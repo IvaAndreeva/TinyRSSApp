@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_welcome_msg">Welcome to TinyRSSApp, please fill out the data so we can show you your feeds</string>
+    <string name="login_address_msg">Address:</string>
+    <string name="login_username_msg">Username:</string>
+    <string name="login_password_msg">Password:</string>
+    <string name="login_connecting_msg">Connecting...</string>
+    <string name="login_connect_button_text">Connect</string>
+    <string name="login_error_msg">Login failed</string>
+    <string name="login_success_msg">Loading feeds...</string>
+</resources>

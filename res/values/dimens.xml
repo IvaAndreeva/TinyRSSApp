@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bigger_msg_size">20dp</dimen>
+    <dimen name="top_margin">20dp</dimen>
+    <dimen name="bottom_margin">20dp</dimen>
+    <dimen name="left_margin">20dp</dimen>
+    <dimen name="right_margin">20dp</dimen>
+    <dimen name="small_text_edit_width">120dp</dimen>
+    <dimen name="small_text_view_width">100dp</dimen>
+
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="custom_theme" parent="@android:style/Theme.NoTitleBar">
+        <item name="android:textColor">#ffd764</item>
+    </style>
+</resources>

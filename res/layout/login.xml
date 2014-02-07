@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:measureWithLargestChild="true" android:orientation="vertical" android:weightSum="1"
+              android:visibility="visible">
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_welcome_msg"
+            android:textColor="@color/yellow_theme_color" android:textSize="@dimen/bigger_msg_size"
+            android:textStyle="bold" android:gravity="center_horizontal" android:layout_marginTop="@dimen/top_margin"
+            android:layout_marginBottom="@dimen/bottom_margin"/>
+
+    <LinearLayout
+            android:layout_width="266dp"
+            android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/top_margin"
+                  android:text="@string/login_address_msg" android:textColor="@color/yellow_theme_color"
+                  android:id="@+id/addressMsg"
+                  android:layout_marginRight="@dimen/right_margin" android:gravity="center_vertical|right"
+                  android:width="@dimen/small_text_view_width"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/adressText" android:layout_gravity="bottom"
+                android:width="@dimen/small_text_edit_width" android:hint="Address of the API"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="266dp"
+            android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/top_margin"
+                  android:text="@string/login_username_msg" android:textColor="@color/yellow_theme_color"
+                  android:id="@+id/usernameMsg"
+                  android:layout_marginRight="@dimen/right_margin" android:gravity="center_vertical|right"
+                  android:width="@dimen/small_text_view_width"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/usernameText" android:layout_gravity="bottom"
+                android:width="@dimen/small_text_edit_width" android:hint="Username for the API"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="266dp"
+            android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="@string/login_password_msg" android:textColor="@color/yellow_theme_color"
+                  android:id="@+id/passwordMsg"
+                  android:layout_marginRight="@dimen/right_margin" android:gravity="center_vertical|right"
+                  android:layout_marginTop="@dimen/top_margin" android:width="@dimen/small_text_view_width"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/passwordText" android:layout_gravity="bottom"
+                android:password="true" android:width="@dimen/small_text_edit_width"
+                android:hint="Password for the API"/>
+    </LinearLayout>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_connect_button_text"
+            android:id="@+id/connectButton" android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/top_margin" android:textColor="@color/yellow_theme_color"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_error_msg"
+            android:id="@+id/errorMsg" android:layout_gravity="center_horizontal" android:visibility="invisible"
+            android:textColor="@color/error_theme_color" android:textSize="@dimen/bigger_msg_size"
+            android:layout_marginTop="@dimen/top_margin"/>
+</LinearLayout>
+
