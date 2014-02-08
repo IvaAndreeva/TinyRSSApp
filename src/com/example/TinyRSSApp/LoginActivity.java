@@ -56,23 +56,23 @@ public class LoginActivity extends Activity {
 
                 try {
                     JSONObject jsonParams = new JSONObject();
-                    jsonParams.put(TinyTinySpecificConstants.OP_PROP, TinyTinySpecificConstants.LOGIN_OP_VALUE);
-                    jsonParams.put(TinyTinySpecificConstants.LOGIN_USERNAME_PROP, username.getText().toString());
-                    jsonParams.put(TinyTinySpecificConstants.LOGIN_PASSWORD_PROP, password.getText().toString());
+                    jsonParams.put(TinyTinySpecificConstants.OP_PROP, TinyTinySpecificConstants.REQUEST_LOGIN_OP_VALUE);
+                    jsonParams.put(TinyTinySpecificConstants.REQUEST_LOGIN_USERNAME_PROP, username.getText().toString());
+                    jsonParams.put(TinyTinySpecificConstants.REQUEST_LOGIN_PASSWORD_PROP, password.getText().toString());
                     StringEntity entity = new StringEntity(jsonParams.toString());
                     client.post(getApplicationContext(), finalHost, entity, "application/json",
                             new JsonHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     try {
-                                        if (response.getInt(TinyTinySpecificConstants.LOGIN_STATUS_PROP) == TinyTinySpecificConstants.LOGIN_STATUS_FAIL_VALUE) {
+                                        if (response.getInt(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP) == TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_FAIL_VALUE) {
                                             ((TextView) findViewById(R.id.errorMsg)).setVisibility(View.VISIBLE);
                                             connectButton.setText(R.string.login_connect_button_text);
                                             connectButton.setEnabled(true);
                                         } else {
                                             ((TextView) findViewById(R.id.errorMsg)).setVisibility(View.INVISIBLE);
                                             connectButton.setText(R.string.login_success_msg);
-                                            String sessionId = response.getJSONObject(TinyTinySpecificConstants.LOGIN_CONTENT_PROP).getString(TinyTinySpecificConstants.LOGIN_SESSIONID_PROP);
+                                            String sessionId = response.getJSONObject(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP).getString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP);
                                             startAllFeedsActivity(finalHost, sessionId);
                                         }
                                     } catch (JSONException e) {
@@ -90,10 +90,10 @@ public class LoginActivity extends Activity {
     }
 
     private void startAllFeedsActivity(String host, String sessionId) {
-        Intent intent = new Intent(LoginActivity.this, AllFeedsActivity.class);
+        Intent intent = new Intent(LoginActivity.this, ListActivity.class);
         Bundle b = new Bundle();
         b.putString(HOST_PROP, host);
-        b.putString(TinyTinySpecificConstants.LOGIN_SESSIONID_PROP, sessionId);
+        b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP, sessionId);
         intent.putExtras(b);
         startActivity(intent);
         finish();

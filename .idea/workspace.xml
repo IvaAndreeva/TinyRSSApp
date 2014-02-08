@@ -68,6 +68,23 @@
       </breakpoint>
     </breakpoint_any>
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/ListActivity.java" line="140" class="com.example.TinyRSSApp.ListActivity" package="com.example.TinyRSSApp">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -80,96 +97,55 @@
       <file leaf-file-name="LoginActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="5" selection-start="4323" selection-end="4323" vertical-scroll-proportion="0.0" vertical-offset="819" max-vertical-offset="1605">
+            <state line="92" column="8" selection-start="4459" selection-end="4764" vertical-scroll-proportion="0.0" vertical-offset="1118" max-vertical-offset="1717">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1342#4315#0" expanded="true" />
-                <element signature="e#1690#1719#0" expanded="true" />
-                <element signature="e#2597#4086#0" expanded="true" />
-                <element signature="e#3165#3199#0" expanded="true" />
-                <element signature="e#3509#3535#0" expanded="true" />
-                <element signature="e#4055#4056#0" expanded="true" />
-                <element signature="e#4304#4305#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="colors.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/values/colors.xml">
+      <file leaf-file-name="ListActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/ListActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="40" selection-start="85" selection-end="91" vertical-scroll-proportion="-1.2" vertical-offset="0" max-vertical-offset="120">
+            <state line="198" column="6" selection-start="11279" selection-end="11279" vertical-scroll-proportion="0.6201299" vertical-offset="3175" max-vertical-offset="3757">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2330#5369#0" expanded="true" />
+                <element signature="e#2658#2664#0" expanded="true" />
+                <element signature="e#5346#5347#0" expanded="true" />
+                <element signature="e#5647#5653#0" expanded="true" />
+                <element signature="e#5788#6044#0" expanded="true" />
+                <element signature="e#6033#6034#0" expanded="true" />
+                <element signature="e#7170#10665#0" expanded="true" />
+                <element signature="e#7506#7516#0" expanded="true" />
+                <element signature="e#10642#10643#0" expanded="true" />
+                <element signature="e#10963#10973#0" expanded="true" />
+                <element signature="e#11116#11374#0" expanded="true" />
+                <element signature="e#11363#11364#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ArticleActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/ArticleActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="56" selection-start="733" selection-end="733" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="782">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="all_feeds.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/all_feeds.xml">
+      <file leaf-file-name="article.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/article.xml">
           <provider editor-type-id="text-editor">
-            <state line="11" column="15" selection-start="476" selection-end="476" vertical-scroll-proportion="-4.2" vertical-offset="60" max-vertical-offset="255">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
               <folding />
             </state>
           </provider>
           <provider selected="true" editor-type-id="android-designer">
             <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TinyTinySpecificConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/TinyTinySpecificConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="57" selection-start="955" selection-end="955" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AllFeedsActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/AllFeedsActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="117" column="5" selection-start="5460" selection-end="5460" vertical-scroll-proportion="-17.444445" vertical-offset="1059" max-vertical-offset="1635">
-              <folding>
-                <element signature="e#2183#5061#0" expanded="true" />
-                <element signature="e#5038#5039#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="styles.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="12" selection-start="203" selection-end="203" vertical-scroll-proportion="0.12975779" vertical-offset="0" max-vertical-offset="578">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="85" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="360">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Feed.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/Feed.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="36" selection-start="1165" selection-end="1165" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="990">
-              <folding>
-                <element signature="method#setFeedUrl#0;class#Feed#0" expanded="true" />
-                <element signature="method#setTitle#0;class#Feed#0" expanded="true" />
-                <element signature="method#setId#0;class#Feed#0" expanded="true" />
-                <element signature="method#setUndread#0;class#Feed#0" expanded="true" />
-                <element signature="method#setHasIcon#0;class#Feed#0" expanded="true" />
-                <element signature="method#setCatId#0;class#Feed#0" expanded="true" />
-                <element signature="method#setLastUpdated#0;class#Feed#0" expanded="true" />
-                <element signature="method#setOrderId#0;class#Feed#0" expanded="true" />
-              </folding>
-            </state>
           </provider>
         </entry>
       </file>
@@ -189,25 +165,30 @@
         <option value="$PROJECT_DIR$/res/values/dimens.xml" />
         <option value="$PROJECT_DIR$/res/values/login_strings.xml" />
         <option value="$PROJECT_DIR$/res/values/tiny_specific_properties.xml" />
-        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/TinyTinySpecificConstants.java" />
         <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/AllFeedLoaderTask.java" />
         <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/AllFeedsLoaderTask.java" />
-        <option value="$PROJECT_DIR$/res/layout/all_feeds.xml" />
         <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/Feed.java" />
         <option value="$PROJECT_DIR$/res/layout/login.xml" />
         <option value="$PROJECT_DIR$/res/layout/custom_textview.xml" />
-        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/AllFeedsActivity.java" />
         <option value="$PROJECT_DIR$/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/Article.java" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/Headline.java" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/TinyTinySpecificConstants.java" />
+        <option value="$PROJECT_DIR$/res/layout/all_feeds.xml" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/AllFeedsActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/article.xml" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/ListActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/TinyRSSApp/ArticleActivity.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
-    <option name="y" value="24" />
-    <option name="width" value="1855" />
-    <option name="height" value="1056" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -235,7 +216,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -285,10 +265,6 @@
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -308,22 +284,9 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TinyRSSApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TinyRSSApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -335,15 +298,18 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="OverrideImplement.combined" value="true" />
-    <property name="OverrideImplement.overriding.sorted" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/libs/android-async-http-1.4.4.jar!/" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="true" />
+    <property name="options.lastSelected" value="android.dex.compiler" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.TinyRSSApp" />
+    </key>
   </component>
   <component name="RunManager" selected="Android Application.TinyRSSApp">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
@@ -380,6 +346,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -405,19 +384,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -475,8 +441,8 @@
     </configuration>
     <configuration default="false" name="TinyRSSApp" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="TinyRSSApp" />
-      <option name="ACTIVITY_CLASS" value="com.example.TinyRSSApp.LoginActivity" />
-      <option name="MODE" value="specific_activity" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
@@ -554,35 +520,35 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24682496" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290735" sideWeight="0.4997242" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34952977" sideWeight="0.4997242" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29073483" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5002758" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36990595" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5007353" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.4997242" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.49926472" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41379312" sideWeight="0.49926472" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.4997242" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1869829" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31842387" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18667643" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3181818" sideWeight="0.602489" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24682496" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -608,16 +574,84 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state line="89" column="5" selection-start="4323" selection-end="4323" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1819">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/colors.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="40" selection-start="85" selection-end="91" vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="136">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/list_view.xml">
+      <provider editor-type-id="text-editor">
+        <state line="11" column="15" selection-start="476" selection-end="476" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/TinyTinySpecificConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="57" selection-start="955" selection-end="955" vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="595">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/ListActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="117" column="5" selection-start="5460" selection-end="5460" vertical-scroll-proportion="0.0" vertical-offset="1989" max-vertical-offset="2108">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2330#5369#0" expanded="true" />
+            <element signature="e#2658#2664#0" expanded="true" />
+            <element signature="e#5346#5347#0" expanded="true" />
+            <element signature="e#5647#5653#0" expanded="true" />
+            <element signature="e#5788#6044#0" expanded="true" />
+            <element signature="e#6033#6034#0" expanded="true" />
+            <element signature="e#7170#10665#0" expanded="true" />
+            <element signature="e#7506#7516#0" expanded="true" />
+            <element signature="e#10642#10643#0" expanded="true" />
+            <element signature="e#10963#10973#0" expanded="true" />
+            <element signature="e#11116#11374#0" expanded="true" />
+            <element signature="e#11363#11364#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="12" selection-start="203" selection-end="203" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="187">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="85" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="408">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/Feed.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="36" selection-start="1165" selection-end="1165" vertical-scroll-proportion="0.0" vertical-offset="969" max-vertical-offset="1122">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="43" selection-start="312" selection-end="312" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="315">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1342#4315#0" expanded="true" />
-            <element signature="e#1690#1719#0" expanded="true" />
-            <element signature="e#2597#4086#0" expanded="true" />
-            <element signature="e#3165#3199#0" expanded="true" />
-            <element signature="e#3509#3535#0" expanded="true" />
-            <element signature="e#4055#4056#0" expanded="true" />
-            <element signature="e#4304#4305#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -662,52 +696,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/project.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="537">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/TinyTinySpecificConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="57" selection-start="955" selection-end="955" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/Feed.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="36" selection-start="1165" selection-end="1165" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="990">
-          <folding>
-            <element signature="method#setFeedUrl#0;class#Feed#0" expanded="true" />
-            <element signature="method#setTitle#0;class#Feed#0" expanded="true" />
-            <element signature="method#setId#0;class#Feed#0" expanded="true" />
-            <element signature="method#setUndread#0;class#Feed#0" expanded="true" />
-            <element signature="method#setHasIcon#0;class#Feed#0" expanded="true" />
-            <element signature="method#setCatId#0;class#Feed#0" expanded="true" />
-            <element signature="method#setLastUpdated#0;class#Feed#0" expanded="true" />
-            <element signature="method#setOrderId#0;class#Feed#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/all_feeds.xml">
-      <provider editor-type-id="text-editor">
-        <state line="11" column="15" selection-start="476" selection-end="476" vertical-scroll-proportion="-4.2" vertical-offset="60" max-vertical-offset="255">
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/AllFeedsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="5" selection-start="5460" selection-end="5460" vertical-scroll-proportion="-17.444445" vertical-offset="1059" max-vertical-offset="1635">
-          <folding>
-            <element signature="e#2183#5061#0" expanded="true" />
-            <element signature="e#5038#5039#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="537" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/login.xml">
@@ -720,40 +709,113 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="5" selection-start="4323" selection-end="4323" vertical-scroll-proportion="0.0" vertical-offset="819" max-vertical-offset="1605">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1342#4315#0" expanded="true" />
-            <element signature="e#1690#1719#0" expanded="true" />
-            <element signature="e#2597#4086#0" expanded="true" />
-            <element signature="e#3165#3199#0" expanded="true" />
-            <element signature="e#3509#3535#0" expanded="true" />
-            <element signature="e#4055#4056#0" expanded="true" />
-            <element signature="e#4304#4305#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="40" selection-start="85" selection-end="91" vertical-scroll-proportion="-1.2" vertical-offset="0" max-vertical-offset="120">
+        <state line="2" column="40" selection-start="85" selection-end="91" vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="136">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="85" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="360">
+        <state line="8" column="47" selection-start="493" selection-end="493" vertical-scroll-proportion="0.3908046" vertical-offset="0" max-vertical-offset="408">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="12" selection-start="203" selection-end="203" vertical-scroll-proportion="0.12975779" vertical-offset="0" max-vertical-offset="578">
+        <state line="5" column="1" selection-start="192" selection-end="192" vertical-scroll-proportion="0.2631579" vertical-offset="0" max-vertical-offset="323">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/Feed.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="36" selection-start="1165" selection-end="1165" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="990">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/Headline.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="21" selection-start="1460" selection-end="1460" vertical-scroll-proportion="0.0" vertical-offset="865" max-vertical-offset="1326">
+          <folding>
+            <element signature="method#setId#0;class#Headline#0" expanded="true" />
+            <element signature="method#setUnread#0;class#Headline#0" expanded="true" />
+            <element signature="method#setMarked#0;class#Headline#0" expanded="true" />
+            <element signature="method#setPublished#0;class#Headline#0" expanded="true" />
+            <element signature="method#setUpdated#0;class#Headline#0" expanded="true" />
+            <element signature="method#setIsUpdated#0;class#Headline#0" expanded="true" />
+            <element signature="method#setTitle#0;class#Headline#0" expanded="true" />
+            <element signature="method#setLink#0;class#Headline#0" expanded="true" />
+            <element signature="method#setFeedId#0;class#Headline#0" expanded="true" />
+            <element signature="method#setContent#0;class#Headline#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/TinyTinySpecificConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="79" selection-start="2597" selection-end="2597" vertical-scroll-proportion="-3.0545454" vertical-offset="614" max-vertical-offset="1071">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/list_view.xml">
+      <provider editor-type-id="text-editor">
+        <state line="11" column="15" selection-start="471" selection-end="471" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/article.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="221">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="8" selection-start="4459" selection-end="4764" vertical-scroll-proportion="0.0" vertical-offset="1118" max-vertical-offset="1717">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/ArticleActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="56" selection-start="733" selection-end="733" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="782">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/example/TinyRSSApp/ListActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="198" column="6" selection-start="11279" selection-end="11279" vertical-scroll-proportion="0.6201299" vertical-offset="3175" max-vertical-offset="3757">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2330#5369#0" expanded="true" />
+            <element signature="e#2658#2664#0" expanded="true" />
+            <element signature="e#5346#5347#0" expanded="true" />
+            <element signature="e#5647#5653#0" expanded="true" />
+            <element signature="e#5788#6044#0" expanded="true" />
+            <element signature="e#6033#6034#0" expanded="true" />
+            <element signature="e#7170#10665#0" expanded="true" />
+            <element signature="e#7506#7516#0" expanded="true" />
+            <element signature="e#10642#10643#0" expanded="true" />
+            <element signature="e#10963#10973#0" expanded="true" />
+            <element signature="e#11116#11374#0" expanded="true" />
+            <element signature="e#11363#11364#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
