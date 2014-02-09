@@ -2,10 +2,15 @@
 <resources>
     <string name="login_welcome_msg">Welcome to TinyRSSApp, please fill out the data so we can show you your feeds</string>
     <string name="login_address_msg">Address:</string>
+    <string name="login_address_hint_msg">Address of the API</string>
     <string name="login_username_msg">Username:</string>
+    <string name="login_username_hint_msg">Username for the API</string>
     <string name="login_password_msg">Password:</string>
-    <string name="login_connecting_msg">Connecting...</string>
+    <string name="login_password_hint_msg">Password for the API</string>
+    <string name="login_connecting_msg">Connecting…</string>
     <string name="login_connect_button_text">Connect</string>
     <string name="login_error_msg">Login failed</string>
-    <string name="login_success_msg">Loading feeds...</string>
+    <string name="login_error_conn_failed_msg">Connection failed</string>
+    <string name="login_success_msg">Loading feeds…</string>
+    <string name="login_save_credentials_msg">Save credentials</string>
 </resources>

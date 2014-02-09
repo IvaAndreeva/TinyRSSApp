@@ -35,6 +35,7 @@ public final class TinyTinySpecificConstants {
     public static final String REQUEST_HEADLINES_SHOW_CONTENT_PROP = "show_content";
     public static final String REQUEST_HEADLINES_VIEW_MODE_PROP = "view_mode";
     public static final String REQUEST_HEADLINES_VIEW_MODE_UNREAD_VALUE = "unread";
+    public static final String REQUEST_HEADLINES_VIEW_MODE_ALL_ARTICLES_VALUE = "all_articles";
 
     public static final String RESPONSE_HEADLINE_ID_PROP = "id";
     public static final String RESPONSE_HEADLINE_MARKED_PROP = "marked";
@@ -54,4 +55,6 @@ public final class TinyTinySpecificConstants {
     public static final String REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE = "0";
     public static final String REQUEST_UPDATE_ARTICLE_MODE_TRUE_VALUE = "1";
     public static final String REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE = "2";
+    
+    public static final String REQUEST_MARK_FEED_AS_READ_OP_VALUE = "catchupFeed";
 }
