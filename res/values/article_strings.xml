@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="article_back_to_headlines">Back to headlines</string>
+    <string name="article_toggle_unread_msg">Toggle unread</string>
+    <string name="article_toggle_starred_msg">Toggle starred</string>
+    <string name="article_previous_button_msg">Previous</string>
+    <string name="article_go_to_article_msg">Go to article</string>
+    <string name="article_next_button_msg">Next</string>
+</resources>

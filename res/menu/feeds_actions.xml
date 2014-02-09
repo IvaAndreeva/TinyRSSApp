@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tinyrssapp="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/list_action_refresh"
+        android:icon="@drawable/list_action_refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_bar_refresh"
+        tinyrssapp:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/logout_action"
+        android:showAsAction="never"
+        android:title="@string/logout_action_msg"
+        tinyrssapp:showAsAction="never"/>
+    <item
+        android:id="@+id/toggle_show_unread"
+        android:showAsAction="never"
+        android:title="@string/toggle_show_unread_msg"
+        tinyrssapp:showAsAction="never"/>
+
+</menu>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_bar_refresh">Refresh</string>
+    <string name="action_bar_mark_all_as_read">Mark all as read</string>
+</resources>
