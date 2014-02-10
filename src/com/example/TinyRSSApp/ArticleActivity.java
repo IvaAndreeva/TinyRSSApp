@@ -35,13 +35,16 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.article);
-
+		
 		initialize();
 	}
 
 	@Override
 	public void onBackPressed() {
-		finish();
+		Headline currArticle = getCurrentArticle();
+		startHeadlinesActivity(
+				(new Feed()).setId(currArticle.feedId).setTitle(
+						currArticle.title), ArticleActivity.this);
 		super.onBackPressed();
 	}
 

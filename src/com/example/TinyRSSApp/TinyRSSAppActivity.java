@@ -1,5 +1,7 @@
 package com.example.TinyRSSApp;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +13,11 @@ import android.view.MenuItem;
 public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public static final String PREFS = "credentials";
 	public static final String SHOW_UNREAD_PREFS = "unread";
+	public static final String ARTICLE_ID = "articleId";
+	public static final String CONTENT = "content";
+	public static final String HEADLINES_TO_LOAD = "headlines";
+	public static final String FEED_ID_TO_LOAD = "feedId";
+	public static final String FEED_TITLE_TO_LOAD = "feedTitle";
 
 	public String sessionId;
 	public String host;
@@ -24,7 +31,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		}
 		return false;
 	}
-	
+
 	public boolean toggleShowUnreadIfChosen(MenuItem item) {
 		if (item.getItemId() == R.id.toggle_show_unread) {
 			toggleShowUnread();
@@ -74,5 +81,46 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		Editor editor = savedPrefs.edit();
 		editor.putBoolean(SHOW_UNREAD_PREFS, showUnread);
 		editor.commit();
+	}
+
+	public void startAllFeedsActivity(String host, String sessionId,
+			Context context) {
+		Intent intent = new Intent(context, FeedsActivity.class);
+		Bundle b = new Bundle();
+		b.putString(LoginActivity.HOST_PROP, host);
+		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
+				sessionId);
+		intent.putExtras(b);
+		startActivity(intent);
+		finish();
+	}
+
+	public void startArticleActivity(Headline headline,
+			List<Headline> headlines, Context context) {
+		Intent intent = new Intent(context, ArticleActivity.class);
+		Bundle b = new Bundle();
+		b.putString(LoginActivity.HOST_PROP, host);
+		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
+				sessionId);
+		b.putLong(ARTICLE_ID, headline.id);
+		b.putString(CONTENT, headline.content);
+		b.putParcelableArray(HEADLINES_TO_LOAD,
+				headlines.toArray(new Headline[headlines.size()]));
+		intent.putExtras(b);
+		startActivity(intent);
+		finish();
+	}
+
+	public void startHeadlinesActivity(Feed feed, Context context) {
+		Intent intent = new Intent(context, HeadlinesActivity.class);
+		Bundle b = new Bundle();
+		b.putString(LoginActivity.HOST_PROP, host);
+		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
+				sessionId);
+		b.putInt(FEED_ID_TO_LOAD, feed.id);
+		b.putString(FEED_TITLE_TO_LOAD, feed.title);
+		intent.putExtras(b);
+		startActivity(intent);
+		finish();
 	}
 }

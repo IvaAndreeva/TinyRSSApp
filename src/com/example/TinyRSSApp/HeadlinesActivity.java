@@ -9,8 +9,6 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,9 +26,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
  * Created by iva on 2/7/14.
  */
 public class HeadlinesActivity extends TinyRSSAppActivity {
-	public static final String HEADLINES_TO_LOAD = "headlines";
-	public static final String ARTICLE_ID = "articleId";
-	public static final String CONTENT = "content";
 	public static final String NO_HEADLINES_MSG = "There are no available headlines in here";
 
 	private ListView listView;
@@ -48,7 +43,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onBackPressed() {
-		finish();
+		startAllFeedsActivity(host, sessionId, HeadlinesActivity.this);
 		super.onBackPressed();
 	}
 
@@ -66,7 +61,6 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			feedId = 0;
 			title = "";
 		}
-		setTitle(title);
 		listView = (ListView) findViewById(R.id.listView);
 	}
 
@@ -82,17 +76,17 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			return true;
 		}
 		if (toggleShowUnreadIfChosen(item)) {
-			getHeadlines((new Feed()).setId(feedId));
+			getHeadlines((new Feed()).setId(feedId).setTitle(title));
 			return true;
 		}
 		switch (item.getItemId()) {
 		case R.id.list_action_refresh:
-			getHeadlines((new Feed()).setId(feedId));
+			getHeadlines((new Feed()).setId(feedId).setTitle(title));
 			return true;
 		case R.id.list_action_mark_all_as_read:
 			FeedsActivity.markAsRead(feedId, host, sessionId,
 					getApplicationContext());
-			finish();
+			startAllFeedsActivity(host, sessionId, HeadlinesActivity.this);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -110,12 +104,13 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getHeadlines((new Feed()).setId(feedId));
+		getHeadlines((new Feed()).setId(feedId).setTitle(title));
 	}
 
 	private void getHeadlines(Feed feed) {
 		try {
 			feedId = feed.id;
+			setTitle(feed.title);
 			AsyncHttpClient client = new AsyncHttpClient();
 			JSONObject jsonParams = new JSONObject();
 			jsonParams.put(
@@ -226,25 +221,11 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				getArticle((Headline) parent.getAdapter().getItem(position),
-						headlines);
+				startArticleActivity(
+						(Headline) parent.getAdapter().getItem(position),
+						headlines, HeadlinesActivity.this);
 			}
 		});
 		headlinesAdapter.notifyDataSetChanged();
-	}
-
-	private void getArticle(Headline headline, List<Headline> headlines) {
-		Intent intent = new Intent(HeadlinesActivity.this,
-				ArticleActivity.class);
-		Bundle b = new Bundle();
-		b.putString(LoginActivity.HOST_PROP, host);
-		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
-				sessionId);
-		b.putLong(ARTICLE_ID, headline.id);
-		b.putString(CONTENT, headline.content);
-		b.putParcelableArray(HEADLINES_TO_LOAD,
-				headlines.toArray(new Headline[headlines.size()]));
-		intent.putExtras(b);
-		startActivity(intent);
 	}
 }

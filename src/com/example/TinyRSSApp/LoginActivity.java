@@ -54,7 +54,6 @@ public class LoginActivity extends Activity {
 
 	private void initialize() {
         address = (EditText) findViewById(R.id.adressText);
-        address.setText("http://yassen.info/reader/api/");
         username = (EditText) findViewById(R.id.usernameText);
         password = (EditText) findViewById(R.id.passwordText);
         ((Button) findViewById(R.id.connectButton)).setOnClickListener(new Button.OnClickListener() {

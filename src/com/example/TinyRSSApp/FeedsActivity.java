@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,8 +28,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
  * Created by iva on 2/7/14.
  */
 public class FeedsActivity extends TinyRSSAppActivity {
-	public static final String FEED_ID_TO_LOAD = "feedId";
-	public static final String FEED_TITLE_TO_LOAD = "feedTitle";
 	public static final String ARTICLE_ID = "articleId";
 	public static final String CONTENT = "content";
 	public static final String NO_FEEDS_MSG = "There are no available feeds in here";
@@ -63,7 +60,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		if (logoutIfChosen(item)) {
 			return true;
 		}
-		if (toggleShowUnreadIfChosen(item)){
+		if (toggleShowUnreadIfChosen(item)) {
 			getFeeds();
 			return true;
 		}
@@ -180,21 +177,9 @@ public class FeedsActivity extends TinyRSSAppActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				getHeadlines((Feed) parent.getAdapter().getItem(position));
-			}
-
-			private void getHeadlines(Feed feed) {
-				Intent intent = new Intent(FeedsActivity.this,
-						HeadlinesActivity.class);
-				Bundle b = new Bundle();
-				b.putString(LoginActivity.HOST_PROP, host);
-				b.putString(
-						TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
-						sessionId);
-				b.putInt(FEED_ID_TO_LOAD, feed.id);
-				b.putString(FEED_TITLE_TO_LOAD, feed.title);
-				intent.putExtras(b);
-				startActivity(intent);
+				startHeadlinesActivity(
+						(Feed) parent.getAdapter().getItem(position),
+						FeedsActivity.this);
 			}
 		});
 		feedsAdapter.notifyDataSetChanged();
