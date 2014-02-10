@@ -3,5 +3,6 @@
 
     <color name="dark_theme_text_color">#3399cc</color>
     <color name="error_theme_color">#ff4000</color>
+    <color name="menu_background">#b6b6b4</color>
 
 </resources>

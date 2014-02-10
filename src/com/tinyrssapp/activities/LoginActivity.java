@@ -31,11 +31,13 @@ public class LoginActivity extends Activity {
 	public static final String PREFS_HOST = "host";
 	public static final String PREFS_USERNAME = "username";
 	public static final String PREFS_PASS = "pass";
+	public static final String AUTO_CONNECT = "auto-connect";
 
 	private EditText address;
 	private EditText username;
 	private EditText password;
 	private SharedPreferences savedPrefs;
+	private boolean autoConnect = true;
 
 	/**
 	 * Called when the activity is first created.
@@ -51,6 +53,11 @@ public class LoginActivity extends Activity {
 	}
 
 	private void initialize() {
+		Bundle b = getIntent().getExtras();
+		if (b != null) {
+			autoConnect = b.getBoolean(AUTO_CONNECT);
+		}
+
 		address = (EditText) findViewById(R.id.adressText);
 		username = (EditText) findViewById(R.id.usernameText);
 		password = (EditText) findViewById(R.id.passwordText);
@@ -174,7 +181,9 @@ public class LoginActivity extends Activity {
 			address.setText(savedPrefs.getString(PREFS_HOST, ""));
 			username.setText(savedPrefs.getString(PREFS_USERNAME, ""));
 			password.setText(savedPrefs.getString(PREFS_PASS, ""));
-			clickConnectIfPossible();
+			if (autoConnect) {
+				clickConnectIfPossible();
+			}
 		}
 	}
 

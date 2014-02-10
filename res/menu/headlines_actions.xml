@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/list_action_refresh"
-        android:icon="@drawable/list_action_refresh"
+        android:icon="?attr/refresh_icon"
         android:showAsAction="ifRoom"
         android:title="@string/action_bar_refresh"
         tinyrssapp:showAsAction="ifRoom"/>
     <item
         android:id="@+id/list_action_mark_all_as_read"
-        android:icon="@drawable/mark_as_read"
+        android:icon="?attr/mark_as_read_icon"
         android:showAsAction="ifRoom"
         android:title="@string/action_bar_mark_all_as_read"
         tinyrssapp:showAsAction="ifRoom"/>

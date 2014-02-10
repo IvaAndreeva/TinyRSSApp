@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="menu_item">
+        <attr name="refresh_icon" format="reference" />
+        <attr name="mark_as_read_icon" format="reference" />
+        <attr name="toggle_starred_icon" format="reference" />
+        <attr name="toggle_unread_icon" format="reference" />
+    </declare-styleable>
+</resources>

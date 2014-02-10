@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/article_action_toggle_unread"
-        android:icon="@drawable/article_toggle_unread"
+        android:icon="?attr/toggle_unread_icon"
         android:showAsAction="ifRoom|withText"
         android:title="@string/article_toggle_unread_msg"
         tinyrssapp:showAsAction="ifRoom|withText"/>
     <item
         android:id="@+id/article_action_toggle_starred"
-        android:icon="@drawable/article_toggle_starred"
+        android:icon="?attr/toggle_starred_icon"
         android:showAsAction="ifRoom|withText"
         android:title="@string/article_toggle_starred_msg"
         tinyrssapp:showAsAction="ifRoom|withText"/>

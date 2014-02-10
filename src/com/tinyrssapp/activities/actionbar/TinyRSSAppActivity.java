@@ -109,6 +109,9 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 
 	private void logout() {
 		Intent intent = new Intent(TinyRSSAppActivity.this, LoginActivity.class);
+		Bundle b = new Bundle();
+		b.putBoolean(LoginActivity.AUTO_CONNECT, false);
+		intent.putExtras(b);
 		startActivity(intent);
 		finish();
 	}

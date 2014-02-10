@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CustomLightTheme" parent="Theme.Base.AppCompat.Light"></style>
+    <style name="CustomLightTheme" parent="Theme.Base.AppCompat.Light">
+        <item name="actionMenuTextColor">@color/menu_background</item>
+        <item name="refresh_icon">@drawable/light_list_action_refresh</item>
+        <item name="mark_as_read_icon">@drawable/light_mark_as_read</item>
+        <item name="toggle_starred_icon">@drawable/light_article_toggle_starred</item>
+        <item name="toggle_unread_icon">@drawable/light_article_toggle_unread</item>
+    </style>
 
     <style name="CustomDarkTheme" parent="Theme.Base.AppCompat">
         <item name="android:textColor">@color/dark_theme_text_color</item>
         <item name="android:button">@style/CustomButton</item>
         <item name="android:checkboxStyle">@style/CustomCheckbox</item>
+        <item name="android:panelFullBackground">@color/menu_background</item>
+        <item name="refresh_icon">@drawable/dark_list_action_refresh</item>
+        <item name="mark_as_read_icon">@drawable/dark_mark_as_read</item>
+        <item name="toggle_starred_icon">@drawable/dark_article_toggle_starred</item>
+        <item name="toggle_unread_icon">@drawable/dark_article_toggle_unread</item>
     </style>
 
     <style name="CustomButton" parent="@android:style/Widget.Button">
