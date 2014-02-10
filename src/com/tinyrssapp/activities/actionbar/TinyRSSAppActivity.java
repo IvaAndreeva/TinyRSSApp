@@ -1,14 +1,24 @@
-package com.example.TinyRSSApp;
+package com.tinyrssapp.activities.actionbar;
 
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.example.TinyRSSApp.R;
+import com.tinyrssapp.activities.LoginActivity;
+import com.tinyrssapp.constants.TinyTinySpecificConstants;
+import com.tinyrssapp.entities.Feed;
+import com.tinyrssapp.entities.Headline;
 
 public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public static final String PREFS = "credentials";
@@ -19,12 +29,50 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public static final String FEED_ID_TO_LOAD = "feedId";
 	public static final String FEED_TITLE_TO_LOAD = "feedTitle";
 
+	private static final String SHOWING_UNREAD_MSG = "Showing only unread";
+	private static final String SHOWING_ALL_MSG = "Showing all";
+
 	public String sessionId;
 	public String host;
 	private SharedPreferences savedPrefs;
-	public boolean showUnread = false;
+	public static boolean showAll = false;
+	public Menu menu;
+	public boolean isMenuInflated = false;
+	private ProgressDialog progressDialog;
 
-	public boolean logoutIfChosen(MenuItem item) {
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(getLayout());
+
+		initialize();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		this.menu = menu;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	public void inflateMenu() {
+		if (!isMenuInflated) {
+			isMenuInflated = true;
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(getMenu(), menu);
+		}
+	}
+
+	public boolean checkIsCommonMenuItemSelected(MenuItem item) {
+		if (logoutIfChosen(item)) {
+			return true;
+		}
+		if (toggleShowUnreadIfChosen(item)) {
+			onToggleShowUnread();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean logoutIfChosen(MenuItem item) {
 		if (item.getItemId() == R.id.logout_action) {
 			logout();
 			return true;
@@ -32,7 +80,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		return false;
 	}
 
-	public boolean toggleShowUnreadIfChosen(MenuItem item) {
+	private boolean toggleShowUnreadIfChosen(MenuItem item) {
 		if (item.getItemId() == R.id.toggle_show_unread) {
 			toggleShowUnread();
 			return true;
@@ -46,8 +94,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		finish();
 	}
 
-	public void initialize() {
-		Bundle b = getIntent().getExtras();
+	public void initSessionAndHost(Bundle b) {
 		if (b != null) {
 			sessionId = b
 					.getString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP);
@@ -60,32 +107,36 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	}
 
 	public String getViewMode() {
-		return showUnread ? TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_ALL_ARTICLES_VALUE
+		return showAll ? TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_ALL_ARTICLES_VALUE
 				: TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_UNREAD_VALUE;
 	}
 
 	public void toggleShowUnread() {
-		showUnread = !showUnread;
+		showAll = !showAll;
+		String msg = SHOWING_UNREAD_MSG;
+		if (showAll) {
+			msg = SHOWING_ALL_MSG;
+		}
+		Toast.makeText(TinyRSSAppActivity.this, msg, Toast.LENGTH_LONG).show();
 		savePrefs();
 	}
 
 	private void loadSavedPrefs() {
 		savedPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 		if (savedPrefs != null) {
-			showUnread = savedPrefs.getBoolean(SHOW_UNREAD_PREFS, false);
+			showAll = savedPrefs.getBoolean(SHOW_UNREAD_PREFS, false);
 		}
 	}
 
 	private void savePrefs() {
 		savedPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 		Editor editor = savedPrefs.edit();
-		editor.putBoolean(SHOW_UNREAD_PREFS, showUnread);
+		editor.putBoolean(SHOW_UNREAD_PREFS, showAll);
 		editor.commit();
 	}
 
-	public void startAllFeedsActivity(String host, String sessionId,
-			Context context) {
-		Intent intent = new Intent(context, FeedsActivity.class);
+	public void startAllFeedsActivity(String host, String sessionId) {
+		Intent intent = new Intent(TinyRSSAppActivity.this, FeedsActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
@@ -96,14 +147,16 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	}
 
 	public void startArticleActivity(Headline headline,
-			List<Headline> headlines, Context context) {
-		Intent intent = new Intent(context, ArticleActivity.class);
+			List<Headline> headlines, String feedTitle) {
+		Intent intent = new Intent(TinyRSSAppActivity.this,
+				ArticleActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
 				sessionId);
 		b.putLong(ARTICLE_ID, headline.id);
 		b.putString(CONTENT, headline.content);
+		b.putString(FEED_TITLE_TO_LOAD, feedTitle);
 		b.putParcelableArray(HEADLINES_TO_LOAD,
 				headlines.toArray(new Headline[headlines.size()]));
 		intent.putExtras(b);
@@ -111,8 +164,9 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		finish();
 	}
 
-	public void startHeadlinesActivity(Feed feed, Context context) {
-		Intent intent = new Intent(context, HeadlinesActivity.class);
+	public void startHeadlinesActivity(Feed feed) {
+		Intent intent = new Intent(TinyRSSAppActivity.this,
+				HeadlinesActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
@@ -123,4 +177,21 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		startActivity(intent);
 		finish();
 	}
+
+	public void showProgress(String title, String body) {
+		progressDialog = ProgressDialog.show(TinyRSSAppActivity.this, title,
+				body);
+	}
+	
+	public void hideProgress(){
+		progressDialog.cancel();
+	}
+
+	public abstract int getMenu();
+
+	public abstract int getLayout();
+
+	public abstract void initialize();
+
+	public abstract void onToggleShowUnread();
 }

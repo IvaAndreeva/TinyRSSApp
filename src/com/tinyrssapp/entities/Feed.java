@@ -1,4 +1,4 @@
-package com.example.TinyRSSApp;
+package com.tinyrssapp.entities;
 
 /**
  * Created by iva on 2/7/14.

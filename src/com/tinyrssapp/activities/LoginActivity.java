@@ -1,4 +1,4 @@
-package com.example.TinyRSSApp;
+package com.tinyrssapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,8 +11,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.tinyrssapp.activities.actionbar.FeedsActivity;
+import com.tinyrssapp.constants.TinyTinySpecificConstants;
+
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
@@ -47,6 +52,7 @@ public class LoginActivity extends Activity {
     private void loadSavedPrefs() {
     	savedPrefs=getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     	if (savedPrefs!=null){
+    		address.setText(savedPrefs.getString(PREFS_HOST, ""));
     		username.setText(savedPrefs.getString(PREFS_USERNAME, ""));
     		password.setText(savedPrefs.getString(PREFS_PASS, ""));
     	}
@@ -110,6 +116,9 @@ public class LoginActivity extends Activity {
 								public void onFailure(String responseBody, Throwable error) {
                                 	showErrorMsg(R.string.login_error_conn_failed_msg);
                                 };
+                                
+                                public void onFailure(Throwable e, JSONObject errorResponse) {
+                                	showErrorMsg(R.string.login_error_conn_failed_msg);};
                                 
                                 private void showErrorMsg() {
                                 	((TextView) findViewById(R.id.errorMsg)).setVisibility(View.VISIBLE);

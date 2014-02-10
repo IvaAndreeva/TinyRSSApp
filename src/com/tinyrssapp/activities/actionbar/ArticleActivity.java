@@ -1,10 +1,8 @@
-package com.example.TinyRSSApp;
+package com.tinyrssapp.activities.actionbar;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,77 +12,40 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.tinyrssapp.constants.TinyTinySpecificConstants;
+import com.tinyrssapp.entities.Feed;
+import com.tinyrssapp.entities.Headline;
 
 /**
  * Created by iva on 2/8/14.
  */
 public class ArticleActivity extends TinyRSSAppActivity {
+	public static final String MARKED_AS_READ_STR = "Marked as read";
+	public static final String MARKED_AS_UNREAD_STR = "Marked as unread";
+
 	private long articleId;
 	private String content;
 	private List<Headline> headlines;
-
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.article);
-		
-		initialize();
-	}
-
-	@Override
-	public void onBackPressed() {
-		Headline currArticle = getCurrentArticle();
-		startHeadlinesActivity(
-				(new Feed()).setId(currArticle.feedId).setTitle(
-						currArticle.title), ArticleActivity.this);
-		super.onBackPressed();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.article_actions, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (logoutIfChosen(item)) {
-			return true;
-		}
-		switch (item.getItemId()) {
-		case R.id.article_action_toggle_unread:
-			markArticleFieldAsMode(
-					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
-					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
-			return true;
-		case R.id.article_action_toggle_starred:
-			markArticleFieldAsMode(
-					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_STARRED_VALUE,
-					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+	private String feedTitle;
 
 	public void initialize() {
 		Bundle b = getIntent().getExtras();
+		initSessionAndHost(b);
 		if (b != null) {
 			b.setClassLoader(getClassLoader());
-			sessionId = b
-					.getString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP);
-			host = b.getString(LoginActivity.HOST_PROP);
-			articleId = b.getLong(FeedsActivity.ARTICLE_ID);
-			content = b.getString(FeedsActivity.CONTENT);
+			articleId = b.getLong(ARTICLE_ID);
+			content = b.getString(CONTENT);
+			feedTitle = b.getString(FEED_TITLE_TO_LOAD);
 			headlines = new ArrayList<Headline>();
 			Parcelable[] headlinesBundle = b
 					.getParcelableArray(HeadlinesActivity.HEADLINES_TO_LOAD);
@@ -94,8 +55,6 @@ public class ArticleActivity extends TinyRSSAppActivity {
 				}
 			}
 		} else {
-			sessionId = "";
-			host = "";
 			articleId = 0;
 			content = "";
 			headlines = new ArrayList<Headline>();
@@ -127,10 +86,50 @@ public class ArticleActivity extends TinyRSSAppActivity {
 						startActivity(browserIntent);
 					}
 				});
-		markArticleFieldAsMode(
-				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
-				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE);
-		loadWebView();
+		loadArticle();
+	}
+
+	@Override
+	public void onBackPressed() {
+		startHeadlinesActivity((new Feed()).setId(getCurrentArticle().feedId)
+				.setTitle(feedTitle));
+		super.onBackPressed();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		boolean res = super.onCreateOptionsMenu(menu);
+		inflateMenu();
+		return res;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (checkIsCommonMenuItemSelected(item)) {
+			return true;
+		}
+		switch (item.getItemId()) {
+		case R.id.article_action_toggle_unread:
+			Headline currArticle = getCurrentArticle();
+			currArticle.unread = !currArticle.unread;
+
+			String msg = MARKED_AS_UNREAD_STR;
+			if (!currArticle.unread) {
+				msg = MARKED_AS_READ_STR;
+			}
+			markArticleFieldAsMode(
+					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
+					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
+			Toast.makeText(ArticleActivity.this, msg, Toast.LENGTH_LONG).show();
+			return true;
+		case R.id.article_action_toggle_starred:
+			markArticleFieldAsMode(
+					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_STARRED_VALUE,
+					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private Headline getCurrentArticle() {
@@ -148,10 +147,17 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		}
 		articleId = headline.id;
 		content = headline.content;
+		loadArticle();
+	}
+
+	private void loadArticle() {
+		Headline currArticle = getCurrentArticle();
+		currArticle.unread = !currArticle.unread;
 		markArticleFieldAsMode(
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE);
 		loadWebView();
+
 	}
 
 	protected Headline getPrevHeadline() {
@@ -175,6 +181,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	}
 
 	private void markArticleFieldAsMode(String fieldValue, String modeValue) {
+		showProgress("Loading article", "");
 		AsyncHttpClient client = new AsyncHttpClient();
 		try {
 			JSONObject jsonParams = new JSONObject();
@@ -195,9 +202,9 @@ public class ArticleActivity extends TinyRSSAppActivity {
 			client.post(getApplicationContext(), host, entity,
 					"application/json", new JsonHttpResponseHandler() {
 						@Override
-						public void onSuccess(int statusCode, Header[] headers,
-								JSONObject response) {
-							System.out.println("DONE!");
+						public void onFinish() {
+							hideProgress();
+							super.onFinish();
 						}
 					});
 		} catch (JSONException e) {
@@ -211,5 +218,19 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		setTitle(getCurrentArticle().title);
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
 		webView.loadData(content, "text/html", "utf-8");
+	}
+
+	@Override
+	public int getMenu() {
+		return R.menu.article_actions;
+	}
+
+	@Override
+	public int getLayout() {
+		return R.layout.article;
+	}
+
+	@Override
+	public void onToggleShowUnread() {
 	}
 }

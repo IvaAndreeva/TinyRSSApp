@@ -13,9 +13,9 @@
     <application
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" android:theme="@style/Theme.AppCompat">
+        android:label="@string/feeds_title" android:theme="@style/Theme.AppCompat">
         <activity
-            android:name=".LoginActivity"
+            android:name="com.tinyrssapp.activities.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,13 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FeedsActivity"
+            android:name="com.tinyrssapp.activities.actionbar.FeedsActivity"
             android:theme="@style/custom_theme" />
         <activity
-            android:name=".HeadlinesActivity"
+            android:name="com.tinyrssapp.activities.actionbar.HeadlinesActivity"
             android:theme="@style/custom_theme" />
         <activity
-            android:name=".ArticleActivity"
+            android:name="com.tinyrssapp.activities.actionbar.ArticleActivity"
             android:theme="@style/Theme.AppCompat" />
 
     </application>

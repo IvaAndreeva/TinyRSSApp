@@ -1,4 +1,4 @@
-package com.example.TinyRSSApp;
+package com.tinyrssapp.activities.actionbar;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -9,20 +9,18 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.tinyrssapp.constants.TinyTinySpecificConstants;
+import com.tinyrssapp.entities.Feed;
 
 /**
  * Created by iva on 2/7/14.
@@ -34,34 +32,21 @@ public class FeedsActivity extends TinyRSSAppActivity {
 	public static final String NO_HEADLINES_MSG = "There are no available headlines in here";
 
 	private ListView listView;
-	private Menu menu;
-	private boolean isMenuInflated = false;
 
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_view);
-
-		initialize();
+	@Override
+	protected void onStart() {
+		super.onStart();
+		getFeeds();
 	}
 
 	public void initialize() {
-		super.initialize();
+		initSessionAndHost(getIntent().getExtras());
 		listView = (ListView) findViewById(R.id.listView);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		this.menu = menu;
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (logoutIfChosen(item)) {
-			return true;
-		}
-		if (toggleShowUnreadIfChosen(item)) {
-			getFeeds();
+		if (checkIsCommonMenuItemSelected(item)) {
 			return true;
 		}
 		switch (item.getItemId()) {
@@ -73,21 +58,8 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		}
 	}
 
-	private void inflateMenu() {
-		if (!isMenuInflated) {
-			isMenuInflated = true;
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.feeds_actions, menu);
-		}
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		getFeeds();
-	}
-
 	private void getFeeds() {
+		showProgress("Loading feeds...", "");
 		AsyncHttpClient client = new AsyncHttpClient();
 		try {
 			JSONObject jsonParams = new JSONObject();
@@ -98,10 +70,16 @@ public class FeedsActivity extends TinyRSSAppActivity {
 					sessionId);
 			jsonParams
 					.put(TinyTinySpecificConstants.REQUEST_GET_FEEDS_UNREAD_ONLY_PROP,
-							showUnread);
+							!showAll);
 			StringEntity entity = new StringEntity(jsonParams.toString());
 			client.post(getApplicationContext(), host, entity,
 					"application/json", new JsonHttpResponseHandler() {
+						@Override
+						public void onFinish() {
+							hideProgress();
+							super.onFinish();
+						}
+
 						@Override
 						public void onSuccess(int statusCode, Header[] headers,
 								JSONObject response) {
@@ -177,42 +155,25 @@ public class FeedsActivity extends TinyRSSAppActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				startHeadlinesActivity(
-						(Feed) parent.getAdapter().getItem(position),
-						FeedsActivity.this);
+				startHeadlinesActivity((Feed) parent.getAdapter().getItem(
+						position));
 			}
 		});
 		feedsAdapter.notifyDataSetChanged();
 	}
 
-	public static void markAsRead(int feedId, String host, String sessionId,
-			Context context) {
-		AsyncHttpClient client = new AsyncHttpClient();
-		JSONObject jsonParams = new JSONObject();
-		try {
-			jsonParams.put(
-					TinyTinySpecificConstants.REQUEST_HEADLINES_FEED_ID_PROP,
-					feedId);
-			jsonParams
-					.put(TinyTinySpecificConstants.OP_PROP,
-							TinyTinySpecificConstants.REQUEST_MARK_FEED_AS_READ_OP_VALUE);
-			jsonParams.put(TinyTinySpecificConstants.REQUEST_SESSION_ID_PROP,
-					sessionId);
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_PROP,
-							TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_UNREAD_VALUE);
-			StringEntity entity = new StringEntity(jsonParams.toString());
-			client.post(context, host, entity, "application/json",
-					new JsonHttpResponseHandler() {
-						@Override
-						public void onSuccess(int statusCode, Header[] headers,
-								JSONObject response) {
-						}
-					});
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
+	@Override
+	public int getMenu() {
+		return R.menu.feeds_actions;
+	}
+
+	@Override
+	public int getLayout() {
+		return R.layout.list_view;
+	}
+
+	@Override
+	public void onToggleShowUnread() {
+		getFeeds();
 	}
 }

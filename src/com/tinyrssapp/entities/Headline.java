@@ -1,4 +1,4 @@
-package com.example.TinyRSSApp;
+package com.tinyrssapp.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
