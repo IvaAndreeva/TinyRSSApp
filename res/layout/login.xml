@@ -3,7 +3,7 @@
     android:id="@+id/loginScroll"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,7 +18,6 @@
             android:layout_marginTop="@dimen/top_margin"
             android:gravity="center_horizontal"
             android:text="@string/login_welcome_msg"
-            android:textColor="@color/yellow_theme_color"
             android:textSize="@dimen/bigger_msg_size"
             android:textStyle="bold" />
 
@@ -35,7 +34,6 @@
                 android:layout_marginTop="@dimen/top_margin"
                 android:gravity="center_vertical|right"
                 android:text="@string/login_address_msg"
-                android:textColor="@color/yellow_theme_color"
                 android:width="@dimen/small_text_view_width" />
 
             <EditText
@@ -60,7 +58,6 @@
                 android:layout_marginTop="@dimen/top_margin"
                 android:gravity="center_vertical|right"
                 android:text="@string/login_username_msg"
-                android:textColor="@color/yellow_theme_color"
                 android:width="@dimen/small_text_view_width" />
 
             <EditText
@@ -85,7 +82,6 @@
                 android:layout_marginTop="@dimen/top_margin"
                 android:gravity="center_vertical|right"
                 android:text="@string/login_password_msg"
-                android:textColor="@color/yellow_theme_color"
                 android:width="@dimen/small_text_view_width" />
 
             <EditText
@@ -99,15 +95,18 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/LinearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/top_margin" >
+            android:layout_marginTop="@dimen/top_margin"
+            android:orientation="vertical" >
 
             <CheckBox
                 android:id="@+id/saveCredentialsCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:checked="true"
                 android:text="@string/login_save_credentials_msg" />
 
@@ -115,8 +114,8 @@
                 android:id="@+id/connectButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_connect_button_text"
-                android:textColor="@color/yellow_theme_color" />
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="@string/login_connect_button_text" />
         </LinearLayout>
 
         <TextView

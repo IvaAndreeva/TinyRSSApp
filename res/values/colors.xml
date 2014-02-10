@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="yellow_theme_color">#ffd764</color><color name="error_theme_color">#ff4000</color></resources>
+
+    <color name="dark_theme_text_color">#3399cc</color>
+    <color name="error_theme_color">#ff4000</color>
+
+</resources>

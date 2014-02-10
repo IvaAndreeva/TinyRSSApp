@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.activities.LoginActivity;
+import com.tinyrssapp.activities.ThemeUpdater;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
@@ -41,6 +42,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	private ProgressDialog progressDialog;
 
 	public void onCreate(Bundle savedInstanceState) {
+		ThemeUpdater.updateTheme(TinyRSSAppActivity.this);
 		super.onCreate(savedInstanceState);
 		setContentView(getLayout());
 
@@ -69,6 +71,9 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 			onToggleShowUnread();
 			return true;
 		}
+		if (switchThemeIfChosen(item)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -83,6 +88,20 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	private boolean toggleShowUnreadIfChosen(MenuItem item) {
 		if (item.getItemId() == R.id.toggle_show_unread) {
 			toggleShowUnread();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean switchThemeIfChosen(MenuItem item) {
+		if (item.getItemId() == R.id.switch_to_dark_theme) {
+			ThemeUpdater.setThemeManually(TinyRSSAppActivity.this,
+					ThemeUpdater.NIGHT_THEME);
+			return true;
+		}
+		if (item.getItemId() == R.id.switch_to_light_theme) {
+			ThemeUpdater.setThemeManually(TinyRSSAppActivity.this,
+					ThemeUpdater.DAY_THEME);
 			return true;
 		}
 		return false;
@@ -179,12 +198,15 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	}
 
 	public void showProgress(String title, String body) {
-		progressDialog = ProgressDialog.show(TinyRSSAppActivity.this, title,
-				body);
+		if (progressDialog == null) {
+			progressDialog = ProgressDialog.show(TinyRSSAppActivity.this,
+					title, body);
+		}
 	}
-	
-	public void hideProgress(){
+
+	public void hideProgress() {
 		progressDialog.cancel();
+		progressDialog = null;
 	}
 
 	public abstract int getMenu();

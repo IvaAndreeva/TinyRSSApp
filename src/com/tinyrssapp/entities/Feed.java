@@ -55,6 +55,6 @@ public class Feed {
 
 	@Override
 	public String toString() {
-		return unread > 0 ? (title + " " + unread) : title;
+		return unread > 0 ? (title + "  -" + unread + "-") : title;
 	}
 }

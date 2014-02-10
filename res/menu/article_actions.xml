@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tinyrssapp="http://schemas.android.com/apk/res-auto" >
+
     <item
         android:id="@+id/article_action_toggle_unread"
         android:icon="@drawable/article_toggle_unread"
         android:showAsAction="ifRoom|withText"
         android:title="@string/article_toggle_unread_msg"
         tinyrssapp:showAsAction="ifRoom|withText"/>
-    
     <item
         android:id="@+id/article_action_toggle_starred"
         android:icon="@drawable/article_toggle_starred"
         android:showAsAction="ifRoom|withText"
         android:title="@string/article_toggle_starred_msg"
         tinyrssapp:showAsAction="ifRoom|withText"/>
-    
     <item
         android:id="@+id/logout_action"
         android:showAsAction="never"
         android:title="@string/logout_action_msg"
         tinyrssapp:showAsAction="never"/>
-    
     <item
         android:id="@+id/toggle_show_unread"
         android:showAsAction="never"
         android:title="@string/toggle_show_unread_msg"
         tinyrssapp:showAsAction="never"/>
+    <item
+        android:id="@+id/switch_theme"
+        android:showAsAction="never"
+        android:title="@string/switch_theme_msg"
+        tinyrssapp:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/switch_to_dark_theme"
+                android:title="@string/switch_to_dark_theme_msg"/>
+            <item
+                android:id="@+id/switch_to_light_theme"
+                android:title="@string/switch_to_light_theme_msg"/>
+        </menu>
+    </item>
+
 </menu>

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="custom_theme" parent="Theme.AppCompat">
-        <item name="android:textColor">#ffd764</item>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="CustomLightTheme" parent="Theme.Base.AppCompat.Light"></style>
+
+    <style name="CustomDarkTheme" parent="Theme.Base.AppCompat">
+        <item name="android:textColor">@color/dark_theme_text_color</item>
+        <item name="android:button">@style/CustomButton</item>
+        <item name="android:checkboxStyle">@style/CustomCheckbox</item>
     </style>
+
+    <style name="CustomButton" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@color/dark_theme_text_color</item>
+    </style>
+
+    <style name="CustomCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/dark_theme_text_color</item>
+    </style>
+
 </resources>
