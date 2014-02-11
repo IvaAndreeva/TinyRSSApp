@@ -68,6 +68,16 @@ public class LoginActivity extends Activity {
 								&& !host.startsWith("https://")) {
 							host = "http://" + host;
 						}
+						if (!host.endsWith("/api") && !host.endsWith("/api/")) {
+							if (host.endsWith("/")) {
+								host = host + "api/";
+							} else {
+								host = host + "/api/";
+							}
+						}
+						if (!host.endsWith("/")) {
+							host = host + "/";
+						}
 						final String finalHost = host;
 
 						try {
