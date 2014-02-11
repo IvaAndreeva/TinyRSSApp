@@ -114,7 +114,6 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		try {
 			showProgress("Loading headlines...", "");
 			feedId = feed.id;
-			setTitle(feed.title);
 			AsyncHttpClient client = new AsyncHttpClient();
 			JSONObject jsonParams = new JSONObject();
 			jsonParams.put(
@@ -238,6 +237,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		if (menuLoadingShouldWait) {
 			inflateMenu();
 		}
+		setTitle(feed.title);
 		feed.unread = 0;
 		for (Headline headline : headlines) {
 			if (headline.unread) {

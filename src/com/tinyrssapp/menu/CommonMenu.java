@@ -1,6 +1,7 @@
 package com.tinyrssapp.menu;
 
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.activities.ThemeUpdater;
@@ -17,6 +18,20 @@ public class CommonMenu {
 			return true;
 		}
 		if (switchThemeIfChosen(context, item)) {
+			return true;
+		}
+
+		if (homeIsChosen(context, item)) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean homeIsChosen(TinyRSSAppActivity context,
+			MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			Toast.makeText(context, context.getTitle(), Toast.LENGTH_LONG)
+					.show();
 			return true;
 		}
 		return false;

@@ -3,8 +3,10 @@ package com.tinyrssapp.activities.actionbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -37,11 +39,15 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	private ProgressDialog progressDialog;
 	protected boolean menuLoadingShouldWait = true;
 
+	@SuppressLint("NewApi")
 	public void onCreate(Bundle savedInstanceState) {
 		ThemeUpdater.updateTheme(this);
 		super.onCreate(savedInstanceState);
 		setContentView(getLayout());
 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+		    getActionBar().setHomeButtonEnabled(true);
+		}
 		initialize();
 	}
 
