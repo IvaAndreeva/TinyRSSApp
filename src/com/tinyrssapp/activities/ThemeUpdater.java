@@ -22,7 +22,8 @@ public final class ThemeUpdater {
 		Date now = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(now);
-		if (c.get(Calendar.HOUR_OF_DAY) >= 19) {
+		if (c.get(Calendar.HOUR_OF_DAY) >= 19
+				|| c.get(Calendar.HOUR_OF_DAY) <= 7) {
 			context.setTheme(NIGHT_THEME);
 		}
 	}

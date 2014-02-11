@@ -1,14 +1,10 @@
 package com.tinyrssapp.entities;
 
 import java.io.Serializable;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by iva on 2/7/14.
  */
-public class Headline implements Parcelable, Serializable {
+public class Headline implements Serializable {
 	/**
 	 * 
 	 */
@@ -80,47 +76,5 @@ public class Headline implements Parcelable, Serializable {
 	@Override
 	public String toString() {
 		return title;
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeLong(this.id);
-		dest.writeByte((byte) (this.unread ? 1 : 0));
-		dest.writeByte((byte) (this.marked ? 1 : 0));
-		dest.writeByte((byte) (this.published ? 1 : 0));
-		dest.writeLong(this.updated);
-		dest.writeByte((byte) (this.isUpdated ? 1 : 0));
-		dest.writeString(this.title);
-		dest.writeString(this.link);
-		dest.writeInt(this.feedId);
-		dest.writeString(this.content);
-	}
-
-	public static final Parcelable.Creator<Headline> CREATOR = new Parcelable.Creator<Headline>() {
-		public Headline createFromParcel(Parcel in) {
-			return new Headline(in);
-		}
-
-		public Headline[] newArray(int size) {
-			return new Headline[size];
-		}
-	};
-
-	private Headline(Parcel in) {
-		id = in.readLong();
-		unread = in.readByte() != 0;
-		marked = in.readByte() != 0;
-		published = in.readByte() != 0;
-		updated = in.readLong();
-		isUpdated = in.readByte() != 0;
-		title = in.readString();
-		link = in.readString();
-		feedId = in.readInt();
-		content = in.readString();
 	}
 }

@@ -1,9 +1,15 @@
 package com.tinyrssapp.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by iva on 2/7/14.
  */
-public class Feed {
+public class Feed implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2632196177217492919L;
 	public String feedUrl;
 	public String title;
 	public int id;

@@ -1,52 +1,44 @@
 package com.tinyrssapp.activities.actionbar;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.TinyRSSApp.R;
 import com.tinyrssapp.activities.LoginActivity;
 import com.tinyrssapp.activities.ThemeUpdater;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
+import com.tinyrssapp.storage.InternalStorageUtil;
+import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
 
 public abstract class TinyRSSAppActivity extends ActionBarActivity {
-	public static final String PREFS = "credentials";
-	public static final String SHOW_UNREAD_PREFS = "unread";
 	public static final String ARTICLE_ID = "articleId";
 	public static final String CONTENT = "content";
 	public static final String HEADLINES_TO_LOAD = "headlines";
 	public static final String FEED_ID_TO_LOAD = "feedId";
 	public static final String FEED_TITLE_TO_LOAD = "feedTitle";
-	public static final String FILE_WITH_HEADLINES = "headlines";
 
 	private static final String SHOWING_UNREAD_MSG = "Showing only unread";
 	private static final String SHOWING_ALL_MSG = "Showing all";
 
 	public String sessionId;
 	public String host;
-	private SharedPreferences savedPrefs;
 	public static boolean showAll = false;
 	public Menu menu;
 	public boolean isMenuInflated = false;
 	private ProgressDialog progressDialog;
+	protected boolean menuLoadingShouldWait = true;
 
 	public void onCreate(Bundle savedInstanceState) {
-		ThemeUpdater.updateTheme(TinyRSSAppActivity.this);
+		ThemeUpdater.updateTheme(this);
 		super.onCreate(savedInstanceState);
 		setContentView(getLayout());
 
@@ -56,7 +48,11 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		this.menu = menu;
-		return super.onCreateOptionsMenu(menu);
+		boolean res = super.onCreateOptionsMenu(menu);
+		if (!menuLoadingShouldWait) {
+			inflateMenu();
+		}
+		return res;
 	}
 
 	public void inflateMenu() {
@@ -67,52 +63,8 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		}
 	}
 
-	public boolean checkIsCommonMenuItemSelected(MenuItem item) {
-		if (logoutIfChosen(item)) {
-			return true;
-		}
-		if (toggleShowUnreadIfChosen(item)) {
-			onToggleShowUnread();
-			return true;
-		}
-		if (switchThemeIfChosen(item)) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean logoutIfChosen(MenuItem item) {
-		if (item.getItemId() == R.id.logout_action) {
-			logout();
-			return true;
-		}
-		return false;
-	}
-
-	private boolean toggleShowUnreadIfChosen(MenuItem item) {
-		if (item.getItemId() == R.id.toggle_show_unread) {
-			toggleShowUnread();
-			return true;
-		}
-		return false;
-	}
-
-	private boolean switchThemeIfChosen(MenuItem item) {
-		if (item.getItemId() == R.id.switch_to_dark_theme) {
-			ThemeUpdater.setThemeManually(TinyRSSAppActivity.this,
-					ThemeUpdater.NIGHT_THEME);
-			return true;
-		}
-		if (item.getItemId() == R.id.switch_to_light_theme) {
-			ThemeUpdater.setThemeManually(TinyRSSAppActivity.this,
-					ThemeUpdater.DAY_THEME);
-			return true;
-		}
-		return false;
-	}
-
-	private void logout() {
-		Intent intent = new Intent(TinyRSSAppActivity.this, LoginActivity.class);
+	public void logout() {
+		Intent intent = new Intent(this, LoginActivity.class);
 		Bundle b = new Bundle();
 		b.putBoolean(LoginActivity.AUTO_CONNECT, false);
 		intent.putExtras(b);
@@ -129,7 +81,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 			sessionId = "";
 			host = "";
 		}
-		loadSavedPrefs();
+		showAll = StoredPreferencesTinyRSSApp.getShowAllPref(this);
 	}
 
 	public String getViewMode() {
@@ -143,26 +95,12 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		if (showAll) {
 			msg = SHOWING_ALL_MSG;
 		}
-		Toast.makeText(TinyRSSAppActivity.this, msg, Toast.LENGTH_LONG).show();
-		savePrefs();
-	}
-
-	private void loadSavedPrefs() {
-		savedPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-		if (savedPrefs != null) {
-			showAll = savedPrefs.getBoolean(SHOW_UNREAD_PREFS, false);
-		}
-	}
-
-	private void savePrefs() {
-		savedPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-		Editor editor = savedPrefs.edit();
-		editor.putBoolean(SHOW_UNREAD_PREFS, showAll);
-		editor.commit();
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+		StoredPreferencesTinyRSSApp.putShowAllPref(this, showAll);
 	}
 
 	public void startAllFeedsActivity(String host, String sessionId) {
-		Intent intent = new Intent(TinyRSSAppActivity.this, FeedsActivity.class);
+		Intent intent = new Intent(this, FeedsActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
@@ -174,8 +112,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 
 	public void startArticleActivity(Headline headline,
 			List<Headline> headlines, String feedTitle) {
-		Intent intent = new Intent(TinyRSSAppActivity.this,
-				ArticleActivity.class);
+		Intent intent = new Intent(this, ArticleActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
@@ -183,29 +120,15 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putLong(ARTICLE_ID, headline.id);
 		b.putString(CONTENT, headline.content);
 		b.putString(FEED_TITLE_TO_LOAD, feedTitle);
-		saveHeadlinesInFile(headlines);
-		// b.putParcelableArray(HEADLINES_TO_LOAD,
-		// headlines.toArray(new Headline[headlines.size()]));
+		b.putInt(FEED_ID_TO_LOAD, headline.feedId);
+		InternalStorageUtil.saveHeadlines(this, headlines, headline.feedId);
 		intent.putExtras(b);
 		startActivity(intent);
 		finish();
 	}
 
-	private void saveHeadlinesInFile(List<Headline> headlines) {
-		try {
-			FileOutputStream fos = TinyRSSAppActivity.this.openFileOutput(
-					FILE_WITH_HEADLINES, Context.MODE_PRIVATE);
-			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(headlines);
-			os.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void startHeadlinesActivity(Feed feed) {
-		Intent intent = new Intent(TinyRSSAppActivity.this,
-				HeadlinesActivity.class);
+		Intent intent = new Intent(this, HeadlinesActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
@@ -217,10 +140,24 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		finish();
 	}
 
+	public List<Headline> loadHeadlinesFromFile(int feedId) {
+		List<Headline> allHeadlines = InternalStorageUtil.getHeadlines(this,
+				feedId);
+		List<Headline> resultHeadlines = allHeadlines;
+		if (!StoredPreferencesTinyRSSApp.getShowAllPref(this)) {
+			resultHeadlines = new ArrayList<Headline>();
+			for (Headline headline : allHeadlines) {
+				if (headline.unread) {
+					resultHeadlines.add(headline);
+				}
+			}
+		}
+		return resultHeadlines;
+	}
+
 	public void showProgress(String title, String body) {
 		if (progressDialog == null) {
-			progressDialog = ProgressDialog.show(TinyRSSAppActivity.this,
-					title, body);
+			progressDialog = ProgressDialog.show(this, title, body);
 		}
 	}
 

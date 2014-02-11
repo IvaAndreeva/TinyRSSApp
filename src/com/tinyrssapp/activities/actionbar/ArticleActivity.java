@@ -1,13 +1,9 @@
 package com.tinyrssapp.activities.actionbar;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +11,6 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +25,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
+import com.tinyrssapp.menu.CommonMenu;
+import com.tinyrssapp.storage.InternalStorageUtil;
 
 /**
  * Created by iva on 2/8/14.
@@ -37,11 +34,13 @@ import com.tinyrssapp.entities.Headline;
 public class ArticleActivity extends TinyRSSAppActivity {
 	public static final String MARKED_AS_READ_STR = "Marked as read";
 	public static final String MARKED_AS_UNREAD_STR = "Marked as unread";
+	public static final String BLANK_PAGE = "about:blank";
 
 	private long articleId;
 	private String content;
 	private List<Headline> headlines;
 	private String feedTitle;
+	private int feedId;
 
 	public void initialize() {
 		Bundle b = getIntent().getExtras();
@@ -51,15 +50,10 @@ public class ArticleActivity extends TinyRSSAppActivity {
 			articleId = b.getLong(ARTICLE_ID);
 			content = b.getString(CONTENT);
 			feedTitle = b.getString(FEED_TITLE_TO_LOAD);
-			readHeadlinesFromFile();
-			// Parcelable[] headlinesBundle = b
-			// .getParcelableArray(HeadlinesActivity.HEADLINES_TO_LOAD);
-			// for (Parcelable headlineBundle : headlinesBundle) {
-			// if (headlineBundle instanceof Headline) {
-			// headlines.add((Headline) headlineBundle);
-			// }
-			// }
+			feedId = b.getInt(FEED_ID_TO_LOAD);
+			headlines = loadHeadlinesFromFile(feedId);
 		} else {
+			feedId = 0;
 			articleId = 0;
 			content = "";
 			headlines = new ArrayList<Headline>();
@@ -94,29 +88,6 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		loadArticle();
 	}
 
-	private void readHeadlinesFromFile() {
-		FileInputStream fis;
-		try {
-			fis = ArticleActivity.this.openFileInput(FILE_WITH_HEADLINES);
-
-			ObjectInputStream is = new ObjectInputStream(fis);
-			headlines = (List<Headline>) is.readObject();
-			is.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StreamCorruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public void onBackPressed() {
 		startHeadlinesActivity((new Feed()).setId(getCurrentArticle().feedId)
@@ -133,13 +104,14 @@ public class ArticleActivity extends TinyRSSAppActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (checkIsCommonMenuItemSelected(item)) {
+		if (CommonMenu.checkIsCommonMenuItemSelected(this, item)) {
 			return true;
 		}
 		switch (item.getItemId()) {
 		case R.id.article_action_toggle_unread:
 			Headline currArticle = getCurrentArticle();
 			currArticle.unread = !currArticle.unread;
+			InternalStorageUtil.saveHeadlines(this, headlines, feedId);
 
 			String msg = MARKED_AS_UNREAD_STR;
 			if (!currArticle.unread) {
@@ -148,7 +120,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 			markArticleFieldAsMode(
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
-			Toast.makeText(ArticleActivity.this, msg, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.article_action_toggle_starred:
 			markArticleFieldAsMode(
@@ -184,6 +156,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		markArticleFieldAsMode(
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE);
+		InternalStorageUtil.saveHeadlines(this, headlines, feedId);
 		loadWebView();
 
 	}
@@ -244,6 +217,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		showProgress("Loading article", "");
 		setTitle(getCurrentArticle().title);
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
+		webView.loadUrl(BLANK_PAGE);
 		webView.loadData(content, "text/html", "utf-8");
 		hideProgress();
 	}

@@ -1,10 +1,14 @@
 package com.tinyrssapp.activities;
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.Header;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,26 +21,15 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.activities.actionbar.FeedsActivity;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
-
-import org.apache.http.Header;
-import org.apache.http.entity.StringEntity;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
+import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
 
 public class LoginActivity extends Activity {
 	public static final String HOST_PROP = "host";
-	public static final String PREFS = "credentials";
-	public static final String PREFS_HOST = "host";
-	public static final String PREFS_USERNAME = "username";
-	public static final String PREFS_PASS = "pass";
 	public static final String AUTO_CONNECT = "auto-connect";
 
 	private EditText address;
 	private EditText username;
 	private EditText password;
-	private SharedPreferences savedPrefs;
 	private boolean autoConnect = true;
 
 	/**
@@ -125,19 +118,15 @@ public class LoginActivity extends Activity {
 										}
 
 										private void savePrefs() {
-											savedPrefs = getSharedPreferences(
-													PREFS, Context.MODE_PRIVATE);
-											Editor editor = savedPrefs.edit();
-											editor.putString(PREFS_HOST,
-													address.getText()
-															.toString());
-											editor.putString(PREFS_USERNAME,
-													username.getText()
-															.toString());
-											editor.putString(PREFS_PASS,
-													password.getText()
-															.toString());
-											editor.commit();
+											StoredPreferencesTinyRSSApp
+													.putUserPassHost(
+															LoginActivity.this,
+															username.getText()
+																	.toString(),
+															password.getText()
+																	.toString(),
+															address.getText()
+																	.toString());
 										}
 
 										@Override
@@ -176,14 +165,14 @@ public class LoginActivity extends Activity {
 	}
 
 	private void loadSavedPrefs() {
-		savedPrefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-		if (savedPrefs != null) {
-			address.setText(savedPrefs.getString(PREFS_HOST, ""));
-			username.setText(savedPrefs.getString(PREFS_USERNAME, ""));
-			password.setText(savedPrefs.getString(PREFS_PASS, ""));
-			if (autoConnect) {
-				clickConnectIfPossible();
-			}
+		address.setText(StoredPreferencesTinyRSSApp
+				.getHostPref(LoginActivity.this));
+		username.setText(StoredPreferencesTinyRSSApp
+				.getUsernamePref(LoginActivity.this));
+		password.setText(StoredPreferencesTinyRSSApp
+				.getPasswordPref(LoginActivity.this));
+		if (autoConnect) {
+			clickConnectIfPossible();
 		}
 	}
 
