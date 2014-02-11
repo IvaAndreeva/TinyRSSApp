@@ -1,5 +1,8 @@
 package com.tinyrssapp.activities.actionbar;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -29,6 +32,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public static final String HEADLINES_TO_LOAD = "headlines";
 	public static final String FEED_ID_TO_LOAD = "feedId";
 	public static final String FEED_TITLE_TO_LOAD = "feedTitle";
+	public static final String FILE_WITH_HEADLINES = "headlines";
 
 	private static final String SHOWING_UNREAD_MSG = "Showing only unread";
 	private static final String SHOWING_ALL_MSG = "Showing all";
@@ -179,11 +183,24 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putLong(ARTICLE_ID, headline.id);
 		b.putString(CONTENT, headline.content);
 		b.putString(FEED_TITLE_TO_LOAD, feedTitle);
-		b.putParcelableArray(HEADLINES_TO_LOAD,
-				headlines.toArray(new Headline[headlines.size()]));
+		saveHeadlinesInFile(headlines);
+		// b.putParcelableArray(HEADLINES_TO_LOAD,
+		// headlines.toArray(new Headline[headlines.size()]));
 		intent.putExtras(b);
 		startActivity(intent);
 		finish();
+	}
+
+	private void saveHeadlinesInFile(List<Headline> headlines) {
+		try {
+			FileOutputStream fos = TinyRSSAppActivity.this.openFileOutput(
+					FILE_WITH_HEADLINES, Context.MODE_PRIVATE);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			os.writeObject(headlines);
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void startHeadlinesActivity(Feed feed) {
@@ -208,7 +225,13 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	}
 
 	public void hideProgress() {
-		progressDialog.cancel();
+		if (progressDialog != null) {
+			progressDialog.cancel();
+		}
+		progressDialog = null;
+	}
+
+	public void progressNull() {
 		progressDialog = null;
 	}
 

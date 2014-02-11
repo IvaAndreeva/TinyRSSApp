@@ -1,12 +1,18 @@
 package com.tinyrssapp.entities;
 
+import java.io.Serializable;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
  * Created by iva on 2/7/14.
  */
-public class Headline implements Parcelable {
+public class Headline implements Parcelable, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5144624830514635974L;
 	public long id;
 	public boolean unread;
 	public boolean marked;
@@ -20,7 +26,7 @@ public class Headline implements Parcelable {
 
 	public Headline() {
 	}
-	
+
 	public Headline setId(long id) {
 		this.id = id;
 		return this;
@@ -104,7 +110,7 @@ public class Headline implements Parcelable {
 			return new Headline[size];
 		}
 	};
-	
+
 	private Headline(Parcel in) {
 		id = in.readLong();
 		unread = in.readByte() != 0;
@@ -116,5 +122,5 @@ public class Headline implements Parcelable {
 		link = in.readString();
 		feedId = in.readInt();
 		content = in.readString();
-    }
+	}
 }

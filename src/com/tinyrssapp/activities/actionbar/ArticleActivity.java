@@ -1,5 +1,10 @@
 package com.tinyrssapp.activities.actionbar;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +51,14 @@ public class ArticleActivity extends TinyRSSAppActivity {
 			articleId = b.getLong(ARTICLE_ID);
 			content = b.getString(CONTENT);
 			feedTitle = b.getString(FEED_TITLE_TO_LOAD);
-			headlines = new ArrayList<Headline>();
-			Parcelable[] headlinesBundle = b
-					.getParcelableArray(HeadlinesActivity.HEADLINES_TO_LOAD);
-			for (Parcelable headlineBundle : headlinesBundle) {
-				if (headlineBundle instanceof Headline) {
-					headlines.add((Headline) headlineBundle);
-				}
-			}
+			readHeadlinesFromFile();
+			// Parcelable[] headlinesBundle = b
+			// .getParcelableArray(HeadlinesActivity.HEADLINES_TO_LOAD);
+			// for (Parcelable headlineBundle : headlinesBundle) {
+			// if (headlineBundle instanceof Headline) {
+			// headlines.add((Headline) headlineBundle);
+			// }
+			// }
 		} else {
 			articleId = 0;
 			content = "";
@@ -87,6 +92,29 @@ public class ArticleActivity extends TinyRSSAppActivity {
 					}
 				});
 		loadArticle();
+	}
+
+	private void readHeadlinesFromFile() {
+		FileInputStream fis;
+		try {
+			fis = ArticleActivity.this.openFileInput(FILE_WITH_HEADLINES);
+
+			ObjectInputStream is = new ObjectInputStream(fis);
+			headlines = (List<Headline>) is.readObject();
+			is.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StreamCorruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -181,7 +209,6 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	}
 
 	private void markArticleFieldAsMode(String fieldValue, String modeValue) {
-		showProgress("Loading article", "");
 		AsyncHttpClient client = new AsyncHttpClient();
 		try {
 			JSONObject jsonParams = new JSONObject();
@@ -203,7 +230,6 @@ public class ArticleActivity extends TinyRSSAppActivity {
 					"application/json", new JsonHttpResponseHandler() {
 						@Override
 						public void onFinish() {
-							hideProgress();
 							super.onFinish();
 						}
 					});
@@ -215,9 +241,11 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	}
 
 	private void loadWebView() {
+		showProgress("Loading article", "");
 		setTitle(getCurrentArticle().title);
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
 		webView.loadData(content, "text/html", "utf-8");
+		hideProgress();
 	}
 
 	@Override

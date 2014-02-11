@@ -73,8 +73,8 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		}
 	}
 
-	private void markFeedAsRead(int feedId, String host, String sessionId,
-			Context context) {
+	private void markFeedAsRead(int feedId, final String host,
+			final String sessionId, Context context) {
 		showProgress("Marking feed as read...", "");
 		AsyncHttpClient client = new AsyncHttpClient();
 		JSONObject jsonParams = new JSONObject();
@@ -95,7 +95,8 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 					new JsonHttpResponseHandler() {
 						@Override
 						public void onFinish() {
-							hideProgress();
+							progressNull();
+							startAllFeedsActivity(host, sessionId);
 							super.onFinish();
 						}
 					});
@@ -139,7 +140,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			StringEntity entity = new StringEntity(jsonParams.toString());
 			client.post(getApplicationContext(), host, entity,
 					"application/json", new JsonHttpResponseHandler() {
-
+//TODO error handling
 						@Override
 						public void onFinish() {
 							hideProgress();
