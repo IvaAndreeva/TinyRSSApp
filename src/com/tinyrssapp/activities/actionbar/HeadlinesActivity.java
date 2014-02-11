@@ -26,6 +26,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
+import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.storage.InternalStorageUtil;
 import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
@@ -89,7 +90,6 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			return true;
 		case R.id.list_action_mark_all_as_read:
 			markFeedAsRead(feedId, host, sessionId, getApplicationContext());
-			startAllFeedsActivity(host, sessionId);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -137,7 +137,15 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			StringEntity entity = new StringEntity(jsonParams.toString());
 			client.post(getApplicationContext(), host, entity,
 					"application/json", new JsonHttpResponseHandler() {
-						// TODO error handling
+
+						@Override
+						public void onFailure(Throwable e,
+								JSONObject errorResponse) {
+							ErrorAlertDialog.showError(HeadlinesActivity.this,
+									R.string.error_refresh_headlines);
+							super.onFailure(e, errorResponse);
+						}
+
 						@Override
 						public void onFinish() {
 							hideProgress();
@@ -156,8 +164,10 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 									try {
 										if (params.length < 1
 												|| !(params[0] instanceof JSONObject)) {
-											// TODO ERROR MSG
-											return null;
+											ErrorAlertDialog
+													.showError(
+															HeadlinesActivity.this,
+															R.string.error_something_went_wrong);
 										}
 										StoredPreferencesTinyRSSApp
 												.putLastHeadlinesRefreshTime(
@@ -211,9 +221,6 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 								@Override
 								protected void onPostExecute(Void aVoid) {
 									super.onPostExecute(aVoid);
-									InternalStorageUtil.saveHeadlines(
-											HeadlinesActivity.this, headlines,
-											feedId);
 									showHeadlines(headlines);
 								}
 							};
@@ -231,10 +238,18 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		if (menuLoadingShouldWait) {
 			inflateMenu();
 		}
-		feed.unread = headlines.size();
-		InternalStorageUtil.saveFeeds(HeadlinesActivity.this, feeds);
+		feed.unread = 0;
+		for (Headline headline : headlines) {
+			if (headline.unread) {
+				feed.unread++;
+			}
+		}
+		updateHeadlinesAndFeedsFiles(headlines);
 		if (headlines.size() == 0) {
 			headlines.add((new Headline()).setTitle(NO_HEADLINES_MSG));
+			listView.setEnabled(false);
+		} else {
+			listView.setEnabled(true);
 		}
 		ArrayAdapter<Headline> headlinesAdapter = new ArrayAdapter<Headline>(
 				this, android.R.layout.simple_list_item_1, headlines);
@@ -252,7 +267,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		headlinesAdapter.notifyDataSetChanged();
 	}
 
-	private void markFeedAsRead(int feedId, final String host,
+	private void markFeedAsRead(final int feedId, final String host,
 			final String sessionId, Context context) {
 		showProgress("Marking feed as read...", "");
 		AsyncHttpClient client = new AsyncHttpClient();
@@ -272,12 +287,21 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			StringEntity entity = new StringEntity(jsonParams.toString());
 			client.post(context, host, entity, "application/json",
 					new JsonHttpResponseHandler() {
+
+						@Override
+						public void onFailure(Throwable e,
+								JSONObject errorResponse) {
+							ErrorAlertDialog.showError(HeadlinesActivity.this,
+									R.string.error_mark_feed_as_read);
+							super.onFailure(e, errorResponse);
+						}
+
 						@Override
 						public void onFinish() {
+							hideProgress();
 							progressNull();
 							feed.unread = 0;
-							InternalStorageUtil.saveFeeds(
-									HeadlinesActivity.this, feeds);
+							updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
 							startAllFeedsActivity(host, sessionId);
 							super.onFinish();
 						}
@@ -287,6 +311,20 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	protected List<Headline> markAllHeadlinesAsRead() {
+		List<Headline> headlines = loadHeadlinesFromFile(feedId);
+		for (Headline headline : headlines) {
+			headline.unread = false;
+		}
+		return headlines;
+	}
+
+	private void updateHeadlinesAndFeedsFiles(List<Headline> headlines) {
+		InternalStorageUtil.saveHeadlines(HeadlinesActivity.this, headlines,
+				feedId);
+		InternalStorageUtil.saveFeeds(HeadlinesActivity.this, feeds);
 	}
 
 	@Override

@@ -14,13 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.activities.actionbar.FeedsActivity;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
+import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
 
 public class LoginActivity extends Activity {
@@ -50,7 +50,6 @@ public class LoginActivity extends Activity {
 		if (b != null) {
 			autoConnect = b.getBoolean(AUTO_CONNECT);
 		}
-
 		address = (EditText) findViewById(R.id.adressText);
 		username = (EditText) findViewById(R.id.usernameText);
 		password = (EditText) findViewById(R.id.passwordText);
@@ -103,10 +102,8 @@ public class LoginActivity extends Activity {
 											try {
 												if (response
 														.getInt(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP) == TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_FAIL_VALUE) {
-													showErrorMsg(R.string.login_error_msg);
+													showError();
 												} else {
-													((TextView) findViewById(R.id.errorMsg))
-															.setVisibility(View.INVISIBLE);
 													connectButton
 															.setText(R.string.login_success_msg);
 													String sessionId = response
@@ -127,6 +124,15 @@ public class LoginActivity extends Activity {
 											}
 										}
 
+										private void showError() {
+											ErrorAlertDialog.showError(
+													LoginActivity.this,
+													R.string.error_login);
+											connectButton
+													.setText(R.string.login_connect_button_text);
+											connectButton.setEnabled(true);
+										}
+
 										private void savePrefs() {
 											StoredPreferencesTinyRSSApp
 													.putUserPassHost(
@@ -139,31 +145,10 @@ public class LoginActivity extends Activity {
 																	.toString());
 										}
 
-										@Override
-										public void onFailure(
-												String responseBody,
-												Throwable error) {
-											showErrorMsg(R.string.login_error_conn_failed_msg);
-										};
-
 										public void onFailure(Throwable e,
 												JSONObject errorResponse) {
-											showErrorMsg(R.string.login_error_conn_failed_msg);
+											showError();
 										};
-
-										private void showErrorMsg() {
-											((TextView) findViewById(R.id.errorMsg))
-													.setVisibility(View.VISIBLE);
-											connectButton
-													.setText(R.string.login_connect_button_text);
-											connectButton.setEnabled(true);
-										}
-
-										private void showErrorMsg(int msg) {
-											((TextView) findViewById(R.id.errorMsg))
-													.setText(msg);
-											showErrorMsg();
-										}
 									});
 						} catch (JSONException e) {
 							e.printStackTrace();

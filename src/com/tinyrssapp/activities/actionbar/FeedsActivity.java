@@ -22,6 +22,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
+import com.tinyrssapp.entities.FeedAdapter;
+import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.storage.InternalStorageUtil;
 import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
@@ -33,7 +35,6 @@ public class FeedsActivity extends TinyRSSAppActivity {
 	public static final String ARTICLE_ID = "articleId";
 	public static final String CONTENT = "content";
 	public static final String NO_FEEDS_MSG = "There are no available feeds in here";
-	public static final String NO_HEADLINES_MSG = "There are no available headlines in here";
 	public static final int MINUTES_WITHOUT_FEEDS_REFRESH = 10;
 	private static final long MILISECS_WITHOUT_FEEDS_REFRESH = MINUTES_WITHOUT_FEEDS_REFRESH * 60 * 1000;
 
@@ -108,6 +109,16 @@ public class FeedsActivity extends TinyRSSAppActivity {
 			StringEntity entity = new StringEntity(jsonParams.toString());
 			client.post(getApplicationContext(), host, entity,
 					"application/json", new JsonHttpResponseHandler() {
+
+						@Override
+						public void onFailure(Throwable e,
+								JSONObject errorResponse) {
+
+							ErrorAlertDialog.showError(FeedsActivity.this,
+									R.string.error_refresh_feeds);
+							super.onFailure(e, errorResponse);
+						}
+
 						@Override
 						public void onFinish() {
 							hideProgress();
@@ -189,9 +200,13 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		}
 		if (feeds.size() == 0) {
 			feeds.add((new Feed()).setTitle(NO_FEEDS_MSG).setUndread(0));
+			listView.setEnabled(false);
+		} else {
+			listView.setEnabled(true);
 		}
-		ArrayAdapter<Feed> feedsAdapter = new ArrayAdapter<Feed>(this,
-				android.R.layout.simple_list_item_1, feeds);
+		ArrayAdapter<Feed> feedsAdapter = new FeedAdapter(this,
+				R.layout.feed_layout, R.id.feed_data, R.id.feed_unread_count,
+				feeds);
 		listView.setAdapter(feedsAdapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override

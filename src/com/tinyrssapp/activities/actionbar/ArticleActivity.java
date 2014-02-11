@@ -25,6 +25,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
+import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.storage.InternalStorageUtil;
 
@@ -152,7 +153,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 
 	private void loadArticle() {
 		Headline currArticle = getCurrentArticle();
-		currArticle.unread = !currArticle.unread;
+		currArticle.unread = false;
 		markArticleFieldAsMode(
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE);
@@ -201,6 +202,15 @@ public class ArticleActivity extends TinyRSSAppActivity {
 			StringEntity entity = new StringEntity(jsonParams.toString());
 			client.post(getApplicationContext(), host, entity,
 					"application/json", new JsonHttpResponseHandler() {
+
+						@Override
+						public void onFailure(Throwable e,
+								JSONObject errorResponse) {
+							ErrorAlertDialog.showError(ArticleActivity.this,
+									R.string.error_mark_article);
+							super.onFailure(e, errorResponse);
+						}
+
 						@Override
 						public void onFinish() {
 							super.onFinish();

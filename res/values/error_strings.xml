@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="error_mark_article">Marking of article failed :(</string>
+    <string name="error_refresh_feeds">Refreshing feeds failed :(</string>
+    <string name="error_refresh_headlines">Refreshing headlines failed :(</string>
+    <string name="error_mark_feed_as_read">Marking feed as read failed :(</string>
+    <string name="error_login">Login failed, try again :(</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
+    
+    <string name="error_title">Ooops</string>
+    <string name="error_button">okay…</string>
+
+</resources>

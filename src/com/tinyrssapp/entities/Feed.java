@@ -61,6 +61,6 @@ public class Feed implements Serializable {
 
 	@Override
 	public String toString() {
-		return unread > 0 ? (title + "  -" + unread + "-") : title;
+		return title;
 	}
 }

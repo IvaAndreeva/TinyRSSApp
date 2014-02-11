@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="bigger_msg_size">20dp</dimen>
+    <dimen name="big_msg_size">20dp</dimen>
+    <dimen name="bigger_msg_size">27dp</dimen>
     <dimen name="top_margin">20dp</dimen>
     <dimen name="bottom_margin">20dp</dimen>
     <dimen name="left_margin">20dp</dimen>

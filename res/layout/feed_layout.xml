@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal" >
+
+    <TextView
+        android:id="@+id/feed_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_margin"
+        android:layout_marginRight="@dimen/right_margin"
+        android:layout_marginTop="@dimen/top_margin"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/big_msg_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/feed_unread_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_margin"
+        android:layout_marginRight="@dimen/right_margin"
+        android:layout_marginTop="@dimen/top_margin"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/bigger_msg_size"
+        android:textStyle="bold"
+        android:width="@dimen/small_text_view_width"
+        android:textColor="?attr/unread_feeds_color"/>
+
+</LinearLayout>
