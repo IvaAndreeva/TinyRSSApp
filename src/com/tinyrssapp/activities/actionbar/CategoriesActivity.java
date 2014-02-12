@@ -108,10 +108,10 @@ public class CategoriesActivity extends TinyRSSAppActivity {
 						sessionId, position);
 				Feed selectedCategory = (Feed) parent.getAdapter().getItem(
 						position);
-				PrefsSettings.putCurrntCategoryId(CategoriesActivity.this,
+				PrefsSettings.putCurrentCategoryId(CategoriesActivity.this,
 						selectedCategory.id);
 				if (PrefsSettings.getCategoryMode(CategoriesActivity.this) == PrefsSettings.CATEGORY_SHOW_FEEDS_MODE) {
-					startAllFeedsActivity(selectedCategory.id);
+					startAllFeedsActivity();
 				} else {
 					startHeadlinesActivity(selectedCategory);
 				}
@@ -225,11 +225,4 @@ public class CategoriesActivity extends TinyRSSAppActivity {
 	public void onToggleShowUnread() {
 		refreshCategories();
 	}
-
-	@Override
-	public void onHideCategories() {
-		super.onHideCategories();
-		startAllFeedsActivity();
-	}
-
 }

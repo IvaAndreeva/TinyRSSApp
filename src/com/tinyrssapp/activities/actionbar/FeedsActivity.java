@@ -37,7 +37,6 @@ import com.tinyrssapp.storage.prefs.PrefsUpdater;
 public class FeedsActivity extends TinyRSSAppActivity {
 	public static final String ARTICLE_ID = "articleId";
 	public static final String CONTENT = "content";
-	public static final String CAT_ID = "catId";
 	public static final String NO_FEEDS_MSG = "There are no available feeds in here";
 	public static final int MINUTES_WITHOUT_FEEDS_REFRESH = 10;
 	private static final long MILISECS_WITHOUT_FEEDS_REFRESH = MINUTES_WITHOUT_FEEDS_REFRESH * 60 * 1000;
@@ -57,7 +56,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		Date now = new Date();
 		long lastFeedUpdate = PrefsUpdater.getLastFeedsRefreshTime(this);
 		if (now.getTime() - lastFeedUpdate >= MILISECS_WITHOUT_FEEDS_REFRESH
-				|| !StorageFeedsUtil.hasInFile(this, sessionId)
+				|| !StorageFeedsUtil.hasInFile(this, sessionId, category.id)
 				|| categoryChanged) {
 			menuLoadingShouldWait = true;
 			refreshFeeds();
@@ -68,7 +67,8 @@ public class FeedsActivity extends TinyRSSAppActivity {
 	}
 
 	private List<Feed> loadFeedsFromFile() {
-		List<Feed> allFeeds = StorageFeedsUtil.get(this, sessionId);
+		List<Feed> allFeeds = StorageFeedsUtil
+				.get(this, sessionId, category.id);
 		List<Feed> resultFeeds = allFeeds;
 		if (!PrefsSettings.getShowAllPref(this)) {
 			resultFeeds = new ArrayList<Feed>();
@@ -99,7 +99,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 				return category;
 			}
 		}
-		return null;
+		return new Feed().setId(TinyTinySpecificConstants.FRESH_FEED_ID);
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 
 	private void refreshFeeds() {
 		showProgress("Loading feeds...", "");
-		StorageFeedsUtil.savePos(this, sessionId, 0);
+		StorageFeedsUtil.savePos(this, sessionId, 0, category.id);
 		ResponseHandler handler = getFeedsResponseHandler();
 		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
 				.paramsGetFeeds(sessionId, showAll,
@@ -135,11 +135,13 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		} else {
 			listView.setEnabled(true);
 		}
-		category.unread = 0;
-		for (Feed feed : feeds) {
-			category.unread += feed.unread;
+		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_MODE) {
+			category.unread = 0;
+			for (Feed feed : feeds) {
+				category.unread += feed.unread;
+			}
+			StorageCategoriesUtil.save(this, sessionId, categories);
 		}
-		StorageCategoriesUtil.save(this, sessionId, categories);
 		ArrayAdapter<Feed> feedsAdapter = new CustomAdapter<Feed>(this,
 				R.layout.feed_layout, R.id.feed_data, R.id.feed_unread_count,
 				feeds);
@@ -149,13 +151,14 @@ public class FeedsActivity extends TinyRSSAppActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				StorageFeedsUtil.savePos(FeedsActivity.this, sessionId,
-						position);
+						position, category.id);
 				startHeadlinesActivity((Feed) parent.getAdapter().getItem(
 						position));
 			}
 		});
-		if (StorageFeedsUtil.hasPosInFile(this, sessionId)) {
-			listView.setSelection(StorageFeedsUtil.getPos(this, sessionId));
+		if (StorageFeedsUtil.hasPosInFile(this, sessionId, category.id)) {
+			listView.setSelection(StorageFeedsUtil.getPos(this, sessionId,
+					category.id));
 		}
 		feedsAdapter.notifyDataSetChanged();
 	}
@@ -215,7 +218,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
 						StorageFeedsUtil.save(FeedsActivity.this, sessionId,
-								feeds);
+								feeds, category.id);
 						showFeeds(feeds);
 					}
 				};

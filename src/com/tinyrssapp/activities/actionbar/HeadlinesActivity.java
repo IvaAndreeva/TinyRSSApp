@@ -70,7 +70,8 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			feeds = StorageCategoriesUtil.get(this, sessionId);
 		} else {
-			feeds = StorageFeedsUtil.get(this, sessionId);
+			feeds = StorageFeedsUtil.get(this, sessionId,
+					PrefsSettings.getCurrntCategoryId(this));
 		}
 		for (Feed feed : feeds) {
 			if (feed.id == feedId) {
@@ -262,8 +263,9 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	private void markFeedAsRead(final int feedId, final String host,
 			final String sessionId, Context context) {
 		showProgress("Marking feed as read...", "");
-		RequestBuilder.makeRequest(this, host,
-				RequestParamsBuilder.paramsMarkFeedAsRead(sessionId, feedId),
+		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
+		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+				.paramsMarkFeedAsRead(sessionId, feedId, parentIsCat),
 				getMarkFeedAsReadHandler());
 	}
 
@@ -281,7 +283,11 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 				progressNull();
 				feed.unread = 0;
 				updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
-				startAllFeedsActivity();
+				if (PrefsSettings.getCategoryMode(HeadlinesActivity.this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+					startCategoriesActivity();
+				} else {
+					startAllFeedsActivity();
+				}
 			}
 
 			@Override
@@ -302,7 +308,13 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	private void updateHeadlinesAndFeedsFiles(List<Headline> headlines) {
 		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
-		StorageFeedsUtil.save(HeadlinesActivity.this, sessionId, feeds);
+		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			StorageFeedsUtil.save(HeadlinesActivity.this, sessionId, feeds,
+					PrefsSettings.getCurrntCategoryId(this));
+		} else {
+			StorageCategoriesUtil.save(this, sessionId, feeds);
+			PrefsUpdater.invalidateFeedsRefreshTime(this);
+		}
 	}
 
 	@Override

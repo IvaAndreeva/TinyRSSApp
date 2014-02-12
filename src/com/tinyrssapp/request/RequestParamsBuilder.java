@@ -122,7 +122,8 @@ public class RequestParamsBuilder {
 		return null;
 	}
 
-	public static StringEntity paramsMarkFeedAsRead(String sessionId, int feedId) {
+	public static StringEntity paramsMarkFeedAsRead(String sessionId,
+			int feedId, boolean isCat) {
 		try {
 			JSONObject jsonParams = new JSONObject();
 			jsonParams.put(
@@ -133,6 +134,8 @@ public class RequestParamsBuilder {
 							TinyTinySpecificConstants.REQUEST_MARK_FEED_AS_READ_OP_VALUE);
 			jsonParams.put(TinyTinySpecificConstants.REQUEST_SESSION_ID_PROP,
 					sessionId);
+			jsonParams
+					.put(TinyTinySpecificConstants.REQUEST_IS_CAT_PROP, isCat);
 			jsonParams
 					.put(TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_PROP,
 							TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_UNREAD_VALUE);

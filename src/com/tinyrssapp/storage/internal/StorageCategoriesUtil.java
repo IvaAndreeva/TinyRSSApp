@@ -46,6 +46,9 @@ public class StorageCategoriesUtil extends InternalStorageUtil {
 
 	@SuppressWarnings("unchecked")
 	public static List<Feed> get(TinyRSSAppActivity context, String sessionId) {
+		if (!hasInFile(context, sessionId)) {
+			return new ArrayList<Feed>();
+		}
 		Object catsObj = InternalStorageUtil.readObjFromFile(context,
 				getFileNameCategories(sessionId));
 		List<Feed> categories = new ArrayList<Feed>();

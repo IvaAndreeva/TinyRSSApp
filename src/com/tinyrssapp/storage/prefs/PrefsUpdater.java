@@ -36,4 +36,22 @@ public class PrefsUpdater extends StoredPreferencesTinyRSSApp {
 	public static void putLastHeadlinesRefreshTime(Context context, Date date) {
 		putDateInSavedPrefs(context, LAST_TIME_HEADLINES_UPDATED, date);
 	}
+
+	public static void invalidateCategoriesRefreshTime(Context context) {
+		putLastCategoriesRefreshTime(context, new Date(0));
+	}
+
+	public static void invalidateFeedsRefreshTime(Context context) {
+		putLastFeedsRefreshTime(context, new Date(0));
+	}
+
+	public static void invalidateHeadlinesRefreshTime(Context context) {
+		putLastHeadlinesRefreshTime(context, new Date(0));
+	}
+
+	public static void invalidateRefreshTimes(Context context) {
+		invalidateCategoriesRefreshTime(context);
+		invalidateFeedsRefreshTime(context);
+		invalidateHeadlinesRefreshTime(context);
+	}
 }

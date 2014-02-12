@@ -27,7 +27,7 @@ public class PrefsSettings extends StoredPreferencesTinyRSSApp {
 		return getIntFromSavedPrefs(context, CURRENT_CATEGORY_ID);
 	}
 
-	public static void putCurrntCategoryId(Context context, int categoryId) {
+	public static void putCurrentCategoryId(Context context, int categoryId) {
 		putIntInSavedPrefs(context, CURRENT_CATEGORY_ID, categoryId);
 	}
 

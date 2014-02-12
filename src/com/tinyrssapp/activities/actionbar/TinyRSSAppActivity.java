@@ -20,6 +20,7 @@ import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
 import com.tinyrssapp.storage.internal.StorageHeadlinesUtil;
 import com.tinyrssapp.storage.prefs.PrefsSettings;
+import com.tinyrssapp.storage.prefs.PrefsUpdater;
 
 public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public static final String ARTICLE_ID = "articleId";
@@ -108,13 +109,16 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public void onShowCategories() {
 		PrefsSettings.putCategoryMode(this,
 				PrefsSettings.CATEGORY_NO_FEEDS_MODE);
+		PrefsUpdater.invalidateRefreshTimes(this);
 		startCategoriesActivity();
 	}
 
 	public void onHideCategories() {
 		PrefsSettings.putCategoryMode(this, PrefsSettings.CATEGORY_NO_MODE);
-		PrefsSettings.putCurrntCategoryId(this,
+		PrefsSettings.putCurrentCategoryId(this,
 				TinyTinySpecificConstants.FRESH_FEED_ID);
+		PrefsUpdater.invalidateRefreshTimes(this);
+		startAllFeedsActivity();
 	}
 
 	public void startCategoriesActivity() {
@@ -131,15 +135,6 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
 				sessionId);
 		startActivity(b, _class);
-	}
-
-	public void startAllFeedsActivity(int catId) {
-		Bundle b = new Bundle();
-		b.putString(LoginActivity.HOST_PROP, host);
-		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
-				sessionId);
-		b.putInt(FeedsActivity.CAT_ID, catId);
-		startActivity(b, FeedsActivity.class);
 	}
 
 	public void startActivity(Bundle b,
