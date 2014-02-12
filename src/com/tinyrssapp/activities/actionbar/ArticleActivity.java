@@ -209,7 +209,6 @@ public class ArticleActivity extends TinyRSSAppActivity {
 
 	private void loadWebView() {
 		showProgress("Loading article", "");
-		setTitle(getCurrentArticle().title);
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
 		webView.loadUrl(BLANK_PAGE);
 		// use loadDataWithBaseURL as workaround for webview bug:

@@ -137,7 +137,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		if (menuLoadingShouldWait) {
 			inflateMenu();
 		}
-		setTitle(feed.title);
+		setTitle("");
 		feed.unread = 0;
 		for (Headline headline : headlines) {
 			if (headline.unread) {
@@ -262,7 +262,14 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	private void markFeedAsRead(final int feedId, final String host,
 			final String sessionId, Context context) {
-		showProgress("Marking feed as read...", "");
+		// showProgress("Marking feed as read...", "");
+		feed.unread = 0;
+		updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
+		if (PrefsSettings.getCategoryMode(HeadlinesActivity.this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			startCategoriesActivity();
+		} else {
+			startAllFeedsActivity();
+		}
 		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
 		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
 				.paramsMarkFeedAsRead(sessionId, feedId, parentIsCat),
@@ -281,13 +288,14 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			public void onFinish() {
 				hideProgress();
 				progressNull();
-				feed.unread = 0;
-				updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
-				if (PrefsSettings.getCategoryMode(HeadlinesActivity.this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
-					startCategoriesActivity();
-				} else {
-					startAllFeedsActivity();
-				}
+				// feed.unread = 0;
+				// updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
+				// if (PrefsSettings.getCategoryMode(HeadlinesActivity.this) ==
+				// PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+				// startCategoriesActivity();
+				// } else {
+				// startAllFeedsActivity();
+				// }
 			}
 
 			@Override
