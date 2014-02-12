@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -210,11 +211,28 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	private void loadWebView() {
 		showProgress("Loading article", "");
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
+		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl(BLANK_PAGE);
+		injectHtml();
 		// use loadDataWithBaseURL as workaround for webview bug:
 		// https://code.google.com/p/android/issues/detail?id=1733
 		webView.loadDataWithBaseURL(null, content, "text/html", "UTF-8", null);
 		hideProgress();
+	}
+
+	private void injectHtml() {
+		content = content.replaceAll("^<html><body>", "");
+		content = content.replaceAll("</body>\\s*</html>$", "");
+		String headlineLink = TextUtils.replace(
+				getString(R.string.tpl_article_title),
+				new String[] { "{{link}}", "{{title}}" },
+				new String[] { getCurrentArticle().link,
+						TextUtils.htmlEncode(getCurrentArticle().title) })
+				.toString();
+		content = "<html><head>" + getString(R.string.tpl_article_style)
+				+ "</head><body><div id='ttrss-article-container'>"
+				+ headlineLink + content + "</div>"
+				+ getString(R.string.tpl_article_script) + "</body></html>";
 	}
 
 	@Override

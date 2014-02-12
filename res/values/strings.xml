@@ -11,5 +11,28 @@
     <string name="switch_theme_msg">Switch theme</string>
     <string name="switch_to_dark_theme_msg">Go dark</string>
     <string name="switch_to_light_theme_msg">Go light</string>
+    <string name="tpl_article_title"><![CDATA[
+        <h1 class="article-title"><a href="{{link}}">{{title}}</a></h1>
+    ]]></string>
+    <string name="tpl_article_style"><![CDATA[
+        <style>
+        	.article-title {
+        		border: 1px solid;
+        		padding: 4px;
+        		border-radius: 4px;
+        		-webkit-border-radius: 4px;
+        		font-size: 16pt;
+        	}
+        	.article-title a {
+        		text-decoration: none;
+        		color: #000;
+        	}
+        </style>
+    ]]></string>
+    <string name="tpl_article_script"><![CDATA[
+        <script>
+        </script>
+    ]]></string>
+    
 
 </resources>
