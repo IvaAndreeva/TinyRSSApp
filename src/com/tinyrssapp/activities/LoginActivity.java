@@ -57,6 +57,7 @@ public class LoginActivity extends Activity {
 		long lastFeedUpdate = PrefsUpdater.getLastCleanedTime(this);
 		if (now.getTime() - lastFeedUpdate >= MILISECS_WITHOUT_FEEDS_CLEAN) {
 			InternalStorageUtil.clearFiles(this, sessionId);
+			PrefsUpdater.putLastCleanedTime(this, new Date());
 		}
 	}
 
