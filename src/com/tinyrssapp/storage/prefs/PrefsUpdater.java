@@ -8,9 +8,14 @@ public class PrefsUpdater extends StoredPreferencesTinyRSSApp {
 	public static final String LAST_TIME_CATEGORIES_UPDATED = "feedsUpdated";
 	public static final String LAST_TIME_FEEDS_UPDATED = "feedsUpdated";
 	public static final String LAST_TIME_HEADLINES_UPDATED = "headlinesUpdated";
+	public static final String LAST_TIME_CLEANED = "lastCleaned";
 
 	static {
 		PREFS = "updater";
+	}
+
+	public static long getLastCleanedTime(Context context) {
+		return getDateFromSavedPrefs(context, LAST_TIME_CLEANED);
 	}
 
 	public static long getLastCategoriesRefreshTime(Context context) {
@@ -23,6 +28,10 @@ public class PrefsUpdater extends StoredPreferencesTinyRSSApp {
 
 	public static long getLastHeadlinesRefreshTime(Context context) {
 		return getDateFromSavedPrefs(context, LAST_TIME_HEADLINES_UPDATED);
+	}
+
+	public static void putLastCleanedTime(Context context, Date date) {
+		putDateInSavedPrefs(context, LAST_TIME_CLEANED, date);
 	}
 
 	public static void putLastCategoriesRefreshTime(Context context, Date date) {

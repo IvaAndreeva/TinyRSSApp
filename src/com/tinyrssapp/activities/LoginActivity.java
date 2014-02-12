@@ -1,5 +1,7 @@
 package com.tinyrssapp.activities;
 
+import java.util.Date;
+
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,12 +23,16 @@ import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.request.RequestBuilder;
 import com.tinyrssapp.request.RequestParamsBuilder;
 import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.internal.InternalStorageUtil;
 import com.tinyrssapp.storage.prefs.PrefsCredentials;
 import com.tinyrssapp.storage.prefs.PrefsSettings;
+import com.tinyrssapp.storage.prefs.PrefsUpdater;
 
 public class LoginActivity extends Activity {
 	public static final String HOST_PROP = "host";
 	public static final String AUTO_CONNECT = "auto-connect";
+	public static final int MINUTES_WITHOUT_FEEDS_CLEAN = 120;
+	private static final long MILISECS_WITHOUT_FEEDS_CLEAN = MINUTES_WITHOUT_FEEDS_CLEAN * 60 * 1000;
 
 	private EditText address;
 	private EditText username;
@@ -44,6 +50,14 @@ public class LoginActivity extends Activity {
 
 		initialize();
 		loadSavedPrefs();
+	}
+
+	private void checkForCleaned(String sessionId) {
+		Date now = new Date();
+		long lastFeedUpdate = PrefsUpdater.getLastCleanedTime(this);
+		if (now.getTime() - lastFeedUpdate >= MILISECS_WITHOUT_FEEDS_CLEAN) {
+			InternalStorageUtil.clearFiles(this, sessionId);
+		}
 	}
 
 	private void initialize() {
@@ -70,6 +84,7 @@ public class LoginActivity extends Activity {
 				.getText().toString());
 		boolean saveCredentials = ((CheckBox) findViewById(R.id.saveCredentialsCheck))
 				.isChecked();
+		PrefsUpdater.invalidateRefreshTimes(this);
 		ResponseHandler handler = getLoginResponseHandler(saveCredentials,
 				username.getText().toString(), password.getText().toString(),
 				host, progressDialog);
@@ -115,6 +130,7 @@ public class LoginActivity extends Activity {
 										TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
 								.getString(
 										TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP);
+						checkForCleaned(sessionId);
 						if (saveCredentials) {
 							PrefsCredentials.putUserPassHost(
 									LoginActivity.this, username, password,

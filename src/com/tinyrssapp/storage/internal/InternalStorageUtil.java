@@ -13,6 +13,16 @@ import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
 
 public class InternalStorageUtil {
 
+	public static void clearFiles(Context context, String currSessionId) {
+		if (context.getFilesDir().listFiles() != null) {
+			for (File f : context.getFilesDir().listFiles()) {
+				if (!f.getName().contains(currSessionId)) {
+					f.delete();
+				}
+			}
+		}
+	}
+
 	protected static void saveObjInFile(TinyRSSAppActivity context,
 			String fileName, Object obj) {
 		try {
