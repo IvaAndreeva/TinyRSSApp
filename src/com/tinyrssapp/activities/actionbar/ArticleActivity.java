@@ -228,7 +228,9 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		setTitle(getCurrentArticle().title);
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
 		webView.loadUrl(BLANK_PAGE);
-		webView.loadData(content, "text/html", "utf-8");
+		// use loadDataWithBaseURL as workaround for webview bug:
+		// https://code.google.com/p/android/issues/detail?id=1733
+		webView.loadDataWithBaseURL(null, content, "text/html", "UTF-8", null);
 		hideProgress();
 	}
 
