@@ -1,13 +1,11 @@
 package com.tinyrssapp.activities;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.http.Header;
-import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +14,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.TinyRSSApp.R;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.activities.actionbar.CategoriesActivity;
 import com.tinyrssapp.activities.actionbar.FeedsActivity;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
-import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
+import com.tinyrssapp.request.RequestBuilder;
+import com.tinyrssapp.request.RequestParamsBuilder;
+import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.prefs.PrefsCredentials;
+import com.tinyrssapp.storage.prefs.PrefsSettings;
 
 public class LoginActivity extends Activity {
 	public static final String HOST_PROP = "host";
@@ -58,115 +58,31 @@ public class LoginActivity extends Activity {
 				.setOnClickListener(new Button.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						AsyncHttpClient client = new AsyncHttpClient();
-						String host = address.getText().toString();
-						final Button connectButton = ((Button) findViewById(R.id.connectButton));
-
-						connectButton.setText(R.string.login_connecting_msg);
-						connectButton.setEnabled(false);
-						if (!host.startsWith("http://")
-								&& !host.startsWith("https://")) {
-							host = "http://" + host;
-						}
-						if (!host.endsWith("/api") && !host.endsWith("/api/")) {
-							if (host.endsWith("/")) {
-								host = host + "api/";
-							} else {
-								host = host + "/api/";
-							}
-						}
-						if (!host.endsWith("/")) {
-							host = host + "/";
-						}
-						final String finalHost = host;
-
-						try {
-							JSONObject jsonParams = new JSONObject();
-							jsonParams
-									.put(TinyTinySpecificConstants.OP_PROP,
-											TinyTinySpecificConstants.REQUEST_LOGIN_OP_VALUE);
-							jsonParams
-									.put(TinyTinySpecificConstants.REQUEST_LOGIN_USERNAME_PROP,
-											username.getText().toString());
-							jsonParams
-									.put(TinyTinySpecificConstants.REQUEST_LOGIN_PASSWORD_PROP,
-											password.getText().toString());
-							StringEntity entity = new StringEntity(jsonParams
-									.toString());
-							client.post(getApplicationContext(), finalHost,
-									entity, "application/json",
-									new JsonHttpResponseHandler() {
-										@Override
-										public void onSuccess(int statusCode,
-												Header[] headers,
-												JSONObject response) {
-											try {
-												if (response
-														.getInt(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP) == TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_FAIL_VALUE) {
-													showError();
-												} else {
-													connectButton
-															.setText(R.string.login_success_msg);
-													String sessionId = response
-															.getJSONObject(
-																	TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
-															.getString(
-																	TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP);
-													if (((CheckBox) findViewById(R.id.saveCredentialsCheck))
-															.isChecked()) {
-														savePrefs();
-													}
-													startNextActivity(
-															finalHost,
-															sessionId);
-												}
-											} catch (JSONException e) {
-												e.printStackTrace();
-											}
-										}
-
-										private void showError() {
-											ErrorAlertDialog.showError(
-													LoginActivity.this,
-													R.string.error_login);
-											connectButton
-													.setText(R.string.login_connect_button_text);
-											connectButton.setEnabled(true);
-										}
-
-										private void savePrefs() {
-											StoredPreferencesTinyRSSApp
-													.putUserPassHost(
-															LoginActivity.this,
-															username.getText()
-																	.toString(),
-															password.getText()
-																	.toString(),
-															address.getText()
-																	.toString());
-										}
-
-										public void onFailure(Throwable e,
-												JSONObject errorResponse) {
-											showError();
-										};
-									});
-						} catch (JSONException e) {
-							e.printStackTrace();
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-						}
+						onConnectButtonClick();
 					}
 				});
 	}
 
+	protected void onConnectButtonClick() {
+		final ProgressDialog progressDialog = ProgressDialog.show(
+				LoginActivity.this, "Connecting", "Please wait");
+		final String host = RequestParamsBuilder.formatHostAddress(address
+				.getText().toString());
+		boolean saveCredentials = ((CheckBox) findViewById(R.id.saveCredentialsCheck))
+				.isChecked();
+		ResponseHandler handler = getLoginResponseHandler(saveCredentials,
+				username.getText().toString(), password.getText().toString(),
+				host, progressDialog);
+		RequestBuilder.makeRequest(LoginActivity.this, host,
+				RequestParamsBuilder.paramsLogin(username.getText().toString(),
+						password.getText().toString()), handler);
+
+	}
+
 	private void loadSavedPrefs() {
-		address.setText(StoredPreferencesTinyRSSApp
-				.getHostPref(LoginActivity.this));
-		username.setText(StoredPreferencesTinyRSSApp
-				.getUsernamePref(LoginActivity.this));
-		password.setText(StoredPreferencesTinyRSSApp
-				.getPasswordPref(LoginActivity.this));
+		address.setText(PrefsCredentials.getHostPref(LoginActivity.this));
+		username.setText(PrefsCredentials.getUsernamePref(LoginActivity.this));
+		password.setText(PrefsCredentials.getPasswordPref(LoginActivity.this));
 		if (autoConnect) {
 			clickConnectIfPossible();
 		}
@@ -180,11 +96,62 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	private ResponseHandler getLoginResponseHandler(
+			final boolean saveCredentials, final String username,
+			final String password, final String host,
+			final ProgressDialog progressDialog) {
+		return new ResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				try {
+					if (response
+							.getInt(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP) == TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_FAIL_VALUE) {
+						ErrorAlertDialog.showError(LoginActivity.this,
+								R.string.error_login);
+					} else {
+						String sessionId = response
+								.getJSONObject(
+										TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
+								.getString(
+										TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP);
+						if (saveCredentials) {
+							PrefsCredentials.putUserPassHost(
+									LoginActivity.this, username, password,
+									host);
+						}
+						startNextActivity(host, sessionId);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onFailure(Throwable e, JSONObject errorResponse) {
+				if (!LoginActivity.this.isFinishing()) {
+					progressDialog.dismiss();
+					ErrorAlertDialog.showError(LoginActivity.this,
+							R.string.error_login);
+				}
+			}
+
+			@Override
+			public void onFinish() {
+				if (!LoginActivity.this.isFinishing()) {
+					progressDialog.dismiss();
+				}
+			}
+		};
+	}
+
 	private void startNextActivity(String finalHost, String sessionId) {
-		if (StoredPreferencesTinyRSSApp.getCategoriesUsed(this)) {
-			startSimpleIntent(new Intent(LoginActivity.this, CategoriesActivity.class), finalHost, sessionId);
+		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_MODE) {
+			startSimpleIntent(new Intent(LoginActivity.this,
+					CategoriesActivity.class), finalHost, sessionId);
 		} else {
-			startSimpleIntent(new Intent(LoginActivity.this, FeedsActivity.class), finalHost, sessionId);
+			startSimpleIntent(new Intent(LoginActivity.this,
+					FeedsActivity.class), finalHost, sessionId);
 		}
 	}
 

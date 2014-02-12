@@ -3,10 +3,10 @@ package com.tinyrssapp.activities;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Context;
+
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
-
-import android.content.Context;
 
 public final class ThemeUpdater {
 	public static final int DAY_THEME = R.style.CustomLightTheme;

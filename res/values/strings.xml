@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">TinyRSSApp</string>
+    <string name="categories_title">Categories</string>
     <string name="feeds_title">Feeds</string>
     <string name="logout_action_msg">Logout</string>
     <string name="toggle_show_unread_msg">Toggle show unread</string>

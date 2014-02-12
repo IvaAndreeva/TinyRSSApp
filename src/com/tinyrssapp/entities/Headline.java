@@ -8,7 +8,7 @@ public class Headline extends Entity {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5144624830514635974L;
+	private static final long serialVersionUID = 1L;
 	public long id;
 	public boolean unread;
 	public boolean marked;

@@ -1,0 +1,4 @@
+<resources>
+    <string name="show_feeds_in_cats_msg">Show feeds in categories</string>
+    <string name="hide_feeds_in_cats_msg">Show only headlines in categories</string>
+</resources>

@@ -1,11 +1,11 @@
 package com.tinyrssapp.errorhandling;
 
-import com.example.TinyRSSApp.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import com.example.TinyRSSApp.R;
 
 public class ErrorAlertDialog {
 

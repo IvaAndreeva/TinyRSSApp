@@ -18,8 +18,8 @@ import com.tinyrssapp.activities.ThemeUpdater;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
-import com.tinyrssapp.storage.InternalStorageUtil;
-import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
+import com.tinyrssapp.storage.internal.StorageHeadlinesUtil;
+import com.tinyrssapp.storage.prefs.PrefsSettings;
 
 public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	public static final String ARTICLE_ID = "articleId";
@@ -87,7 +87,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 			sessionId = "";
 			host = "";
 		}
-		showAll = StoredPreferencesTinyRSSApp.getShowAllPref(this);
+		showAll = PrefsSettings.getShowAllPref(this);
 	}
 
 	public String getViewMode() {
@@ -102,19 +102,22 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 			msg = SHOWING_ALL_MSG;
 		}
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-		StoredPreferencesTinyRSSApp.putShowAllPref(this, showAll);
+		PrefsSettings.putShowAllPref(this, showAll);
 	}
 
 	public void onShowCategories() {
-		StoredPreferencesTinyRSSApp.putCategoriesUsed(this, true);
+		PrefsSettings.putCategoryMode(this,
+				PrefsSettings.CATEGORY_NO_FEEDS_MODE);
 		startCategoriesActivity();
 	}
 
 	public void onHideCategories() {
-		StoredPreferencesTinyRSSApp.putCategoriesUsed(this, false);
+		PrefsSettings.putCategoryMode(this, PrefsSettings.CATEGORY_NO_MODE);
+		PrefsSettings.putCurrntCategoryId(this,
+				TinyTinySpecificConstants.FRESH_FEED_ID);
 	}
-	
-	public void startCategoriesActivity(){
+
+	public void startCategoriesActivity() {
 		startSimpleActivity(CategoriesActivity.class);
 	}
 
@@ -157,7 +160,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putString(CONTENT, headline.content);
 		b.putString(FEED_TITLE_TO_LOAD, feedTitle);
 		b.putInt(FEED_ID_TO_LOAD, headline.feedId);
-		InternalStorageUtil.saveHeadlines(this, headlines, headline.feedId);
+		StorageHeadlinesUtil.save(this, headlines, headline.feedId);
 		startActivity(b, ArticleActivity.class);
 	}
 
@@ -172,10 +175,9 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	}
 
 	public List<Headline> loadHeadlinesFromFile(int feedId) {
-		List<Headline> allHeadlines = InternalStorageUtil.getHeadlines(this,
-				feedId);
+		List<Headline> allHeadlines = StorageHeadlinesUtil.get(this, feedId);
 		List<Headline> resultHeadlines = allHeadlines;
-		if (!StoredPreferencesTinyRSSApp.getShowAllPref(this)) {
+		if (!PrefsSettings.getShowAllPref(this)) {
 			resultHeadlines = new ArrayList<Headline>();
 			for (Headline headline : allHeadlines) {
 				if (headline.unread) {

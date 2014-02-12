@@ -58,6 +58,8 @@ public final class TinyTinySpecificConstants {
 	public static final String REQUEST_MARK_FEED_AS_READ_OP_VALUE = "catchupFeed";
 	
 	public static final String REQUEST_GET_CATEGORIES_OP_VALUE = "getCategories";
+	
+	public static final String REQUEST_IS_CAT_PROP = "is_cat";
 
 	public static final int STARRED_FEED_ID = -1;
 	public static final int PUBLISHED_FEED_ID = -2;

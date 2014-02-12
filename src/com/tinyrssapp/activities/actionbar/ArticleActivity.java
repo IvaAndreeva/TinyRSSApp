@@ -1,11 +1,9 @@
 package com.tinyrssapp.activities.actionbar;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.entity.StringEntity;
-import org.json.JSONException;
+import org.apache.http.Header;
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -20,14 +18,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.TinyRSSApp.R;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
-import com.tinyrssapp.storage.InternalStorageUtil;
+import com.tinyrssapp.request.RequestBuilder;
+import com.tinyrssapp.request.RequestParamsBuilder;
+import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.internal.StorageHeadlinesUtil;
 
 /**
  * Created by iva on 2/8/14.
@@ -112,7 +111,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		case R.id.article_action_toggle_unread:
 			Headline currArticle = getCurrentArticle();
 			currArticle.unread = !currArticle.unread;
-			InternalStorageUtil.saveHeadlines(this, headlines, feedId);
+			StorageHeadlinesUtil.save(this, headlines, feedId);
 
 			String msg = MARKED_AS_UNREAD_STR;
 			if (!currArticle.unread) {
@@ -157,7 +156,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		markArticleFieldAsMode(
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE);
-		InternalStorageUtil.saveHeadlines(this, headlines, feedId);
+		StorageHeadlinesUtil.save(this, headlines, feedId);
 		loadWebView();
 
 	}
@@ -183,44 +182,29 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	}
 
 	private void markArticleFieldAsMode(String fieldValue, String modeValue) {
-		AsyncHttpClient client = new AsyncHttpClient();
-		try {
-			JSONObject jsonParams = new JSONObject();
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_ARTILE_IDS_PROP,
-							articleId);
-			jsonParams.put(TinyTinySpecificConstants.OP_PROP,
-					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_OP_VALUE);
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_PROP,
-							fieldValue);
-			jsonParams.put(
-					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_PROP,
-					modeValue);
-			jsonParams.put(TinyTinySpecificConstants.REQUEST_SESSION_ID_PROP,
-					sessionId);
-			StringEntity entity = new StringEntity(jsonParams.toString());
-			client.post(getApplicationContext(), host, entity,
-					"application/json", new JsonHttpResponseHandler() {
+		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+				.paramsMarkArticleFieldAsMode(sessionId, articleId, fieldValue,
+						modeValue), getMarkArticleResponseHandler());
+	}
 
-						@Override
-						public void onFailure(Throwable e,
-								JSONObject errorResponse) {
-							ErrorAlertDialog.showError(ArticleActivity.this,
-									R.string.error_mark_article);
-							super.onFailure(e, errorResponse);
-						}
+	private ResponseHandler getMarkArticleResponseHandler() {
+		return new ResponseHandler() {
 
-						@Override
-						public void onFinish() {
-							super.onFinish();
-						}
-					});
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+			}
+
+			@Override
+			public void onFinish() {
+			}
+
+			@Override
+			public void onFailure(Throwable e, JSONObject errorResponse) {
+				ErrorAlertDialog.showError(ArticleActivity.this,
+						R.string.error_mark_article);
+			}
+		};
 	}
 
 	private void loadWebView() {
@@ -228,7 +212,9 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		setTitle(getCurrentArticle().title);
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
 		webView.loadUrl(BLANK_PAGE);
-		webView.loadData(content, "text/html", "utf-8");
+		// use loadDataWithBaseURL as workaround for webview bug:
+		// https://code.google.com/p/android/issues/detail?id=1733
+		webView.loadDataWithBaseURL(null, content, "text/html", "UTF-8", null);
 		hideProgress();
 	}
 

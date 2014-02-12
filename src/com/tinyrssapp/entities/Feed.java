@@ -7,7 +7,7 @@ public class Feed extends Entity {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2632196177217492919L;
+	private static final long serialVersionUID = 1L;
 	public String feedUrl;
 	public String title;
 	public int id;
@@ -16,7 +16,7 @@ public class Feed extends Entity {
 	public int catId;
 	public long lastUpdated;
 	public int orderId;
-
+	
 	public Feed setFeedUrl(String feedUrl) {
 		this.feedUrl = feedUrl;
 		return this;

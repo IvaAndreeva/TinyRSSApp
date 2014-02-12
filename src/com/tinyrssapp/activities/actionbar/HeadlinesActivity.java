@@ -1,12 +1,10 @@
 package com.tinyrssapp.activities.actionbar;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.http.Header;
-import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,16 +19,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.TinyRSSApp.R;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.entities.CustomAdapter;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
-import com.tinyrssapp.storage.InternalStorageUtil;
-import com.tinyrssapp.storage.StoredPreferencesTinyRSSApp;
+import com.tinyrssapp.request.RequestBuilder;
+import com.tinyrssapp.request.RequestParamsBuilder;
+import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.internal.StorageCategoriesUtil;
+import com.tinyrssapp.storage.internal.StorageFeedsUtil;
+import com.tinyrssapp.storage.internal.StorageHeadlinesUtil;
+import com.tinyrssapp.storage.prefs.PrefsSettings;
+import com.tinyrssapp.storage.prefs.PrefsUpdater;
 
 /**
  * Created by iva on 2/7/14.
@@ -65,7 +67,11 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	}
 
 	private Feed getParentFeed() {
-		feeds = InternalStorageUtil.getFeeds(this, sessionId);
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			feeds = StorageCategoriesUtil.get(this, sessionId);
+		} else {
+			feeds = StorageFeedsUtil.get(this, sessionId);
+		}
 		for (Feed feed : feeds) {
 			if (feed.id == feedId) {
 				return feed;
@@ -76,7 +82,11 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onBackPressed() {
-		startAllFeedsActivity();
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			startCategoriesActivity();
+		} else {
+			startAllFeedsActivity();
+		}
 		super.onBackPressed();
 	}
 
@@ -99,10 +109,10 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	private void loadHeadlines() {
 		Date now = new Date();
-		long lastHeadlinesUpdate = StoredPreferencesTinyRSSApp
+		long lastHeadlinesUpdate = PrefsUpdater
 				.getLastHeadlinesRefreshTime(this);
 		if (now.getTime() - lastHeadlinesUpdate >= MILISECS_WITHOUT_HEADLINES_REFRESH
-				|| !InternalStorageUtil.hasHeadlinesInFile(this, feedId)) {
+				|| !StorageHeadlinesUtil.hasInFile(this, feedId)) {
 			menuLoadingShouldWait = true;
 			refreshHeadlines();
 		} else {
@@ -112,128 +122,14 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	}
 
 	private void refreshHeadlines() {
-		try {
-			showProgress("Loading headlines...", "");
-			InternalStorageUtil.saveHeadlinePos(this, feedId, 0);
-			feedId = feed.id;
-			AsyncHttpClient client = new AsyncHttpClient();
-			JSONObject jsonParams = new JSONObject();
-			jsonParams.put(
-					TinyTinySpecificConstants.REQUEST_HEADLINES_FEED_ID_PROP,
-					feed.id);
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_HEADLINES_LIMIT_PROP,
-							TinyTinySpecificConstants.REQUEST_HEADLINES_LIMIT_UNDEFINED_VALUE);
-			jsonParams
-					.put(TinyTinySpecificConstants.OP_PROP,
-							TinyTinySpecificConstants.REQUEST_HEADLINES_GET_HEADLINES_OP_VALUE);
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_HEADLINES_SHOW_CONTENT_PROP,
-							"true");
-			jsonParams.put(TinyTinySpecificConstants.REQUEST_SESSION_ID_PROP,
-					sessionId);
-			jsonParams.put(
-					TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_PROP,
-					getViewMode());
-			StringEntity entity = new StringEntity(jsonParams.toString());
-			client.post(getApplicationContext(), host, entity,
-					"application/json", new JsonHttpResponseHandler() {
-
-						@Override
-						public void onFailure(Throwable e,
-								JSONObject errorResponse) {
-							ErrorAlertDialog.showError(HeadlinesActivity.this,
-									R.string.error_refresh_headlines);
-							super.onFailure(e, errorResponse);
-						}
-
-						@Override
-						public void onFinish() {
-							hideProgress();
-							super.onFinish();
-						}
-
-						@Override
-						public void onSuccess(int statusCode, Header[] headers,
-								JSONObject response) {
-							AsyncTask<JSONObject, Void, Void> task = new AsyncTask<JSONObject, Void, Void>() {
-								private List<Headline> headlines = new ArrayList<Headline>();
-
-								@Override
-								protected Void doInBackground(
-										JSONObject... params) {
-									try {
-										if (params.length < 1
-												|| !(params[0] instanceof JSONObject)) {
-											ErrorAlertDialog
-													.showError(
-															HeadlinesActivity.this,
-															R.string.error_something_went_wrong);
-											return null;
-										}
-										StoredPreferencesTinyRSSApp
-												.putLastHeadlinesRefreshTime(
-														HeadlinesActivity.this,
-														new Date());
-										JSONObject response = (JSONObject) params[0];
-										JSONArray contentArray = response
-												.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
-										for (int i = 0; i < contentArray
-												.length(); i++) {
-											JSONObject headlineJson = contentArray
-													.getJSONObject(i);
-											Headline headline = (new Headline())
-													.setContent(
-															headlineJson
-																	.getString(TinyTinySpecificConstants.RESPONSE_HEADLINE_CONTENT_PROP))
-													.setFeedId(
-															headlineJson
-																	.getInt(TinyTinySpecificConstants.REQUEST_HEADLINES_FEED_ID_PROP))
-													.setId(headlineJson
-															.getLong(TinyTinySpecificConstants.RESPONSE_HEADLINE_ID_PROP))
-													.setIsUpdated(
-															headlineJson
-																	.getBoolean(TinyTinySpecificConstants.RESPONSE_HEADLINE_IS_UPDATED_PROP))
-													.setLink(
-															headlineJson
-																	.getString(TinyTinySpecificConstants.RESPONSE_HEADLINE_LINK_PROP))
-													.setMarked(
-															headlineJson
-																	.getBoolean(TinyTinySpecificConstants.RESPONSE_HEADLINE_MARKED_PROP))
-													.setPublished(
-															headlineJson
-																	.getBoolean(TinyTinySpecificConstants.RESPONSE_HEADLINE_PUBLISHED_PROP))
-													.setTitle(
-															headlineJson
-																	.getString(TinyTinySpecificConstants.RESPONSE_FEED_TITLE_PROP))
-													.setUnread(
-															headlineJson
-																	.getBoolean(TinyTinySpecificConstants.RESPONSE_FEED_UNREAD_PROP))
-													.setUpdated(
-															headlineJson
-																	.getLong(TinyTinySpecificConstants.RESPONSE_HEADLINE_UPDATED_PROP));
-											headlines.add(headline);
-										}
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
-									return null;
-								}
-
-								@Override
-								protected void onPostExecute(Void aVoid) {
-									super.onPostExecute(aVoid);
-									showHeadlines(headlines);
-								}
-							};
-							task.execute(new JSONObject[] { response });
-						}
-					});
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		showProgress("Loading headlines...", "");
+		StorageHeadlinesUtil.savePos(this, feedId, 0);
+		feedId = feed.id;
+		ResponseHandler handler = getHeadlinesResponseHandler();
+		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
+		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+				.paramsGetHeadlines(sessionId, feedId, parentIsCat,
+						getViewMode()), handler);
 	}
 
 	private void showHeadlines(final List<Headline> headlines) {
@@ -263,63 +159,137 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 					int position, long id) {
 				Headline currHeadline = (Headline) parent.getAdapter().getItem(
 						position);
-				InternalStorageUtil.saveHeadlinePos(HeadlinesActivity.this,
-						feedId, position);
+				StorageHeadlinesUtil.savePos(HeadlinesActivity.this, feedId,
+						position);
 				startArticleActivity(currHeadline, headlines, getTitle()
 						.toString());
 			}
 		});
-		if (InternalStorageUtil.hasHeadlinePosInFile(this, feedId)) {
-			listView.setSelection(InternalStorageUtil.getHeadlinePos(this,
-					feedId));
+		if (StorageHeadlinesUtil.hasPosInFile(this, feedId)) {
+			listView.setSelection(StorageHeadlinesUtil.getPos(this, feedId));
 		}
 		headlinesAdapter.notifyDataSetChanged();
+	}
+
+	private ResponseHandler getHeadlinesResponseHandler() {
+		return new ResponseHandler() {
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+
+				AsyncTask<JSONObject, Void, Void> task = new AsyncTask<JSONObject, Void, Void>() {
+					private List<Headline> headlines = new ArrayList<Headline>();
+
+					@Override
+					protected Void doInBackground(JSONObject... params) {
+						try {
+							if (params.length < 1
+									|| !(params[0] instanceof JSONObject)) {
+								ErrorAlertDialog.showError(
+										HeadlinesActivity.this,
+										R.string.error_something_went_wrong);
+								return null;
+							}
+							PrefsUpdater.putLastHeadlinesRefreshTime(
+									HeadlinesActivity.this, new Date());
+							JSONObject response = (JSONObject) params[0];
+							JSONArray contentArray = response
+									.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
+							for (int i = 0; i < contentArray.length(); i++) {
+								JSONObject headlineJson = contentArray
+										.getJSONObject(i);
+								Headline headline = (new Headline())
+										.setContent(
+												headlineJson
+														.getString(TinyTinySpecificConstants.RESPONSE_HEADLINE_CONTENT_PROP))
+										.setFeedId(
+												headlineJson
+														.getInt(TinyTinySpecificConstants.REQUEST_HEADLINES_FEED_ID_PROP))
+										.setId(headlineJson
+												.getLong(TinyTinySpecificConstants.RESPONSE_HEADLINE_ID_PROP))
+										.setIsUpdated(
+												headlineJson
+														.getBoolean(TinyTinySpecificConstants.RESPONSE_HEADLINE_IS_UPDATED_PROP))
+										.setLink(
+												headlineJson
+														.getString(TinyTinySpecificConstants.RESPONSE_HEADLINE_LINK_PROP))
+										.setMarked(
+												headlineJson
+														.getBoolean(TinyTinySpecificConstants.RESPONSE_HEADLINE_MARKED_PROP))
+										.setPublished(
+												headlineJson
+														.getBoolean(TinyTinySpecificConstants.RESPONSE_HEADLINE_PUBLISHED_PROP))
+										.setTitle(
+												headlineJson
+														.getString(TinyTinySpecificConstants.RESPONSE_FEED_TITLE_PROP))
+										.setUnread(
+												headlineJson
+														.getBoolean(TinyTinySpecificConstants.RESPONSE_FEED_UNREAD_PROP))
+										.setUpdated(
+												headlineJson
+														.getLong(TinyTinySpecificConstants.RESPONSE_HEADLINE_UPDATED_PROP));
+								headlines.add(headline);
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void aVoid) {
+						super.onPostExecute(aVoid);
+						showHeadlines(headlines);
+					}
+				};
+				task.execute(new JSONObject[] { response });
+			}
+
+			@Override
+			public void onFinish() {
+				hideProgress();
+			}
+
+			@Override
+			public void onFailure(Throwable e, JSONObject errorResponse) {
+				ErrorAlertDialog.showError(HeadlinesActivity.this,
+						R.string.error_refresh_headlines);
+			}
+		};
 	}
 
 	private void markFeedAsRead(final int feedId, final String host,
 			final String sessionId, Context context) {
 		showProgress("Marking feed as read...", "");
-		AsyncHttpClient client = new AsyncHttpClient();
-		JSONObject jsonParams = new JSONObject();
-		try {
-			jsonParams.put(
-					TinyTinySpecificConstants.REQUEST_HEADLINES_FEED_ID_PROP,
-					feedId);
-			jsonParams
-					.put(TinyTinySpecificConstants.OP_PROP,
-							TinyTinySpecificConstants.REQUEST_MARK_FEED_AS_READ_OP_VALUE);
-			jsonParams.put(TinyTinySpecificConstants.REQUEST_SESSION_ID_PROP,
-					sessionId);
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_PROP,
-							TinyTinySpecificConstants.REQUEST_HEADLINES_VIEW_MODE_UNREAD_VALUE);
-			StringEntity entity = new StringEntity(jsonParams.toString());
-			client.post(context, host, entity, "application/json",
-					new JsonHttpResponseHandler() {
+		RequestBuilder.makeRequest(this, host,
+				RequestParamsBuilder.paramsMarkFeedAsRead(sessionId, feedId),
+				getMarkFeedAsReadHandler());
+	}
 
-						@Override
-						public void onFailure(Throwable e,
-								JSONObject errorResponse) {
-							ErrorAlertDialog.showError(HeadlinesActivity.this,
-									R.string.error_mark_feed_as_read);
-							super.onFailure(e, errorResponse);
-						}
+	private ResponseHandler getMarkFeedAsReadHandler() {
+		return new ResponseHandler() {
 
-						@Override
-						public void onFinish() {
-							hideProgress();
-							progressNull();
-							feed.unread = 0;
-							updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
-							startAllFeedsActivity();
-							super.onFinish();
-						}
-					});
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+			}
+
+			@Override
+			public void onFinish() {
+				hideProgress();
+				progressNull();
+				feed.unread = 0;
+				updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
+				startAllFeedsActivity();
+			}
+
+			@Override
+			public void onFailure(Throwable e, JSONObject errorResponse) {
+				ErrorAlertDialog.showError(HeadlinesActivity.this,
+						R.string.error_mark_feed_as_read);
+			}
+		};
 	}
 
 	protected List<Headline> markAllHeadlinesAsRead() {
@@ -331,9 +301,8 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	}
 
 	private void updateHeadlinesAndFeedsFiles(List<Headline> headlines) {
-		InternalStorageUtil.saveHeadlines(HeadlinesActivity.this, headlines,
-				feedId);
-		InternalStorageUtil.saveFeeds(HeadlinesActivity.this, sessionId, feeds);
+		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
+		StorageFeedsUtil.save(HeadlinesActivity.this, sessionId, feeds);
 	}
 
 	@Override
