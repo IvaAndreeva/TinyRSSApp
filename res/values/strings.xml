@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">TinyRSSApp</string>
     <string name="feeds_title">Feeds</string>
     <string name="logout_action_msg">Logout</string>
     <string name="toggle_show_unread_msg">Toggle show unread</string>
+    <string name="show_categories_msg">Show categories</string>
+    <string name="hide_categories_msg">Hide categories</string>
     <string name="switch_theme_msg">Switch theme</string>
     <string name="switch_to_dark_theme_msg">Go dark</string>
     <string name="switch_to_light_theme_msg">Go light</string>
+
 </resources>

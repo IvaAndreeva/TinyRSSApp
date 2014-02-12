@@ -32,7 +32,7 @@ public class Feed extends Entity {
 		return this;
 	}
 
-	public Feed setUndread(int unread) {
+	public Feed setUnread(int unread) {
 		this.unread = unread;
 		return this;
 	}

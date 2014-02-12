@@ -17,11 +17,39 @@ public class CommonMenu {
 			context.onToggleShowUnread();
 			return true;
 		}
+		if (showCategoriesIfChosen(context, item)) {
+			context.onShowCategories();
+			return true;
+		}
+		if (hideCategoriesIfChosen(context, item)) {
+			context.onHideCategories();
+			return true;
+		}
 		if (switchThemeIfChosen(context, item)) {
 			return true;
 		}
 
 		if (homeIsChosen(context, item)) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean hideCategoriesIfChosen(TinyRSSAppActivity context,
+			MenuItem item) {
+		if (item.getItemId() == R.id.hide_categories) {
+			Toast.makeText(context, "Hiding categories", Toast.LENGTH_LONG)
+					.show();
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean showCategoriesIfChosen(TinyRSSAppActivity context,
+			MenuItem item) {
+		if (item.getItemId() == R.id.show_categories) {
+			Toast.makeText(context, "Showing categories", Toast.LENGTH_LONG)
+					.show();
 			return true;
 		}
 		return false;

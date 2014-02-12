@@ -12,8 +12,27 @@ public class StoredPreferencesTinyRSSApp {
 	public static final String USERNAME = "username";
 	public static final String PASS = "pass";
 	public static final String SHOW_ALL = "unread";
+	public static final String LAST_TIME_CATEGORIES_UPDATED = "feedsUpdated";
 	public static final String LAST_TIME_FEEDS_UPDATED = "feedsUpdated";
 	public static final String LAST_TIME_HEADLINES_UPDATED = "headlinesUpdated";
+	public static final String CATEGORY_USED = "useCat";
+	public static final String SHOW_FEEDS_IN_CATEGORY = "showFeedsInCategory";
+
+	public static boolean getCategoriesUsed(Context context) {
+		return getBooleanFromSavedPrefs(context, CATEGORY_USED);
+	}
+
+	public static void putCategoriesUsed(Context context, boolean catUsed) {
+		putBooleanInSavedPrefs(context, CATEGORY_USED, catUsed);
+	}
+
+	public static boolean getShowFeedsInCat(Context context) {
+		return getBooleanFromSavedPrefs(context, SHOW_FEEDS_IN_CATEGORY);
+	}
+
+	public static void putShowFeedsInCat(Context context, boolean showFeedsInCat) {
+		putBooleanInSavedPrefs(context, SHOW_FEEDS_IN_CATEGORY, showFeedsInCat);
+	}
 
 	public static String getUsernamePref(Context context) {
 		return getStringFromSavedPrefs(context, USERNAME);
@@ -54,12 +73,20 @@ public class StoredPreferencesTinyRSSApp {
 		putBooleanInSavedPrefs(context, SHOW_ALL, showAll);
 	}
 
+	public static long getLastCategoriesRefreshTime(Context context) {
+		return getDateFromSavedPrefs(context, LAST_TIME_CATEGORIES_UPDATED);
+	}
+
 	public static long getLastFeedsRefreshTime(Context context) {
 		return getDateFromSavedPrefs(context, LAST_TIME_FEEDS_UPDATED);
 	}
 
 	public static long getLastHeadlinesRefreshTime(Context context) {
 		return getDateFromSavedPrefs(context, LAST_TIME_HEADLINES_UPDATED);
+	}
+
+	public static void putLastCategoriesRefreshTime(Context context, Date date) {
+		putDateInSavedPrefs(context, LAST_TIME_CATEGORIES_UPDATED, date);
 	}
 
 	public static void putLastFeedsRefreshTime(Context context, Date date) {

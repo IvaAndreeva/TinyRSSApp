@@ -105,12 +105,43 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		StoredPreferencesTinyRSSApp.putShowAllPref(this, showAll);
 	}
 
-	public void startAllFeedsActivity(String host, String sessionId) {
-		Intent intent = new Intent(this, FeedsActivity.class);
+	public void onShowCategories() {
+		StoredPreferencesTinyRSSApp.putCategoriesUsed(this, true);
+		startCategoriesActivity();
+	}
+
+	public void onHideCategories() {
+		StoredPreferencesTinyRSSApp.putCategoriesUsed(this, false);
+	}
+	
+	public void startCategoriesActivity(){
+		startSimpleActivity(CategoriesActivity.class);
+	}
+
+	public void startAllFeedsActivity() {
+		startSimpleActivity(FeedsActivity.class);
+	}
+
+	public void startSimpleActivity(Class<? extends TinyRSSAppActivity> _class) {
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
 				sessionId);
+		startActivity(b, _class);
+	}
+
+	public void startAllFeedsActivity(int catId) {
+		Bundle b = new Bundle();
+		b.putString(LoginActivity.HOST_PROP, host);
+		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
+				sessionId);
+		b.putInt(FeedsActivity.CAT_ID, catId);
+		startActivity(b, FeedsActivity.class);
+	}
+
+	public void startActivity(Bundle b,
+			Class<? extends TinyRSSAppActivity> _class) {
+		Intent intent = new Intent(this, _class);
 		intent.putExtras(b);
 		startActivity(intent);
 		finish();
@@ -118,7 +149,6 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 
 	public void startArticleActivity(Headline headline,
 			List<Headline> headlines, String feedTitle) {
-		Intent intent = new Intent(this, ArticleActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
@@ -128,22 +158,17 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putString(FEED_TITLE_TO_LOAD, feedTitle);
 		b.putInt(FEED_ID_TO_LOAD, headline.feedId);
 		InternalStorageUtil.saveHeadlines(this, headlines, headline.feedId);
-		intent.putExtras(b);
-		startActivity(intent);
-		finish();
+		startActivity(b, ArticleActivity.class);
 	}
 
 	public void startHeadlinesActivity(Feed feed) {
-		Intent intent = new Intent(this, HeadlinesActivity.class);
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
 				sessionId);
 		b.putInt(FEED_ID_TO_LOAD, feed.id);
 		b.putString(FEED_TITLE_TO_LOAD, feed.title);
-		intent.putExtras(b);
-		startActivity(intent);
-		finish();
+		startActivity(b, HeadlinesActivity.class);
 	}
 
 	public List<Headline> loadHeadlinesFromFile(int feedId) {

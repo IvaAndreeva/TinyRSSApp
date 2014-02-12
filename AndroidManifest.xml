@@ -24,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.tinyrssapp.activities.actionbar.CategoriesActivity" />
         <activity android:name="com.tinyrssapp.activities.actionbar.FeedsActivity" />
         <activity android:name="com.tinyrssapp.activities.actionbar.HeadlinesActivity" />
         <activity android:name="com.tinyrssapp.activities.actionbar.ArticleActivity" />

@@ -65,7 +65,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	}
 
 	private Feed getParentFeed() {
-		feeds = InternalStorageUtil.getFeeds(this);
+		feeds = InternalStorageUtil.getFeeds(this, sessionId);
 		for (Feed feed : feeds) {
 			if (feed.id == feedId) {
 				return feed;
@@ -76,7 +76,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onBackPressed() {
-		startAllFeedsActivity(host, sessionId);
+		startAllFeedsActivity();
 		super.onBackPressed();
 	}
 
@@ -114,6 +114,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	private void refreshHeadlines() {
 		try {
 			showProgress("Loading headlines...", "");
+			InternalStorageUtil.saveHeadlinePos(this, feedId, 0);
 			feedId = feed.id;
 			AsyncHttpClient client = new AsyncHttpClient();
 			JSONObject jsonParams = new JSONObject();
@@ -310,7 +311,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 							progressNull();
 							feed.unread = 0;
 							updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
-							startAllFeedsActivity(host, sessionId);
+							startAllFeedsActivity();
 							super.onFinish();
 						}
 					});
@@ -332,7 +333,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	private void updateHeadlinesAndFeedsFiles(List<Headline> headlines) {
 		InternalStorageUtil.saveHeadlines(HeadlinesActivity.this, headlines,
 				feedId);
-		InternalStorageUtil.saveFeeds(HeadlinesActivity.this, feeds);
+		InternalStorageUtil.saveFeeds(HeadlinesActivity.this, sessionId, feeds);
 	}
 
 	@Override

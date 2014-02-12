@@ -18,6 +18,7 @@ import android.widget.EditText;
 import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.tinyrssapp.activities.actionbar.CategoriesActivity;
 import com.tinyrssapp.activities.actionbar.FeedsActivity;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
@@ -115,7 +116,7 @@ public class LoginActivity extends Activity {
 															.isChecked()) {
 														savePrefs();
 													}
-													startAllFeedsActivity(
+													startNextActivity(
 															finalHost,
 															sessionId);
 												}
@@ -179,8 +180,15 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	private void startAllFeedsActivity(String host, String sessionId) {
-		Intent intent = new Intent(LoginActivity.this, FeedsActivity.class);
+	private void startNextActivity(String finalHost, String sessionId) {
+		if (StoredPreferencesTinyRSSApp.getCategoriesUsed(this)) {
+			startSimpleIntent(new Intent(LoginActivity.this, CategoriesActivity.class), finalHost, sessionId);
+		} else {
+			startSimpleIntent(new Intent(LoginActivity.this, FeedsActivity.class), finalHost, sessionId);
+		}
+	}
+
+	private void startSimpleIntent(Intent intent, String host, String sessionId) {
 		Bundle b = new Bundle();
 		b.putString(HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
