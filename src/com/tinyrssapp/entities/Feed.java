@@ -1,11 +1,9 @@
 package com.tinyrssapp.entities;
 
-import java.io.Serializable;
-
 /**
  * Created by iva on 2/7/14.
  */
-public class Feed implements Serializable {
+public class Feed extends Entity {
 	/**
 	 * 
 	 */
@@ -62,5 +60,20 @@ public class Feed implements Serializable {
 	@Override
 	public String toString() {
 		return title;
+	}
+
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	@Override
+	public boolean isUnread() {
+		return unread > 0;
+	}
+
+	@Override
+	public int getUnread() {
+		return unread;
 	}
 }

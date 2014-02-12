@@ -21,8 +21,8 @@ import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
+import com.tinyrssapp.entities.CustomAdapter;
 import com.tinyrssapp.entities.Feed;
-import com.tinyrssapp.entities.FeedAdapter;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.storage.InternalStorageUtil;
@@ -137,7 +137,10 @@ public class FeedsActivity extends TinyRSSAppActivity {
 									try {
 										if (params.length < 1
 												|| !(params[0] instanceof JSONObject)) {
-											// TODO ERROR MSG
+											ErrorAlertDialog
+													.showError(
+															FeedsActivity.this,
+															R.string.error_something_went_wrong);
 											return null;
 										}
 										StoredPreferencesTinyRSSApp
@@ -204,7 +207,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		} else {
 			listView.setEnabled(true);
 		}
-		ArrayAdapter<Feed> feedsAdapter = new FeedAdapter(this,
+		ArrayAdapter<Feed> feedsAdapter = new CustomAdapter<Feed>(this,
 				R.layout.feed_layout, R.id.feed_data, R.id.feed_unread_count,
 				feeds);
 		listView.setAdapter(feedsAdapter);
@@ -212,10 +215,14 @@ public class FeedsActivity extends TinyRSSAppActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				InternalStorageUtil.saveFeedPos(FeedsActivity.this, position);
 				startHeadlinesActivity((Feed) parent.getAdapter().getItem(
 						position));
 			}
 		});
+		if (InternalStorageUtil.hasFeedPosInFile(this)) {
+			listView.setSelection(InternalStorageUtil.getFeedPos(this));
+		}
 		feedsAdapter.notifyDataSetChanged();
 	}
 

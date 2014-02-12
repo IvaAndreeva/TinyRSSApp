@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="big_msg_size">20dp</dimen>
+    <dimen name="big_msg_size">20dp</dimen>
     <dimen name="bigger_msg_size">27dp</dimen>
     <dimen name="top_margin">20dp</dimen>
     <dimen name="bottom_margin">20dp</dimen>
     <dimen name="left_margin">20dp</dimen>
     <dimen name="right_margin">20dp</dimen>
+    <dimen name="small_margin">10dp</dimen>
     <dimen name="small_text_edit_width">120dp</dimen>
     <dimen name="small_text_view_width">100dp</dimen>
+    <dimen name="list_item_height">100dp</dimen>
 
 </resources>

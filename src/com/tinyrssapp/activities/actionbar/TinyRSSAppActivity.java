@@ -46,7 +46,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		setContentView(getLayout());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-		    getActionBar().setHomeButtonEnabled(true);
+			getActionBar().setHomeButtonEnabled(true);
 		}
 		initialize();
 	}
@@ -162,7 +162,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 	}
 
 	public void showProgress(String title, String body) {
-		if (progressDialog == null) {
+		if (progressDialog == null && !this.isFinishing()) {
 			progressDialog = ProgressDialog.show(this, title, body);
 		}
 	}

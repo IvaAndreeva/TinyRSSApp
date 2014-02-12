@@ -3,16 +3,17 @@
 
     <style name="CustomLightTheme" parent="Theme.Base.AppCompat.Light">
         <item name="actionMenuTextColor">@color/menu_background</item>
+        <item name="android:textColor">@color/light_unread_feeds</item>
         <item name="refresh_icon">@drawable/light_list_action_refresh</item>
         <item name="mark_as_read_icon">@drawable/light_mark_as_read</item>
         <item name="toggle_starred_icon">@drawable/light_article_toggle_starred</item>
         <item name="toggle_unread_icon">@drawable/light_article_toggle_unread</item>
-        <item name="no_unread_feeds_color">@color/ligh_no_unread_feeds</item>
-        <item name="unread_feeds_color">@color/ligh_unread_feeds</item>
+        <item name="no_unread_feeds_color">@color/light_no_unread_feeds</item>
+        <item name="unread_feeds_color">@color/light_unread_feeds</item>
     </style>
 
     <style name="CustomDarkTheme" parent="Theme.Base.AppCompat">
-        <item name="android:textColor">@color/dark_theme_text_color</item>
+        <item name="android:textColor">@color/dark_unread_feeds</item>
         <item name="android:button">@style/CustomButton</item>
         <item name="android:checkboxStyle">@style/CustomCheckbox</item>
         <item name="android:panelFullBackground">@color/menu_background</item>

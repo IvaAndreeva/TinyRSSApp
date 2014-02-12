@@ -7,26 +7,14 @@
     android:padding="@dimen/small_margin" >
 
     <TextView
-        android:id="@+id/feed_data"
+        android:id="@+id/headline_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="@dimen/small_margin"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_toLeftOf="@+id/feed_unread_count"
         android:gravity="left"
         android:textSize="@dimen/big_msg_size"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/feed_unread_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:gravity="right"
-        android:textColor="?attr/unread_feeds_color"
-        android:textSize="@dimen/bigger_msg_size"
-        android:textStyle="bold"
-        android:width="@dimen/small_text_view_width" />
 
 </RelativeLayout>

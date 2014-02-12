@@ -1,10 +1,10 @@
 package com.tinyrssapp.entities;
 
-import java.io.Serializable;
+
 /**
  * Created by iva on 2/7/14.
  */
-public class Headline implements Serializable {
+public class Headline extends Entity {
 	/**
 	 * 
 	 */
@@ -76,5 +76,20 @@ public class Headline implements Serializable {
 	@Override
 	public String toString() {
 		return title;
+	}
+
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	@Override
+	public boolean isUnread() {
+		return unread;
+	}
+
+	@Override
+	public int getUnread() {
+		return 1;
 	}
 }

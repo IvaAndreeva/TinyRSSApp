@@ -24,6 +24,7 @@ import com.example.TinyRSSApp.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
+import com.tinyrssapp.entities.CustomAdapter;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
@@ -167,6 +168,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 													.showError(
 															HeadlinesActivity.this,
 															R.string.error_something_went_wrong);
+											return null;
 										}
 										StoredPreferencesTinyRSSApp
 												.putLastHeadlinesRefreshTime(
@@ -251,8 +253,8 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		} else {
 			listView.setEnabled(true);
 		}
-		ArrayAdapter<Headline> headlinesAdapter = new ArrayAdapter<Headline>(
-				this, android.R.layout.simple_list_item_1, headlines);
+		ArrayAdapter<Headline> headlinesAdapter = new CustomAdapter<Headline>(
+				this, R.layout.headline_layout, R.id.headline_data, headlines);
 		listView.setAdapter(headlinesAdapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -260,10 +262,16 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 					int position, long id) {
 				Headline currHeadline = (Headline) parent.getAdapter().getItem(
 						position);
+				InternalStorageUtil.saveHeadlinePos(HeadlinesActivity.this,
+						feedId, position);
 				startArticleActivity(currHeadline, headlines, getTitle()
 						.toString());
 			}
 		});
+		if (InternalStorageUtil.hasHeadlinePosInFile(this, feedId)) {
+			listView.setSelection(InternalStorageUtil.getHeadlinePos(this,
+					feedId));
+		}
 		headlinesAdapter.notifyDataSetChanged();
 	}
 
