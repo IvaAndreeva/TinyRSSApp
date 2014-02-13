@@ -1,6 +1,5 @@
 package com.tinyrssapp.activities.actionbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -167,20 +166,6 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putInt(FEED_ID_TO_LOAD, feed.id);
 		b.putString(FEED_TITLE_TO_LOAD, feed.title);
 		startActivity(b, HeadlinesActivity.class);
-	}
-
-	public List<Headline> loadHeadlinesFromFile(int feedId) {
-		List<Headline> allHeadlines = StorageHeadlinesUtil.get(this, feedId);
-		List<Headline> resultHeadlines = allHeadlines;
-		if (!PrefsSettings.getShowAllPref(this)) {
-			resultHeadlines = new ArrayList<Headline>();
-			for (Headline headline : allHeadlines) {
-				if (headline.unread) {
-					resultHeadlines.add(headline);
-				}
-			}
-		}
-		return resultHeadlines;
 	}
 
 	public void showProgress(String title, String body) {

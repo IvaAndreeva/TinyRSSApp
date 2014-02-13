@@ -28,6 +28,7 @@ import com.tinyrssapp.request.RequestBuilder;
 import com.tinyrssapp.request.RequestParamsBuilder;
 import com.tinyrssapp.response.ResponseHandler;
 import com.tinyrssapp.storage.internal.StorageHeadlinesUtil;
+import com.tinyrssapp.storage.prefs.PrefsSettings;
 
 /**
  * Created by iva on 2/8/14.
@@ -87,6 +88,20 @@ public class ArticleActivity extends TinyRSSAppActivity {
 					}
 				});
 		loadArticle();
+	}
+
+	private List<Headline> loadHeadlinesFromFile(int feedId) {
+		List<Headline> allHeadlines = StorageHeadlinesUtil.get(this, feedId);
+		List<Headline> resultHeadlines = allHeadlines;
+		if (!PrefsSettings.getShowAllPref(this)) {
+			resultHeadlines = new ArrayList<Headline>();
+			for (Headline headline : allHeadlines) {
+				if (headline.isUnread()) {
+					resultHeadlines.add(headline);
+				}
+			}
+		}
+		return resultHeadlines;
 	}
 
 	@Override

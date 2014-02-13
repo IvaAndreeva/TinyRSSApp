@@ -12,94 +12,53 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
-import com.tinyrssapp.entities.CustomAdapter;
+import com.tinyrssapp.entities.Entity;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.request.RequestBuilder;
 import com.tinyrssapp.request.RequestParamsBuilder;
 import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.internal.InternalStorageUtil;
 import com.tinyrssapp.storage.internal.StorageCategoriesUtil;
 import com.tinyrssapp.storage.internal.StorageFeedsUtil;
+import com.tinyrssapp.storage.internal.StorageParams;
 import com.tinyrssapp.storage.prefs.PrefsSettings;
 import com.tinyrssapp.storage.prefs.PrefsUpdater;
 
 /**
  * Created by iva on 2/7/14.
  */
-public class FeedsActivity extends TinyRSSAppActivity {
+public class FeedsActivity extends TinyRSSAppListActivity {
 	public static final String ARTICLE_ID = "articleId";
 	public static final String CONTENT = "content";
 	public static final String NO_FEEDS_MSG = "There are no available feeds in here";
 	public static final int MINUTES_WITHOUT_FEEDS_REFRESH = 10;
 	private static final long MILISECS_WITHOUT_FEEDS_REFRESH = MINUTES_WITHOUT_FEEDS_REFRESH * 60 * 1000;
-
-	private ListView listView;
 	private Feed category;
 	private List<Feed> categories;
-	private boolean categoryChanged = false;
+	private StorageFeedsUtil util = new StorageFeedsUtil();
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		loadFeeds();
-	}
-
-	private void loadFeeds() {
-		Date now = new Date();
-		long lastFeedUpdate = PrefsUpdater.getLastFeedsRefreshTime(this);
-		if (now.getTime() - lastFeedUpdate >= MILISECS_WITHOUT_FEEDS_REFRESH
-				|| !StorageFeedsUtil.hasInFile(this, sessionId, category.id)
-				|| categoryChanged) {
-			menuLoadingShouldWait = true;
-			refreshFeeds();
-		} else {
-			menuLoadingShouldWait = false;
-			showFeeds(loadFeedsFromFile());
-		}
-	}
-
-	private List<Feed> loadFeedsFromFile() {
-		List<Feed> allFeeds = StorageFeedsUtil
-				.get(this, sessionId, category.id);
-		List<Feed> resultFeeds = allFeeds;
-		if (!PrefsSettings.getShowAllPref(this)) {
-			resultFeeds = new ArrayList<Feed>();
-			for (Feed feed : allFeeds) {
-				if (feed.unread > 0) {
-					resultFeeds.add(feed);
-				}
-			}
-		}
-		return resultFeeds;
+		load();
 	}
 
 	public void initialize() {
 		Bundle b = getIntent().getExtras();
 		initSessionAndHost(b);
-		category = getParentCategory();
+		categories = StorageCategoriesUtil.get(this, sessionId);
+		category = getParentFeed();
 		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_MODE
-				&& PrefsSettings.getCurrntCategoryId(this) != TinyTinySpecificConstants.FRESH_FEED_ID) {
+				&& PrefsSettings.getCurrentCategoryId(this) != TinyTinySpecificConstants.FRESH_FEED_ID) {
 			categoryChanged = true;
 		}
 		listView = (ListView) findViewById(R.id.listView);
-	}
-
-	private Feed getParentCategory() {
-		categories = StorageCategoriesUtil.get(this, sessionId);
-		for (Feed category : categories) {
-			if (category.id == PrefsSettings.getCurrntCategoryId(this)) {
-				return category;
-			}
-		}
-		return new Feed().setId(TinyTinySpecificConstants.FRESH_FEED_ID);
 	}
 
 	@Override
@@ -109,58 +68,11 @@ public class FeedsActivity extends TinyRSSAppActivity {
 		}
 		switch (item.getItemId()) {
 		case R.id.list_action_refresh:
-			refreshFeeds();
+			refresh();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private void refreshFeeds() {
-		showProgress("Loading feeds...", "");
-		StorageFeedsUtil.savePos(this, sessionId, 0, category.id);
-		ResponseHandler handler = getFeedsResponseHandler();
-		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
-				.paramsGetFeeds(sessionId, showAll,
-						PrefsSettings.getCurrntCategoryId(this)), handler);
-	}
-
-	private void showFeeds(List<Feed> feeds) {
-		if (menuLoadingShouldWait) {
-			inflateMenu();
-		}
-		if (feeds.size() == 0) {
-			feeds.add((new Feed()).setTitle(NO_FEEDS_MSG).setUnread(0));
-			listView.setEnabled(false);
-		} else {
-			listView.setEnabled(true);
-		}
-		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_MODE) {
-			category.unread = 0;
-			for (Feed feed : feeds) {
-				category.unread += feed.unread;
-			}
-			StorageCategoriesUtil.save(this, sessionId, categories);
-		}
-		ArrayAdapter<Feed> feedsAdapter = new CustomAdapter<Feed>(this,
-				R.layout.feed_layout, R.id.feed_data, R.id.feed_unread_count,
-				feeds);
-		listView.setAdapter(feedsAdapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				StorageFeedsUtil.savePos(FeedsActivity.this, sessionId,
-						position, category.id);
-				startHeadlinesActivity((Feed) parent.getAdapter().getItem(
-						position));
-			}
-		});
-		if (StorageFeedsUtil.hasPosInFile(this, sessionId, category.id)) {
-			listView.setSelection(StorageFeedsUtil.getPos(this, sessionId,
-					category.id));
-		}
-		feedsAdapter.notifyDataSetChanged();
 	}
 
 	private ResponseHandler getFeedsResponseHandler() {
@@ -219,7 +131,7 @@ public class FeedsActivity extends TinyRSSAppActivity {
 						super.onPostExecute(aVoid);
 						StorageFeedsUtil.save(FeedsActivity.this, sessionId,
 								feeds, category.id);
-						showFeeds(feeds);
+						show(feeds);
 					}
 				};
 				task.execute(new JSONObject[] { response });
@@ -258,6 +170,96 @@ public class FeedsActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onToggleShowUnread() {
-		refreshFeeds();
+		refresh();
+	}
+
+	@Override
+	public long getMilisecsWithoutRefresh() {
+		return MILISECS_WITHOUT_FEEDS_REFRESH;
+	}
+
+	@Override
+	public InternalStorageUtil getUtil() {
+		return util;
+	}
+
+	@Override
+	public StorageParams getParamsLoadFromFile() {
+		return new StorageParams().setSessId(sessionId).setCatId(category.id);
+	}
+
+	@Override
+	public StorageParams getParamsHasInFile() {
+		return new StorageParams().setSessId(sessionId).setCatId(category.id);
+	}
+
+	@Override
+	public StorageParams getParamsHasPosInFile() {
+		return new StorageParams().setSessId(sessionId).setCatId(category.id);
+	}
+
+	@Override
+	public StorageParams getParamsGetPosFromFile() {
+		return new StorageParams().setSessId(sessionId).setCatId(category.id);
+	}
+
+	@Override
+	public String getEmptyListMsg() {
+		return NO_FEEDS_MSG;
+	}
+
+	@Override
+	public <T extends Entity> void onShow(List<T> entities) {
+		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_MODE) {
+			StorageCategoriesUtil.save(this, sessionId, categories);
+		}
+	}
+
+	@Override
+	public int getListItemLayout() {
+		return R.layout.feed_layout;
+	}
+
+	@Override
+	public int getListItemDataId() {
+		return R.id.feed_data;
+	}
+
+	@Override
+	public int getListItemCountId() {
+		return R.id.feed_unread_count;
+	}
+
+	@Override
+	public <T extends Entity> void onListItemClick(int position, T selected) {
+		StorageFeedsUtil.savePos(FeedsActivity.this, sessionId, position,
+				category.id);
+		startHeadlinesActivity((Feed) selected);
+	}
+
+	@Override
+	public void refresh() {
+		showProgress("Loading feeds...", "");
+		StorageFeedsUtil.savePos(this, sessionId, 0, category.id);
+		ResponseHandler handler = getFeedsResponseHandler();
+		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+				.paramsGetFeeds(sessionId, showAll,
+						PrefsSettings.getCurrentCategoryId(this)), handler);
+	}
+
+	@Override
+	public Feed getParentFeed() {
+		for (Feed category : categories) {
+			if (category.id == PrefsSettings.getCurrentCategoryId(this)) {
+				return category;
+			}
+		}
+		return new Feed().setId(TinyTinySpecificConstants.FRESH_FEED_ID);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Feed getEmtpyObj() {
+		return new Feed();
 	}
 }

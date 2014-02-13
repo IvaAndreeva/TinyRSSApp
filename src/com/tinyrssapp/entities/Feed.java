@@ -22,6 +22,7 @@ public class Feed extends Entity {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Feed setTitle(String title) {
 		this.title = title;
 		return this;
@@ -32,6 +33,7 @@ public class Feed extends Entity {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Feed setUnread(int unread) {
 		this.unread = unread;
 		return this;

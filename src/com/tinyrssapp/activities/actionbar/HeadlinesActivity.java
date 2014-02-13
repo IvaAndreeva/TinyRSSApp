@@ -13,14 +13,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
-import com.tinyrssapp.entities.CustomAdapter;
+import com.tinyrssapp.entities.Entity;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.entities.Headline;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
@@ -28,29 +25,31 @@ import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.request.RequestBuilder;
 import com.tinyrssapp.request.RequestParamsBuilder;
 import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.internal.InternalStorageUtil;
 import com.tinyrssapp.storage.internal.StorageCategoriesUtil;
 import com.tinyrssapp.storage.internal.StorageFeedsUtil;
 import com.tinyrssapp.storage.internal.StorageHeadlinesUtil;
+import com.tinyrssapp.storage.internal.StorageParams;
 import com.tinyrssapp.storage.prefs.PrefsSettings;
 import com.tinyrssapp.storage.prefs.PrefsUpdater;
 
 /**
  * Created by iva on 2/7/14.
  */
-public class HeadlinesActivity extends TinyRSSAppActivity {
+public class HeadlinesActivity extends TinyRSSAppListActivity {
 	public static final String NO_HEADLINES_MSG = "There are no available headlines in here";
 	public static final int MINUTES_WITHOUT_HEADLINES_REFRESH = 10;
 	private static final long MILISECS_WITHOUT_HEADLINES_REFRESH = MINUTES_WITHOUT_HEADLINES_REFRESH * 60 * 1000;
 
-	private ListView listView;
 	private int feedId;
 	private Feed feed;
 	private List<Feed> feeds;
+	private StorageHeadlinesUtil util = new StorageHeadlinesUtil();
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		loadHeadlines();
+		load();
 	}
 
 	public void initialize() {
@@ -64,21 +63,6 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 			feed = new Feed();
 		}
 		listView = (ListView) findViewById(R.id.listView);
-	}
-
-	private Feed getParentFeed() {
-		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
-			feeds = StorageCategoriesUtil.get(this, sessionId);
-		} else {
-			feeds = StorageFeedsUtil.get(this, sessionId,
-					PrefsSettings.getCurrntCategoryId(this));
-		}
-		for (Feed feed : feeds) {
-			if (feed.id == feedId) {
-				return feed;
-			}
-		}
-		return new Feed();
 	}
 
 	@Override
@@ -98,7 +82,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		}
 		switch (item.getItemId()) {
 		case R.id.list_action_refresh:
-			refreshHeadlines();
+			refresh();
 			return true;
 		case R.id.list_action_mark_all_as_read:
 			markFeedAsRead(feedId, host, sessionId, getApplicationContext());
@@ -106,70 +90,6 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private void loadHeadlines() {
-		Date now = new Date();
-		long lastHeadlinesUpdate = PrefsUpdater
-				.getLastHeadlinesRefreshTime(this);
-		if (now.getTime() - lastHeadlinesUpdate >= MILISECS_WITHOUT_HEADLINES_REFRESH
-				|| !StorageHeadlinesUtil.hasInFile(this, feedId)) {
-			menuLoadingShouldWait = true;
-			refreshHeadlines();
-		} else {
-			menuLoadingShouldWait = false;
-			showHeadlines(loadHeadlinesFromFile(feedId));
-		}
-	}
-
-	private void refreshHeadlines() {
-		showProgress("Loading headlines...", "");
-		StorageHeadlinesUtil.savePos(this, feedId, 0);
-		feedId = feed.id;
-		ResponseHandler handler = getHeadlinesResponseHandler();
-		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
-		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
-				.paramsGetHeadlines(sessionId, feedId, parentIsCat,
-						getViewMode()), handler);
-	}
-
-	private void showHeadlines(final List<Headline> headlines) {
-		if (menuLoadingShouldWait) {
-			inflateMenu();
-		}
-		setTitle("");
-		feed.unread = 0;
-		for (Headline headline : headlines) {
-			if (headline.unread) {
-				feed.unread++;
-			}
-		}
-		updateHeadlinesAndFeedsFiles(headlines);
-		if (headlines.size() == 0) {
-			headlines.add((new Headline()).setTitle(NO_HEADLINES_MSG));
-			listView.setEnabled(false);
-		} else {
-			listView.setEnabled(true);
-		}
-		ArrayAdapter<Headline> headlinesAdapter = new CustomAdapter<Headline>(
-				this, R.layout.headline_layout, R.id.headline_data, headlines);
-		listView.setAdapter(headlinesAdapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Headline currHeadline = (Headline) parent.getAdapter().getItem(
-						position);
-				StorageHeadlinesUtil.savePos(HeadlinesActivity.this, feedId,
-						position);
-				startArticleActivity(currHeadline, headlines, getTitle()
-						.toString());
-			}
-		});
-		if (StorageHeadlinesUtil.hasPosInFile(this, feedId)) {
-			listView.setSelection(StorageHeadlinesUtil.getPos(this, feedId));
-		}
-		headlinesAdapter.notifyDataSetChanged();
 	}
 
 	private ResponseHandler getHeadlinesResponseHandler() {
@@ -241,7 +161,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 					@Override
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
-						showHeadlines(headlines);
+						show(headlines);
 					}
 				};
 				task.execute(new JSONObject[] { response });
@@ -307,7 +227,7 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	}
 
 	protected List<Headline> markAllHeadlinesAsRead() {
-		List<Headline> headlines = loadHeadlinesFromFile(feedId);
+		List<Headline> headlines = loadFromFile(getParamsLoadFromFile());
 		for (Headline headline : headlines) {
 			headline.unread = false;
 		}
@@ -315,14 +235,30 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 	}
 
 	private void updateHeadlinesAndFeedsFiles(List<Headline> headlines) {
+		// Need to update the feeds with the modified parent feed (something
+		// goes wrong when updating with parent class, probably cause it uses
+		// Entity)
+		feeds = updateOldFeedsWithModifiedNewOne();
 		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
 		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			StorageFeedsUtil.save(HeadlinesActivity.this, sessionId, feeds,
-					PrefsSettings.getCurrntCategoryId(this));
+					PrefsSettings.getCurrentCategoryId(this));
 		} else {
 			StorageCategoriesUtil.save(this, sessionId, feeds);
 			PrefsUpdater.invalidateFeedsRefreshTime(this);
 		}
+	}
+
+	private List<Feed> updateOldFeedsWithModifiedNewOne() {
+		List<Feed> newFeeds = new ArrayList<Feed>();
+		for (Feed oldFeed : feeds) {
+			if (oldFeed.id == this.feed.id) {
+				newFeeds.add(this.feed);
+			} else {
+				newFeeds.add(oldFeed);
+			}
+		}
+		return newFeeds;
 	}
 
 	@Override
@@ -337,6 +273,109 @@ public class HeadlinesActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onToggleShowUnread() {
-		refreshHeadlines();
+		refresh();
+	}
+
+	@Override
+	public long getMilisecsWithoutRefresh() {
+		return MILISECS_WITHOUT_HEADLINES_REFRESH;
+	}
+
+	@Override
+	public InternalStorageUtil getUtil() {
+		return util;
+	}
+
+	@Override
+	public StorageParams getParamsLoadFromFile() {
+		return new StorageParams().setFeedId(feedId);
+	}
+
+	@Override
+	public StorageParams getParamsHasInFile() {
+		return new StorageParams().setFeedId(feedId);
+	}
+
+	@Override
+	public StorageParams getParamsHasPosInFile() {
+		return new StorageParams().setFeedId(feedId);
+	}
+
+	@Override
+	public StorageParams getParamsGetPosFromFile() {
+		return new StorageParams().setFeedId(feedId);
+	}
+
+	@Override
+	public String getEmptyListMsg() {
+		return NO_HEADLINES_MSG;
+	}
+
+	@Override
+	public <T extends Entity> void onShow(List<T> entities) {
+		List<Headline> headlines = new ArrayList<Headline>();
+		if (entities.size() > 0 && entities.get(0) instanceof Headline) {
+			for (T entity : entities) {
+				headlines.add((Headline) entity);
+			}
+		}
+		updateHeadlinesAndFeedsFiles(headlines);
+	}
+
+	@Override
+	public int getListItemLayout() {
+		return R.layout.headline_layout;
+	}
+
+	@Override
+	public int getListItemDataId() {
+		return R.id.headline_data;
+	}
+
+	@Override
+	public int getListItemCountId() {
+		return -1;
+	}
+
+	@Override
+	public <T extends Entity> void onListItemClick(int position, T selected) {
+		Headline currHeadline = (Headline) selected;
+		StorageHeadlinesUtil.savePos(HeadlinesActivity.this, feedId, position);
+		List<Headline> headlines = StorageHeadlinesUtil.get(this, feedId);
+		startArticleActivity(currHeadline, headlines, getTitle().toString());
+	}
+
+	@Override
+	public void refresh() {
+		showProgress("Loading headlines...", "");
+		StorageHeadlinesUtil.savePos(this, feedId, 0);
+		feedId = feed.id;
+		ResponseHandler handler = getHeadlinesResponseHandler();
+		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
+		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+				.paramsGetHeadlines(sessionId, feedId, parentIsCat,
+						getViewMode()), handler);
+	}
+
+	@Override
+	public Feed getParentFeed() {
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			feeds = StorageCategoriesUtil.get(this, sessionId);
+		} else {
+			feeds = StorageFeedsUtil.get(this, sessionId,
+					PrefsSettings.getCurrentCategoryId(this));
+		}
+		for (Feed feed : feeds) {
+			if (feed.id == feedId) {
+				return feed;
+			}
+		}
+		return new Feed();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Headline getEmtpyObj() {
+		return new Headline();
 	}
 }

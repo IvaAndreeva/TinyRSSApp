@@ -11,30 +11,28 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
-import com.tinyrssapp.entities.CustomAdapter;
+import com.tinyrssapp.entities.Entity;
 import com.tinyrssapp.entities.Feed;
 import com.tinyrssapp.errorhandling.ErrorAlertDialog;
 import com.tinyrssapp.menu.CommonMenu;
 import com.tinyrssapp.request.RequestBuilder;
 import com.tinyrssapp.request.RequestParamsBuilder;
 import com.tinyrssapp.response.ResponseHandler;
+import com.tinyrssapp.storage.internal.InternalStorageUtil;
 import com.tinyrssapp.storage.internal.StorageCategoriesUtil;
+import com.tinyrssapp.storage.internal.StorageParams;
 import com.tinyrssapp.storage.prefs.PrefsSettings;
 import com.tinyrssapp.storage.prefs.PrefsUpdater;
 
-public class CategoriesActivity extends TinyRSSAppActivity {
+public class CategoriesActivity extends TinyRSSAppListActivity {
 	public static final String NO_CATEGORIES_MSG = "There are no available categories in here";
 	public static final int MINUTES_WITHOUT_CATEGORIES_REFRESH = 10;
 	private static final long MILISECS_WITHOUT_CATEGORIES_REFRESH = MINUTES_WITHOUT_CATEGORIES_REFRESH * 60 * 1000;
-
-	private ListView listView;
+	private StorageCategoriesUtil util = new StorageCategoriesUtil();
 
 	@Override
 	public void initialize() {
@@ -46,81 +44,7 @@ public class CategoriesActivity extends TinyRSSAppActivity {
 	protected void onStart() {
 		super.onStart();
 		setTitle(R.string.categories_title);
-		loadCategories();
-	}
-
-	private void loadCategories() {
-		Date now = new Date();
-		long lastFeedUpdate = PrefsUpdater.getLastCategoriesRefreshTime(this);
-		if (now.getTime() - lastFeedUpdate >= MILISECS_WITHOUT_CATEGORIES_REFRESH
-				|| !StorageCategoriesUtil.hasInFile(this, sessionId)) {
-			menuLoadingShouldWait = true;
-			refreshCategories();
-		} else {
-			menuLoadingShouldWait = false;
-			showCategories(loadCategoriesFromFile());
-		}
-	}
-
-	private void refreshCategories() {
-		showProgress("Loading categories...", "");
-		StorageCategoriesUtil.savePos(this, sessionId, 0);
-		ResponseHandler handler = getCategoriesResponseHandler();
-		RequestBuilder.makeRequest(this, host,
-				RequestParamsBuilder.paramsGetCategories(sessionId, showAll),
-				handler);
-	}
-
-	private List<Feed> loadCategoriesFromFile() {
-		List<Feed> allCategories = StorageCategoriesUtil.get(this, sessionId);
-		List<Feed> resultCategories = allCategories;
-		if (!PrefsSettings.getShowAllPref(this)) {
-			resultCategories = new ArrayList<Feed>();
-			for (Feed cat : allCategories) {
-				if (cat.unread > 0) {
-					resultCategories.add(cat);
-				}
-			}
-		}
-		return resultCategories;
-	}
-
-	private void showCategories(List<Feed> categories) {
-		if (menuLoadingShouldWait) {
-			inflateMenu();
-		}
-		if (categories.size() == 0) {
-			categories.add((new Feed()).setTitle(NO_CATEGORIES_MSG)
-					.setUnread(0).setId(-3));
-			listView.setEnabled(false);
-		} else {
-			listView.setEnabled(true);
-		}
-		ArrayAdapter<Feed> categoriesAdapter = new CustomAdapter<Feed>(this,
-				R.layout.feed_layout, R.id.feed_data, R.id.feed_unread_count,
-				categories);
-		listView.setAdapter(categoriesAdapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				StorageCategoriesUtil.savePos(CategoriesActivity.this,
-						sessionId, position);
-				Feed selectedCategory = (Feed) parent.getAdapter().getItem(
-						position);
-				PrefsSettings.putCurrentCategoryId(CategoriesActivity.this,
-						selectedCategory.id);
-				if (PrefsSettings.getCategoryMode(CategoriesActivity.this) == PrefsSettings.CATEGORY_SHOW_FEEDS_MODE) {
-					startAllFeedsActivity();
-				} else {
-					startHeadlinesActivity(selectedCategory);
-				}
-			}
-		});
-		if (StorageCategoriesUtil.hasPosInFile(this, sessionId)) {
-			listView.setSelection(StorageCategoriesUtil.getPos(this, sessionId));
-		}
-		categoriesAdapter.notifyDataSetChanged();
+		load();
 	}
 
 	private ResponseHandler getCategoriesResponseHandler() {
@@ -181,7 +105,7 @@ public class CategoriesActivity extends TinyRSSAppActivity {
 						super.onPostExecute(aVoid);
 						StorageCategoriesUtil.save(CategoriesActivity.this,
 								sessionId, categories);
-						showCategories(categories);
+						show(categories);
 					}
 				};
 				task.execute(new JSONObject[] { response });
@@ -196,7 +120,7 @@ public class CategoriesActivity extends TinyRSSAppActivity {
 		}
 		switch (item.getItemId()) {
 		case R.id.list_action_refresh:
-			refreshCategories();
+			refresh();
 			return true;
 		case R.id.show_feeds_in_cats:
 			PrefsSettings.putCategoryMode(this,
@@ -223,6 +147,95 @@ public class CategoriesActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onToggleShowUnread() {
-		refreshCategories();
+		refresh();
+	}
+
+	@Override
+	public long getMilisecsWithoutRefresh() {
+		return MILISECS_WITHOUT_CATEGORIES_REFRESH;
+	}
+
+	@Override
+	public InternalStorageUtil getUtil() {
+		return util;
+	}
+
+	@Override
+	public StorageParams getParamsLoadFromFile() {
+		return new StorageParams().setSessId(sessionId);
+	}
+
+	@Override
+	public StorageParams getParamsHasInFile() {
+		return new StorageParams().setSessId(sessionId);
+	}
+
+	@Override
+	public StorageParams getParamsHasPosInFile() {
+		return new StorageParams().setSessId(sessionId);
+	}
+
+	@Override
+	public StorageParams getParamsGetPosFromFile() {
+		return new StorageParams().setSessId(sessionId);
+	}
+
+	@Override
+	public String getEmptyListMsg() {
+		return NO_CATEGORIES_MSG;
+	}
+
+	@Override
+	public <T extends Entity> void onShow(List<T> entities) {
+	}
+
+	@Override
+	public int getListItemLayout() {
+		return R.layout.feed_layout;
+	}
+
+	@Override
+	public int getListItemDataId() {
+		return R.id.feed_data;
+	}
+
+	@Override
+	public int getListItemCountId() {
+		return R.id.feed_unread_count;
+	}
+
+	@Override
+	public <T extends Entity> void onListItemClick(int position, T selected) {
+		StorageCategoriesUtil.savePos(CategoriesActivity.this, sessionId,
+				position);
+		Feed selectedCategory = (Feed) selected;
+		PrefsSettings.putCurrentCategoryId(CategoriesActivity.this,
+				selectedCategory.id);
+		if (PrefsSettings.getCategoryMode(CategoriesActivity.this) == PrefsSettings.CATEGORY_SHOW_FEEDS_MODE) {
+			startAllFeedsActivity();
+		} else {
+			startHeadlinesActivity(selectedCategory);
+		}
+	}
+
+	@Override
+	public void refresh() {
+		showProgress("Loading categories...", "");
+		StorageCategoriesUtil.savePos(this, sessionId, 0);
+		ResponseHandler handler = getCategoriesResponseHandler();
+		RequestBuilder.makeRequest(this, host,
+				RequestParamsBuilder.paramsGetCategories(sessionId, showAll),
+				handler);
+	}
+
+	@Override
+	public Feed getParentFeed() {
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Feed getEmtpyObj() {
+		return new Feed().setId(-3);
 	}
 }

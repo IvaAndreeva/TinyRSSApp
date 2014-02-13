@@ -1,6 +1,5 @@
 package com.tinyrssapp.entities;
 
-
 /**
  * Created by iva on 2/7/14.
  */
@@ -53,6 +52,7 @@ public class Headline extends Entity {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Headline setTitle(String title) {
 		this.title = title;
 		return this;
@@ -91,5 +91,12 @@ public class Headline extends Entity {
 	@Override
 	public int getUnread() {
 		return 1;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Headline setUnread(int unread) {
+		this.unread = unread > 0;
+		return this;
 	}
 }

@@ -6,12 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import android.content.Context;
 
 import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
+import com.tinyrssapp.activities.actionbar.TinyRSSAppListActivity;
+import com.tinyrssapp.entities.Entity;
 
-public class InternalStorageUtil {
+public abstract class InternalStorageUtil {
 
 	public static void clearFiles(Context context, String currSessionId) {
 		if (context.getFilesDir().listFiles() != null) {
@@ -57,4 +60,16 @@ public class InternalStorageUtil {
 		}
 		return obj;
 	}
+
+	public abstract <T extends Entity> List<T> get(
+			TinyRSSAppListActivity context, StorageParams params);
+
+	public abstract boolean hasInFile(TinyRSSAppListActivity context,
+			StorageParams params);
+
+	public abstract boolean hasPosInFile(TinyRSSAppListActivity context,
+			StorageParams params);
+
+	public abstract int getPos(TinyRSSAppListActivity context,
+			StorageParams params);
 }

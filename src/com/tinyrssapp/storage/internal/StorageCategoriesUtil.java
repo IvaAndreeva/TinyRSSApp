@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
+import com.tinyrssapp.activities.actionbar.TinyRSSAppListActivity;
 import com.tinyrssapp.entities.Feed;
 
 public class StorageCategoriesUtil extends InternalStorageUtil {
@@ -65,5 +66,28 @@ public class StorageCategoriesUtil extends InternalStorageUtil {
 
 	private static String getFileNameCategoriesPos(String sessionId) {
 		return SELECTED_CATEGORY_POS + sessionId;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Feed> get(TinyRSSAppListActivity context, StorageParams params) {
+		return get(context, params.sessionId);
+	}
+
+	@Override
+	public boolean hasPosInFile(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return hasPosInFile(context, params.sessionId);
+	}
+
+	@Override
+	public int getPos(TinyRSSAppListActivity context, StorageParams params) {
+		return getPos(context, params.sessionId);
+	}
+
+	@Override
+	public boolean hasInFile(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return hasInFile(context, params.sessionId);
 	}
 }

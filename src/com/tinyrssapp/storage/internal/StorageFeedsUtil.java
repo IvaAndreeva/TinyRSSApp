@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
+import com.tinyrssapp.activities.actionbar.TinyRSSAppListActivity;
 import com.tinyrssapp.entities.Feed;
 
 public class StorageFeedsUtil extends InternalStorageUtil {
@@ -26,6 +27,9 @@ public class StorageFeedsUtil extends InternalStorageUtil {
 	@SuppressWarnings("unchecked")
 	public static List<Feed> get(TinyRSSAppActivity context, String sessionId,
 			int catId) {
+		if (!hasInFile(context, sessionId, catId)) {
+			return new ArrayList<Feed>();
+		}
 		Object feedsObj = InternalStorageUtil.readObjFromFile(context,
 				getFileNameFeeds(sessionId, catId));
 		List<Feed> feeds = new ArrayList<Feed>();
@@ -64,5 +68,28 @@ public class StorageFeedsUtil extends InternalStorageUtil {
 
 	private static String getFileNameFeedsPos(String sessionId, int catId) {
 		return SELECTED_FEED_POS + sessionId + catId;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Feed> get(TinyRSSAppListActivity context, StorageParams params) {
+		return get(context, params.sessionId, params.catId);
+	}
+
+	@Override
+	public boolean hasPosInFile(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return hasPosInFile(context, params.sessionId, params.catId);
+	}
+
+	@Override
+	public int getPos(TinyRSSAppListActivity context, StorageParams params) {
+		return getPos(context, params.sessionId, params.catId);
+	}
+
+	@Override
+	public boolean hasInFile(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return hasInFile(context, params.sessionId, params.catId);
 	}
 }

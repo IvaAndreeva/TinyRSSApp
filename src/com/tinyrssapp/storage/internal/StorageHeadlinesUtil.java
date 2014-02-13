@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
+import com.tinyrssapp.activities.actionbar.TinyRSSAppListActivity;
 import com.tinyrssapp.entities.Headline;
 
 public class StorageHeadlinesUtil extends InternalStorageUtil {
@@ -24,6 +25,9 @@ public class StorageHeadlinesUtil extends InternalStorageUtil {
 
 	@SuppressWarnings("unchecked")
 	public static List<Headline> get(TinyRSSAppActivity context, int feedId) {
+		if (!hasInFile(context, feedId)) {
+			return new ArrayList<Headline>();
+		}
 		List<Headline> headlines = new ArrayList<Headline>();
 		Object headlinesObj = InternalStorageUtil.readObjFromFile(context,
 				getFileNameHeadlines(feedId));
@@ -63,4 +67,27 @@ public class StorageHeadlinesUtil extends InternalStorageUtil {
 		return SELECTED_HEADLINE_POS + feedId;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Headline> get(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return get(context, params.feedId);
+	}
+
+	@Override
+	public boolean hasPosInFile(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return hasPosInFile(context, params.feedId);
+	}
+
+	@Override
+	public int getPos(TinyRSSAppListActivity context, StorageParams params) {
+		return getPos(context, params.feedId);
+	}
+
+	@Override
+	public boolean hasInFile(TinyRSSAppListActivity context,
+			StorageParams params) {
+		return hasInFile(context, params.feedId);
+	}
 }
