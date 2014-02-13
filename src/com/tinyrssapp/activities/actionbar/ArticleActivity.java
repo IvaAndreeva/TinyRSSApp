@@ -7,9 +7,12 @@ import org.apache.http.Header;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +39,8 @@ import com.tinyrssapp.storage.prefs.PrefsSettings;
 public class ArticleActivity extends TinyRSSAppActivity {
 	public static final String MARKED_AS_READ_STR = "Marked as read";
 	public static final String MARKED_AS_UNREAD_STR = "Marked as unread";
+	public static final String MARKED_AS_STARRED_STR = "Marked as starred";
+	public static final String MARKED_AS_NOT_STARRED_STR = "Unmarked as starred";
 	public static final String BLANK_PAGE = "about:blank";
 
 	private long articleId;
@@ -43,6 +48,10 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	private List<Headline> headlines;
 	private String feedTitle;
 	private int feedId;
+	private int markReadIcon = 0;
+	private int markUneadIcon = 0;
+	private int markStarredIcon = 0;
+	private int unmarkStarredIcon = 0;
 
 	public void initialize() {
 		Bundle b = getIntent().getExtras();
@@ -105,6 +114,62 @@ public class ArticleActivity extends TinyRSSAppActivity {
 	}
 
 	@Override
+	protected void updateAllItemTitles() {
+		if (markReadIcon == 0 || unmarkStarredIcon == 0 || markStarredIcon == 0
+				|| markUneadIcon == 0) {
+			resolveIcons();
+		}
+		super.updateAllItemTitles();
+		updateMarkUnreadItem();
+		updateMarkStarredItem();
+	}
+
+	private void resolveIcons() {
+		Resources.Theme themes = getTheme();
+		TypedValue storedValueInTheme = new TypedValue();
+		if (themes.resolveAttribute(R.attr.article_mark_read_icon,
+				storedValueInTheme, true)) {
+			markReadIcon = storedValueInTheme.resourceId;
+		}
+		if (themes.resolveAttribute(R.attr.article_mark_unread_icon,
+				storedValueInTheme, true)) {
+			markUneadIcon = storedValueInTheme.resourceId;
+		}
+		if (themes.resolveAttribute(R.attr.article_mark_starred_icon,
+				storedValueInTheme, true)) {
+			markStarredIcon = storedValueInTheme.resourceId;
+		}
+		if (themes.resolveAttribute(R.attr.article_unmark_starred_icon,
+				storedValueInTheme, true)) {
+			unmarkStarredIcon = storedValueInTheme.resourceId;
+		}
+	}
+
+	private void updateMarkUnreadItem() {
+		MenuItem markUnread = menu.findItem(R.id.article_action_toggle_unread);
+
+		if (getCurrentArticle().unread) {
+			markUnread.setTitle(R.string.article_mark_read_msg);
+			markUnread.setIcon(markReadIcon);
+		} else {
+			markUnread.setTitle(R.string.article_mark_unread_msg);
+			markUnread.setIcon(markUneadIcon);
+		}
+	}
+
+	private void updateMarkStarredItem() {
+		MenuItem markStarred = menu
+				.findItem(R.id.article_action_toggle_starred);
+		if (getCurrentArticle().marked) {
+			markStarred.setTitle(R.string.article_mark_unstar_msg);
+			markStarred.setIcon(unmarkStarredIcon);
+		} else {
+			markStarred.setTitle(R.string.article_mark_star_msg);
+			markStarred.setIcon(markStarredIcon);
+		}
+	}
+
+	@Override
 	public void onBackPressed() {
 		int feedIdToLoad = getCurrentArticle().feedId;
 		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
@@ -155,11 +220,24 @@ public class ArticleActivity extends TinyRSSAppActivity {
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
 			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+			forceInflateMenu();
 			return true;
 		case R.id.article_action_toggle_starred:
+			currArticle = getCurrentArticle();
+			currArticle.marked = !currArticle.marked;
+			headlines = updateOldHeadlinesWithModifiedNewOne();
+			StorageHeadlinesUtil.save(this, headlines, feedId);
+
+			msg = MARKED_AS_STARRED_STR;
+			if (!currArticle.marked) {
+				msg = MARKED_AS_NOT_STARRED_STR;
+			}
 			markArticleFieldAsMode(
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_STARRED_VALUE,
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
+
+			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+			updateAllItemTitles();
 			return true;
 		case R.id.article_action_share:
 			startShareIntent(getShareContent(getCurrentArticle()));

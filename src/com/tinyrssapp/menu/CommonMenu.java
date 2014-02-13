@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.example.TinyRSSApp.R;
 import com.tinyrssapp.activities.ThemeUpdater;
 import com.tinyrssapp.activities.actionbar.TinyRSSAppActivity;
+import com.tinyrssapp.storage.prefs.PrefsSettings;
 
 public class CommonMenu {
 	public static boolean checkIsCommonMenuItemSelected(
@@ -37,7 +38,8 @@ public class CommonMenu {
 
 	private static boolean hideCategoriesIfChosen(TinyRSSAppActivity context,
 			MenuItem item) {
-		if (item.getItemId() == R.id.hide_categories) {
+		if (item.getItemId() == R.id.toggle_show_categories
+				&& PrefsSettings.getCategoryMode(context) != PrefsSettings.CATEGORY_NO_MODE) {
 			Toast.makeText(context, "Hiding categories", Toast.LENGTH_LONG)
 					.show();
 			return true;
@@ -47,7 +49,8 @@ public class CommonMenu {
 
 	private static boolean showCategoriesIfChosen(TinyRSSAppActivity context,
 			MenuItem item) {
-		if (item.getItemId() == R.id.show_categories) {
+		if (item.getItemId() == R.id.toggle_show_categories
+				&& PrefsSettings.getCategoryMode(context) == PrefsSettings.CATEGORY_NO_MODE) {
 			Toast.makeText(context, "Showing categories", Toast.LENGTH_LONG)
 					.show();
 			return true;

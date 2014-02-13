@@ -4,15 +4,15 @@
 
     <item
         android:id="@+id/article_action_toggle_unread"
-        android:icon="?attr/toggle_unread_icon"
+        android:icon="?attr/article_mark_unread_icon"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/article_toggle_unread_msg"
+        android:title="@string/article_mark_unread_msg"
         tinyrssapp:showAsAction="always"/>
     <item
         android:id="@+id/article_action_toggle_starred"
-        android:icon="?attr/toggle_starred_icon"
+        android:icon="?attr/article_mark_starred_icon"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/article_toggle_starred_msg"
+        android:title="@string/article_mark_star_msg"
         tinyrssapp:showAsAction="always"/>
     <item
         android:id="@+id/article_action_share"
@@ -28,17 +28,12 @@
     <item
         android:id="@+id/toggle_show_unread"
         android:showAsAction="never"
-        android:title="@string/toggle_show_unread_msg"
+        android:title="@string/show_all_msg"
         tinyrssapp:showAsAction="never"/>
     <item
-        android:id="@+id/show_categories"
+        android:id="@+id/toggle_show_categories"
         android:showAsAction="never"
         android:title="@string/show_categories_msg"
-        tinyrssapp:showAsAction="never"/>
-    <item
-        android:id="@+id/hide_categories"
-        android:showAsAction="never"
-        android:title="@string/hide_categories_msg"
         tinyrssapp:showAsAction="never"/>
     <item
         android:id="@+id/switch_theme"

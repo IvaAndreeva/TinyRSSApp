@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.TinyRSSApp.R;
 import com.tinyrssapp.activities.LoginActivity;
 import com.tinyrssapp.activities.ThemeUpdater;
 import com.tinyrssapp.constants.TinyTinySpecificConstants;
@@ -63,9 +65,11 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 
 	public void inflateMenu() {
 		if (!isMenuInflated) {
+			menu.clear();
 			isMenuInflated = true;
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(getMenu(), menu);
+			updateAllItemTitles();
 		}
 	}
 
@@ -103,12 +107,42 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		}
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 		PrefsSettings.putShowAllPref(this, showAll);
+		forceInflateMenu();
+	}
+
+	public void forceInflateMenu() {
+		isMenuInflated = false;
+		inflateMenu();
+	}
+
+	protected void updateAllItemTitles() {
+		updateShowUnreadItemTitle();
+		updateShowHideCategoriesItemTitle();
+	}
+
+	private void updateShowUnreadItemTitle() {
+		MenuItem showUnreadItem = menu.findItem(R.id.toggle_show_unread);
+		if (PrefsSettings.getShowAllPref(this)) {
+			showUnreadItem.setTitle(R.string.show_unread_msg);
+		} else {
+			showUnreadItem.setTitle(R.string.show_all_msg);
+		}
+	}
+
+	private void updateShowHideCategoriesItemTitle() {
+		MenuItem showUnreadItem = menu.findItem(R.id.toggle_show_categories);
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_MODE) {
+			showUnreadItem.setTitle(R.string.show_categories_msg);
+		} else {
+			showUnreadItem.setTitle(R.string.hide_categories_msg);
+		}
 	}
 
 	public void onShowCategories() {
 		PrefsSettings.putCategoryMode(this,
 				PrefsSettings.CATEGORY_NO_FEEDS_MODE);
 		PrefsUpdater.invalidateRefreshTimes(this);
+		forceInflateMenu();
 		startCategoriesActivity();
 	}
 
@@ -117,6 +151,7 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		PrefsSettings.putCurrentCategoryId(this,
 				TinyTinySpecificConstants.FRESH_FEED_ID);
 		PrefsUpdater.invalidateRefreshTimes(this);
+		forceInflateMenu();
 		startAllFeedsActivity();
 	}
 
