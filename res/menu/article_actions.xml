@@ -7,13 +7,19 @@
         android:icon="?attr/toggle_unread_icon"
         android:showAsAction="ifRoom|withText"
         android:title="@string/article_toggle_unread_msg"
-        tinyrssapp:showAsAction="ifRoom|withText"/>
+        tinyrssapp:showAsAction="always"/>
     <item
         android:id="@+id/article_action_toggle_starred"
         android:icon="?attr/toggle_starred_icon"
         android:showAsAction="ifRoom|withText"
         android:title="@string/article_toggle_starred_msg"
-        tinyrssapp:showAsAction="ifRoom|withText"/>
+        tinyrssapp:showAsAction="always"/>
+    <item
+        android:id="@+id/article_action_share"
+        android:icon="?attr/share_icon"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/article_share_msg"
+        tinyrssapp:showAsAction="always"/>
     <item
         android:id="@+id/logout_action"
         android:showAsAction="never"

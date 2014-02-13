@@ -8,6 +8,7 @@
         <item name="mark_as_read_icon">@drawable/light_mark_as_read</item>
         <item name="toggle_starred_icon">@drawable/light_article_toggle_starred</item>
         <item name="toggle_unread_icon">@drawable/light_article_toggle_unread</item>
+        <item name="share_icon">@drawable/share</item>
         <item name="no_unread_feeds_color">@color/light_no_unread_feeds</item>
         <item name="unread_feeds_color">@color/light_unread_feeds</item>
     </style>
@@ -21,6 +22,7 @@
         <item name="mark_as_read_icon">@drawable/dark_mark_as_read</item>
         <item name="toggle_starred_icon">@drawable/dark_article_toggle_starred</item>
         <item name="toggle_unread_icon">@drawable/dark_article_toggle_unread</item>
+        <item name="share_icon">@drawable/share</item>
         <item name="no_unread_feeds_color">@color/dark_no_unread_feeds</item>
         <item name="unread_feeds_color">@color/dark_unread_feeds</item>
     </style>

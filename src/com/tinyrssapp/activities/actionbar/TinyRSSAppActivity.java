@@ -128,22 +128,6 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		startSimpleActivity(FeedsActivity.class);
 	}
 
-	public void startSimpleActivity(Class<? extends TinyRSSAppActivity> _class) {
-		Bundle b = new Bundle();
-		b.putString(LoginActivity.HOST_PROP, host);
-		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
-				sessionId);
-		startActivity(b, _class);
-	}
-
-	public void startActivity(Bundle b,
-			Class<? extends TinyRSSAppActivity> _class) {
-		Intent intent = new Intent(this, _class);
-		intent.putExtras(b);
-		startActivity(intent);
-		finish();
-	}
-
 	public void startArticleActivity(Headline headline,
 			List<Headline> headlines, String feedTitle) {
 		Bundle b = new Bundle();
@@ -166,6 +150,30 @@ public abstract class TinyRSSAppActivity extends ActionBarActivity {
 		b.putInt(FEED_ID_TO_LOAD, feed.id);
 		b.putString(FEED_TITLE_TO_LOAD, feed.title);
 		startActivity(b, HeadlinesActivity.class);
+	}
+
+	public void startShareIntent(String content) {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, content);
+		sendIntent.setType("text/plain");
+		startActivity(sendIntent);
+	}
+
+	public void startSimpleActivity(Class<? extends TinyRSSAppActivity> _class) {
+		Bundle b = new Bundle();
+		b.putString(LoginActivity.HOST_PROP, host);
+		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,
+				sessionId);
+		startActivity(b, _class);
+	}
+
+	public void startActivity(Bundle b,
+			Class<? extends TinyRSSAppActivity> _class) {
+		Intent intent = new Intent(this, _class);
+		intent.putExtras(b);
+		startActivity(intent);
+		finish();
 	}
 
 	public void showProgress(String title, String body) {

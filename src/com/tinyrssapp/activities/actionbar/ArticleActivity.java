@@ -161,9 +161,16 @@ public class ArticleActivity extends TinyRSSAppActivity {
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_STARRED_VALUE,
 					TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE);
 			return true;
+		case R.id.article_action_share:
+			startShareIntent(getShareContent(getCurrentArticle()));
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private String getShareContent(Headline article) {
+		return article.title + " " + article.link;
 	}
 
 	private Headline getCurrentArticle() {

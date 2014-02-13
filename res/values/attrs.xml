@@ -4,6 +4,7 @@
         <attr name="mark_as_read_icon" format="reference" />
         <attr name="toggle_starred_icon" format="reference" />
         <attr name="toggle_unread_icon" format="reference" />
+        <attr name="share_icon" format="reference" />
         <attr name="no_unread_feeds_color" format="reference" />
         <attr name="unread_feeds_color" format="reference" />
     </declare-styleable>
