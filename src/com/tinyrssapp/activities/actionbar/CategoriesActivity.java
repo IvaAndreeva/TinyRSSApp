@@ -47,6 +47,22 @@ public class CategoriesActivity extends TinyRSSAppListActivity {
 		load();
 	}
 
+	@Override
+	protected void updateAllItemTitles() {
+		super.updateAllItemTitles();
+		updateShowFeedsInCatItem();
+	}
+
+	private void updateShowFeedsInCatItem() {
+		MenuItem markUnread = menu.findItem(R.id.toggle_show_feeds_in_cats);
+
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			markUnread.setTitle(R.string.show_feeds_in_cats_msg);
+		} else {
+			markUnread.setTitle(R.string.hide_feeds_in_cats_msg);
+		}
+	}
+
 	private ResponseHandler getCategoriesResponseHandler() {
 		return new ResponseHandler() {
 
@@ -122,13 +138,15 @@ public class CategoriesActivity extends TinyRSSAppListActivity {
 		case R.id.list_action_refresh:
 			refresh();
 			return true;
-		case R.id.show_feeds_in_cats:
-			PrefsSettings.putCategoryMode(this,
-					PrefsSettings.CATEGORY_SHOW_FEEDS_MODE);
-			return true;
-		case R.id.hide_feeds_in_cats:
-			PrefsSettings.putCategoryMode(this,
-					PrefsSettings.CATEGORY_NO_FEEDS_MODE);
+		case R.id.toggle_show_feeds_in_cats:
+			if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+				PrefsSettings.putCategoryMode(this,
+						PrefsSettings.CATEGORY_SHOW_FEEDS_MODE);
+			} else {
+				PrefsSettings.putCategoryMode(this,
+						PrefsSettings.CATEGORY_NO_FEEDS_MODE);
+			}
+			forceInflateMenu();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

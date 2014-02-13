@@ -96,6 +96,10 @@ public class CommonMenu {
 			ThemeUpdater.setThemeManually(context, ThemeUpdater.DAY_THEME);
 			return true;
 		}
+		if (item.getItemId() == R.id.switch_to_auto_theme) {
+			ThemeUpdater.setThemeAuto(context);
+			return true;
+		}
 		return false;
 	}
 }
