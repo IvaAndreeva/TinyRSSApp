@@ -54,11 +54,12 @@ public abstract class TinyRSSAppListActivity extends TinyRSSAppActivity {
 		if (menuLoadingShouldWait) {
 			inflateMenu();
 		}
-		if (getParentFeed() != null) {
-			getParentFeed().unread = 0;
+		Feed parent = getParentFeed();
+		if (parent != null) {
+			parent.unread = 0;
 			for (Entity entity : entities) {
 				if (entity.isUnread()) {
-					getParentFeed().unread += entity.getUnread();
+					parent.unread += entity.getUnread();
 				}
 			}
 		}

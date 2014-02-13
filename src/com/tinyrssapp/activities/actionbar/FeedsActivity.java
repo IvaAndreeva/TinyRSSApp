@@ -53,7 +53,7 @@ public class FeedsActivity extends TinyRSSAppListActivity {
 		Bundle b = getIntent().getExtras();
 		initSessionAndHost(b);
 		categories = StorageCategoriesUtil.get(this, sessionId);
-		category = getParentFeed();
+		category = initParent();
 		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_MODE
 				&& PrefsSettings.getCurrentCategoryId(this) != TinyTinySpecificConstants.FRESH_FEED_ID) {
 			categoryChanged = true;
@@ -247,14 +247,17 @@ public class FeedsActivity extends TinyRSSAppListActivity {
 						PrefsSettings.getCurrentCategoryId(this)), handler);
 	}
 
-	@Override
-	public Feed getParentFeed() {
+	private Feed initParent() {
 		for (Feed category : categories) {
 			if (category.id == PrefsSettings.getCurrentCategoryId(this)) {
 				return category;
 			}
 		}
 		return new Feed().setId(TinyTinySpecificConstants.FRESH_FEED_ID);
+	}
+
+	public Feed getParentFeed() {
+		return category;
 	}
 
 	@SuppressWarnings("unchecked")

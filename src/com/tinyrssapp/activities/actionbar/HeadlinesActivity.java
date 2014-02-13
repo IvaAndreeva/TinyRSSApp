@@ -57,7 +57,7 @@ public class HeadlinesActivity extends TinyRSSAppListActivity {
 		initSessionAndHost(b);
 		if (b != null) {
 			feedId = b.getInt(FEED_ID_TO_LOAD);
-			feed = getParentFeed();
+			feed = initParent();
 		} else {
 			feedId = 0;
 			feed = new Feed();
@@ -239,7 +239,6 @@ public class HeadlinesActivity extends TinyRSSAppListActivity {
 		// goes wrong when updating with parent class, probably cause it uses
 		// Entity)
 		feeds = updateOldFeedsWithModifiedNewOne();
-		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
 		if (PrefsSettings.getCategoryMode(this) != PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			StorageFeedsUtil.save(HeadlinesActivity.this, sessionId, feeds,
 					PrefsSettings.getCurrentCategoryId(this));
@@ -247,6 +246,7 @@ public class HeadlinesActivity extends TinyRSSAppListActivity {
 			StorageCategoriesUtil.save(this, sessionId, feeds);
 			PrefsUpdater.invalidateFeedsRefreshTime(this);
 		}
+		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
 	}
 
 	private List<Feed> updateOldFeedsWithModifiedNewOne() {
@@ -357,8 +357,7 @@ public class HeadlinesActivity extends TinyRSSAppListActivity {
 						getViewMode()), handler);
 	}
 
-	@Override
-	public Feed getParentFeed() {
+	private Feed initParent() {
 		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			feeds = StorageCategoriesUtil.get(this, sessionId);
 		} else {
@@ -371,6 +370,10 @@ public class HeadlinesActivity extends TinyRSSAppListActivity {
 			}
 		}
 		return new Feed();
+	}
+
+	public Feed getParentFeed() {
+		return feed;
 	}
 
 	@SuppressWarnings("unchecked")

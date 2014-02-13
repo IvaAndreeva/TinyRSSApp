@@ -106,8 +106,12 @@ public class ArticleActivity extends TinyRSSAppActivity {
 
 	@Override
 	public void onBackPressed() {
-		startHeadlinesActivity((new Feed()).setId(getCurrentArticle().feedId)
-				.setTitle(feedTitle));
+		int feedIdToLoad = getCurrentArticle().feedId;
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			feedIdToLoad = PrefsSettings.getCurrentCategoryId(this);
+		}
+		startHeadlinesActivity((new Feed()).setId(feedIdToLoad).setTitle(
+				feedTitle));
 		super.onBackPressed();
 	}
 
@@ -116,6 +120,19 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		boolean res = super.onCreateOptionsMenu(menu);
 		inflateMenu();
 		return res;
+	}
+
+	private List<Headline> updateOldHeadlinesWithModifiedNewOne() {
+		List<Headline> newHeadlines = new ArrayList<Headline>();
+		Headline currArticle = getCurrentArticle();
+		for (Headline oldHeadline : headlines) {
+			if (oldHeadline.id == currArticle.id) {
+				newHeadlines.add(currArticle);
+			} else {
+				newHeadlines.add(oldHeadline);
+			}
+		}
+		return newHeadlines;
 	}
 
 	@Override
@@ -127,6 +144,7 @@ public class ArticleActivity extends TinyRSSAppActivity {
 		case R.id.article_action_toggle_unread:
 			Headline currArticle = getCurrentArticle();
 			currArticle.unread = !currArticle.unread;
+			headlines = updateOldHeadlinesWithModifiedNewOne();
 			StorageHeadlinesUtil.save(this, headlines, feedId);
 
 			String msg = MARKED_AS_UNREAD_STR;
