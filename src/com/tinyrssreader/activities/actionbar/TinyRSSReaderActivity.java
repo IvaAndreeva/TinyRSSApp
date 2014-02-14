@@ -172,8 +172,13 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		b.putLong(ARTICLE_ID, headline.id);
 		b.putString(CONTENT, headline.content);
 		b.putString(FEED_TITLE_TO_LOAD, feedTitle);
-		b.putInt(FEED_ID_TO_LOAD, headline.feedId);
-		StorageHeadlinesUtil.save(this, headlines, headline.feedId);
+		int feedIdToLoad = headline.feedId;
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE
+				|| PrefsSettings.getCurrentCategoryId(this) == TinyTinySpecificConstants.STARRED_FEED_ID) {
+			feedIdToLoad = PrefsSettings.getCurrentCategoryId(this);
+		}
+		b.putInt(FEED_ID_TO_LOAD, feedIdToLoad);
+		StorageHeadlinesUtil.save(this, headlines, feedIdToLoad);
 		startActivity(b, ArticleActivity.class);
 	}
 

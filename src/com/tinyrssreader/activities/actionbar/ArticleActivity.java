@@ -171,7 +171,8 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 	@Override
 	public void onBackPressed() {
 		int feedIdToLoad = getCurrentArticle().feedId;
-		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE
+				|| PrefsSettings.getCurrentCategoryId(this) == TinyTinySpecificConstants.STARRED_FEED_ID) {
 			feedIdToLoad = PrefsSettings.getCurrentCategoryId(this);
 		}
 		startHeadlinesActivity((new Feed()).setId(feedIdToLoad).setTitle(
@@ -266,6 +267,7 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 		articleId = headline.id;
 		content = headline.content;
 		loadArticle();
+		forceInflateMenu();
 	}
 
 	private void loadArticle() {
@@ -274,9 +276,9 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 		markArticleFieldAsMode(
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_FIELD_UNREAD_VALUE,
 				TinyTinySpecificConstants.REQUEST_UPDATE_ARTICLE_MODE_FALSE_VALUE);
+		updateOldHeadlinesWithModifiedNewOne();
 		StorageHeadlinesUtil.save(this, headlines, feedId);
 		loadWebView();
-
 	}
 
 	protected Headline getPrevHeadline() {

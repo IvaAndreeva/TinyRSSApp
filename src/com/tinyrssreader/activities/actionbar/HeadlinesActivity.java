@@ -359,7 +359,8 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 	}
 
 	private Feed initParent() {
-		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE
+				&& feedId != TinyTinySpecificConstants.STARRED_FEED_ID) {
 			feeds = StorageCategoriesUtil.get(this, sessionId);
 		} else {
 			feeds = StorageFeedsUtil.get(this, sessionId,
@@ -381,5 +382,10 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 	@Override
 	public Headline getEmtpyObj() {
 		return new Headline();
+	}
+
+	@Override
+	public long getLastRefreshTime() {
+		return PrefsUpdater.getLastHeadlinesRefreshTime(this);
 	}
 }

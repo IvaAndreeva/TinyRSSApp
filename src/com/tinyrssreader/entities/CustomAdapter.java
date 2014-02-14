@@ -73,7 +73,7 @@ public class CustomAdapter<T extends Entity> extends ArrayAdapter<T> {
 			TextView title = (TextView) v.findViewById(entityTitleTextViewId);
 			if (title != null) {
 				title.setText(entity.getTitle());
-				if (entity.isUnread()) {
+				if (entity.isUnread() || entity.alwaysShow) {
 					title.setTextColor(unreadColor);
 				} else {
 					title.setTextColor(noUnreadColor);

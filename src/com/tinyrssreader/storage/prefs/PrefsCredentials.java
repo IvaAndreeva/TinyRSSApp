@@ -8,7 +8,7 @@ public class PrefsCredentials extends StoredPreferencesTinyRSSReader {
 	public static final String PASS = "pass";
 
 	static{
-		PREFS = "credentials";
+		PREFS = PREFS_PREFIX + "credentials";
 	}
 	
 	public static String getUsernamePref(Context context) {

@@ -149,7 +149,7 @@ public class LoginActivity extends Activity {
 				if (!LoginActivity.this.isFinishing()) {
 					progressDialog.dismiss();
 					ErrorAlertDialog.showError(LoginActivity.this,
-							R.string.error_login);
+							R.string.error_connection);
 				}
 			}
 

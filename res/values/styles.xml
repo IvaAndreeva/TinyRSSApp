@@ -7,9 +7,9 @@
         <item name="refresh_icon">@drawable/light_list_action_refresh</item>
         <item name="mark_as_read_icon">@drawable/light_mark_as_read</item>
         <item name="article_mark_starred_icon">@drawable/light_article_toggle_starred</item>
-        <item name="article_unmark_starred_icon">@drawable/dark_article_toggle_starred</item>
-        <item name="article_mark_unread_icon">@drawable/dark_article_toggle_unread</item>
-        <item name="article_mark_read_icon">@drawable/light_article_toggle_unread</item>
+        <item name="article_unmark_starred_icon">@drawable/light_article_toggle_starred_visited</item>
+        <item name="article_mark_unread_icon">@drawable/light_article_toggle_unread</item>
+        <item name="article_mark_read_icon">@drawable/light_article_toggle_unread_visited</item>
         <item name="share_icon">@drawable/share</item>
         <item name="no_unread_feeds_color">@color/light_no_unread_feeds</item>
         <item name="unread_feeds_color">@color/light_unread_feeds</item>
@@ -22,10 +22,10 @@
         <item name="android:panelFullBackground">@color/menu_background</item>
         <item name="refresh_icon">@drawable/dark_list_action_refresh</item>
         <item name="mark_as_read_icon">@drawable/dark_mark_as_read</item>
-        <item name="article_mark_starred_icon">@drawable/light_article_toggle_starred</item>
-        <item name="article_unmark_starred_icon">@drawable/dark_article_toggle_starred</item>
-        <item name="article_mark_unread_icon">@drawable/light_article_toggle_unread</item>
-        <item name="article_mark_read_icon">@drawable/dark_article_toggle_unread</item>
+        <item name="article_mark_starred_icon">@drawable/dark_article_toggle_starred</item>
+        <item name="article_unmark_starred_icon">@drawable/light_article_toggle_starred_visited</item>
+        <item name="article_mark_unread_icon">@drawable/dark_article_toggle_unread</item>
+        <item name="article_mark_read_icon">@drawable/light_article_toggle_unread_visited</item>
         <item name="share_icon">@drawable/share</item>
         <item name="no_unread_feeds_color">@color/dark_no_unread_feeds</item>
         <item name="unread_feeds_color">@color/dark_unread_feeds</item>

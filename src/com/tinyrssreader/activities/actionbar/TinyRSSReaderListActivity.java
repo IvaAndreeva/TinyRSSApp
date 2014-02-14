@@ -15,7 +15,6 @@ import com.tinyrssreader.entities.Feed;
 import com.tinyrssreader.storage.internal.InternalStorageUtil;
 import com.tinyrssreader.storage.internal.StorageParams;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
-import com.tinyrssreader.storage.prefs.PrefsUpdater;
 
 public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 	protected ListView listView;
@@ -23,7 +22,7 @@ public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 
 	protected void load() {
 		Date now = new Date();
-		long lastFeedUpdate = PrefsUpdater.getLastCategoriesRefreshTime(this);
+		long lastFeedUpdate = getLastRefreshTime();
 		if (now.getTime() - lastFeedUpdate >= getMilisecsWithoutRefresh()
 				|| !getUtil().hasInFile(this, getParamsHasInFile())
 				|| categoryChanged) {
@@ -41,7 +40,7 @@ public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 		if (!PrefsSettings.getShowAllPref(this)) {
 			resultEntities = new ArrayList<T>();
 			for (T entity : allEntities) {
-				if (entity.isUnread()) {
+				if (entity.isUnread() || entity.alwaysShow) {
 					resultEntities.add(entity);
 				}
 			}
@@ -125,4 +124,6 @@ public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 	public abstract Feed getParentFeed();
 
 	public abstract <T extends Entity> T getEmtpyObj();
+	
+	public abstract long getLastRefreshTime();
 }

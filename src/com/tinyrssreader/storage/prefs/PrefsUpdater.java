@@ -11,7 +11,7 @@ public class PrefsUpdater extends StoredPreferencesTinyRSSReader {
 	public static final String LAST_TIME_CLEANED = "lastCleaned";
 
 	static {
-		PREFS = "updater";
+		PREFS = PREFS_PREFIX + "updater";
 	}
 
 	public static long getLastCleanedTime(Context context) {

@@ -13,13 +13,16 @@ import android.content.Context;
 import com.tinyrssreader.activities.actionbar.TinyRSSReaderActivity;
 import com.tinyrssreader.activities.actionbar.TinyRSSReaderListActivity;
 import com.tinyrssreader.entities.Entity;
+import com.tinyrssreader.storage.prefs.StoredPreferencesTinyRSSReader;
 
 public abstract class InternalStorageUtil {
 
 	public static void clearFiles(Context context, String currSessionId) {
 		if (context.getFilesDir().listFiles() != null) {
 			for (File f : context.getFilesDir().listFiles()) {
-				if (!f.getName().contains(currSessionId)) {
+				if (!f.getName().contains(currSessionId)
+						&& !f.getName().contains(
+								StoredPreferencesTinyRSSReader.PREFS_PREFIX)) {
 					f.delete();
 				}
 			}

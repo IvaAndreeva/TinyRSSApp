@@ -2,6 +2,7 @@ package com.tinyrssreader.request;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -29,7 +30,39 @@ public class RequestBuilder {
 						responseHandler.onFailure(e, errorResponse);
 						super.onFailure(e, errorResponse);
 					};
-
+					
+					@Override
+					public void onFailure(Throwable e, JSONArray errorResponse) {
+						responseHandler.onFailure(null, null);
+						super.onFailure(e, errorResponse);
+					}
+					
+					@Override
+					public void onFailure(String responseBody, Throwable error) {
+						responseHandler.onFailure(null, null);
+						super.onFailure(responseBody, error);
+					}
+					
+					@Override
+					public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+							Throwable arg3) {
+						responseHandler.onFailure(null, null);
+						super.onFailure(arg0, arg1, arg2, arg3);
+					}
+					
+					@Override
+					public void onFailure(int statusCode, Header[] headers,
+							Throwable e, JSONArray errorResponse) {
+						responseHandler.onFailure(null, null);
+						super.onFailure(statusCode, headers, e, errorResponse);
+					}
+					
+					@Override
+					public void onFailure(int statusCode, Throwable e,
+							JSONArray errorResponse) {
+						responseHandler.onFailure(null, null);
+						super.onFailure(statusCode, e, errorResponse);
+					}
 					@Override
 					public void onFinish() {
 						responseHandler.onFinish();

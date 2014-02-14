@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.AsyncTask;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -74,57 +73,40 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 
 			@Override
 			public void onFinish() {
-				hideProgress();
 			}
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
-				AsyncTask<JSONObject, Void, Void> task = new AsyncTask<JSONObject, Void, Void>() {
-					private List<Feed> categories = new ArrayList<Feed>();
-
-					@Override
-					protected Void doInBackground(JSONObject... params) {
-						try {
-							if (params.length < 1
-									|| !(params[0] instanceof JSONObject)) {
-								ErrorAlertDialog.showError(
-										CategoriesActivity.this,
-										R.string.error_something_went_wrong);
-								return null;
-							}
-							PrefsUpdater.putLastCategoriesRefreshTime(
-									CategoriesActivity.this, new Date());
-							JSONObject response = (JSONObject) params[0];
-							JSONArray contentArray = response
-									.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
-							for (int i = 0; i < contentArray.length(); i++) {
-								JSONObject catJson = contentArray
-										.getJSONObject(i);
-								Feed cat = new Feed()
-										.setTitle(
-												catJson.getString(TinyTinySpecificConstants.RESPONSE_FEED_TITLE_PROP))
-										.setId(catJson
-												.getInt(TinyTinySpecificConstants.RESPONSE_FEED_ID_PROP))
-										.setUnread(
-												catJson.getInt(TinyTinySpecificConstants.RESPONSE_FEED_UNREAD_PROP));
-								categories.add(cat);
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
+				try {
+					List<Feed> categories = new ArrayList<Feed>();
+					PrefsUpdater.putLastCategoriesRefreshTime(
+							CategoriesActivity.this, new Date());
+					JSONArray contentArray = response
+							.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
+					for (int i = 0; i < contentArray.length(); i++) {
+						JSONObject catJson = contentArray.getJSONObject(i);
+						Feed cat = new Feed()
+								.setTitle(
+										catJson.getString(TinyTinySpecificConstants.RESPONSE_FEED_TITLE_PROP))
+								.setId(catJson
+										.getInt(TinyTinySpecificConstants.RESPONSE_FEED_ID_PROP))
+								.setUnread(
+										catJson.getInt(TinyTinySpecificConstants.RESPONSE_FEED_UNREAD_PROP));
+						if (cat.id == TinyTinySpecificConstants.STARRED_FEED_ID) {
+							cat.alwaysShow = true;
+							cat.unread = 0;
 						}
-						return null;
+						categories.add(cat);
 					}
 
-					@Override
-					protected void onPostExecute(Void aVoid) {
-						super.onPostExecute(aVoid);
-						StorageCategoriesUtil.save(CategoriesActivity.this,
-								sessionId, categories);
-						show(categories);
-					}
-				};
-				task.execute(new JSONObject[] { response });
+					StorageCategoriesUtil.save(CategoriesActivity.this,
+							sessionId, categories);
+					show(categories);
+					hideProgress();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
 		};
 	}
@@ -244,6 +226,8 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 		RequestBuilder.makeRequest(this, host,
 				RequestParamsBuilder.paramsGetCategories(sessionId, showAll),
 				handler);
+		PrefsUpdater.invalidateFeedsRefreshTime(this);
+		PrefsUpdater.invalidateHeadlinesRefreshTime(this);
 	}
 
 	@Override
@@ -255,5 +239,10 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 	@Override
 	public Feed getEmtpyObj() {
 		return new Feed().setId(-3);
+	}
+
+	@Override
+	public long getLastRefreshTime() {
+		return PrefsUpdater.getLastCategoriesRefreshTime(this);
 	}
 }
