@@ -41,9 +41,10 @@ public final class ThemeUpdater {
 		c.setTime(now);
 		if (c.get(Calendar.HOUR_OF_DAY) >= 19
 				|| c.get(Calendar.HOUR_OF_DAY) <= 7) {
-			context.setTheme(NIGHT_THEME);
+			PrefsTheme.putSelectedTheme(context, NIGHT_THEME);
 		} else {
-			context.setTheme(DAY_THEME);
+			PrefsTheme.putSelectedTheme(context, DAY_THEME);
 		}
+		context.setTheme(PrefsTheme.getSelectedTheme(context));
 	}
 }
