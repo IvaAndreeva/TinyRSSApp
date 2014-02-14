@@ -11,10 +11,6 @@ public class PrefsSettings extends StoredPreferencesTinyRSSReader {
 	public static final String CATEGORY_MODE_USED = "categoryMode";
 	public static final String CURRENT_CATEGORY_ID = "categoryId";
 
-	static {
-		PREFS = PREFS_PREFIX + "settings";
-	}
-
 	public static int getCategoryMode(Context context) {
 		return getIntFromSavedPrefs(context, CATEGORY_MODE_USED);
 	}

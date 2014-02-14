@@ -7,8 +7,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public abstract class StoredPreferencesTinyRSSReader {
-	public static final String PREFS_PREFIX = "prefs_";
-	protected static String PREFS;
+	public static final String PREFS = "prefs";
 
 	protected static long getDateFromSavedPrefs(Context context, String prefName) {
 		SharedPreferences savedPrefs = context.getSharedPreferences(PREFS,

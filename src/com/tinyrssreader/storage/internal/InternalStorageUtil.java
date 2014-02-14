@@ -22,7 +22,7 @@ public abstract class InternalStorageUtil {
 			for (File f : context.getFilesDir().listFiles()) {
 				if (!f.getName().contains(currSessionId)
 						&& !f.getName().contains(
-								StoredPreferencesTinyRSSReader.PREFS_PREFIX)) {
+								StoredPreferencesTinyRSSReader.PREFS)) {
 					f.delete();
 				}
 			}

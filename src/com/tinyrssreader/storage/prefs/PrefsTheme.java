@@ -9,10 +9,6 @@ public class PrefsTheme extends StoredPreferencesTinyRSSReader {
 	public static final String THEME_MODE = "sthemeMode";
 	public static final String SELECTED_THEME = "selectedTheme";
 
-	static {
-		PREFS = PREFS_PREFIX + "theme";
-	}
-
 	public static int getThemeMode(Context context) {
 		return getIntFromSavedPrefs(context, THEME_MODE);
 	}
@@ -20,7 +16,7 @@ public class PrefsTheme extends StoredPreferencesTinyRSSReader {
 	public static void putThemeMode(Context context, int mode) {
 		putIntInSavedPrefs(context, THEME_MODE, mode);
 	}
-	
+
 	public static int getSelectedTheme(Context context) {
 		return getIntFromSavedPrefs(context, SELECTED_THEME);
 	}

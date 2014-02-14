@@ -96,6 +96,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void loadSavedPrefs() {
+		String a = PrefsCredentials.getHostPref(LoginActivity.this);
 		address.setText(PrefsCredentials.getHostPref(LoginActivity.this));
 		username.setText(PrefsCredentials.getUsernamePref(LoginActivity.this));
 		password.setText(PrefsCredentials.getPasswordPref(LoginActivity.this));
@@ -136,6 +137,8 @@ public class LoginActivity extends Activity {
 							PrefsCredentials.putUserPassHost(
 									LoginActivity.this, username, password,
 									host);
+
+							String a = PrefsCredentials.getHostPref(LoginActivity.this);
 						}
 						startNextActivity(host, sessionId);
 					}
