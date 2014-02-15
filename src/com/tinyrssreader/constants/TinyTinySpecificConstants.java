@@ -56,9 +56,10 @@ public final class TinyTinySpecificConstants {
 	public static final String REQUEST_UPDATE_ARTICLE_MODE_TOGGLE_VALUE = "2";
 
 	public static final String REQUEST_MARK_FEED_AS_READ_OP_VALUE = "catchupFeed";
-	
+
 	public static final String REQUEST_GET_CATEGORIES_OP_VALUE = "getCategories";
-	
+
+	public static final String REQUEST_IS_LOGGED_IN_OP_VALUE = "isLoggedIn";
 	public static final String REQUEST_IS_CAT_PROP = "is_cat";
 
 	public static final int STARRED_FEED_ID = -1;

@@ -27,6 +27,22 @@ public class RequestParamsBuilder {
 		return address;
 	}
 
+	public static StringEntity paramsCheckSession(String sessionId) {
+		try {
+			JSONObject jsonParams = new JSONObject();
+			jsonParams.put(TinyTinySpecificConstants.OP_PROP,
+					TinyTinySpecificConstants.REQUEST_IS_LOGGED_IN_OP_VALUE);
+			jsonParams.put(TinyTinySpecificConstants.REQUEST_SESSION_ID_PROP,
+					sessionId);
+			return new StringEntity(jsonParams.toString());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public static StringEntity paramsLogin(String username, String pass) {
 		try {
 			JSONObject jsonParams = new JSONObject();

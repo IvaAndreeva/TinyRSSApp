@@ -16,7 +16,7 @@
         android:label="@string/feeds_title"
         android:theme="@style/CustomLightTheme" >
         <activity
-            android:name="com.tinyrssreader.activities.LoginActivity"
+            android:name="com.tinyrssreader.activities.StartingActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.tinyrssreader.activities.LoginActivity" />
         <activity android:name="com.tinyrssreader.activities.actionbar.CategoriesActivity" />
         <activity android:name="com.tinyrssreader.activities.actionbar.FeedsActivity" />
         <activity android:name="com.tinyrssreader.activities.actionbar.HeadlinesActivity" />

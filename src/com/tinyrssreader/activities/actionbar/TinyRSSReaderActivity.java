@@ -20,6 +20,7 @@ import com.tinyrssreader.constants.TinyTinySpecificConstants;
 import com.tinyrssreader.entities.Feed;
 import com.tinyrssreader.entities.Headline;
 import com.tinyrssreader.storage.internal.StorageHeadlinesUtil;
+import com.tinyrssreader.storage.prefs.PrefsCredentials;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
 import com.tinyrssreader.storage.prefs.PrefsUpdater;
 
@@ -74,6 +75,7 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 	}
 
 	public void logout() {
+		PrefsCredentials.putSessionIdPref(this, "");
 		Intent intent = new Intent(this, LoginActivity.class);
 		Bundle b = new Bundle();
 		b.putBoolean(LoginActivity.AUTO_CONNECT, false);
@@ -200,7 +202,8 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		startActivity(sendIntent);
 	}
 
-	public void startSimpleActivity(Class<? extends TinyRSSReaderActivity> _class) {
+	public void startSimpleActivity(
+			Class<? extends TinyRSSReaderActivity> _class) {
 		Bundle b = new Bundle();
 		b.putString(LoginActivity.HOST_PROP, host);
 		b.putString(TinyTinySpecificConstants.RESPONSE_LOGIN_SESSIONID_PROP,

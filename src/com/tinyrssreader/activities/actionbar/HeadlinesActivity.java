@@ -320,6 +320,10 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 				headlines.add((Headline) entity);
 			}
 		}
+		if (feed.id == TinyTinySpecificConstants.STARRED_FEED_ID
+				&& PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
+			feed.unread = 0;
+		}
 		updateHeadlinesAndFeedsFiles(headlines);
 	}
 
@@ -360,7 +364,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	private Feed initParent() {
 		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE
-				&& feedId != TinyTinySpecificConstants.STARRED_FEED_ID) {
+				){//|| feedId == TinyTinySpecificConstants.STARRED_FEED_ID) {
 			feeds = StorageCategoriesUtil.get(this, sessionId);
 		} else {
 			feeds = StorageFeedsUtil.get(this, sessionId,

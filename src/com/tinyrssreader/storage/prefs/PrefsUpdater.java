@@ -5,10 +5,10 @@ import java.util.Date;
 import android.content.Context;
 
 public class PrefsUpdater extends StoredPreferencesTinyRSSReader {
-	public static final String LAST_TIME_CATEGORIES_UPDATED = "feedsUpdated";
+	public static final String LAST_TIME_CATEGORIES_UPDATED = "categoriesUpdated";
 	public static final String LAST_TIME_FEEDS_UPDATED = "feedsUpdated";
 	public static final String LAST_TIME_HEADLINES_UPDATED = "headlinesUpdated";
-	public static final String LAST_TIME_CLEANED = "lastCleaned";
+	public static final String LAST_TIME_CLEANED = "lastCleaned"; 
 
 	public static long getLastCleanedTime(Context context) {
 		return getDateFromSavedPrefs(context, LAST_TIME_CLEANED);

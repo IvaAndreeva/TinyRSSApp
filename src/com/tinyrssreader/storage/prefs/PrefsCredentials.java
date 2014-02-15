@@ -3,9 +3,18 @@ package com.tinyrssreader.storage.prefs;
 import android.content.Context;
 
 public class PrefsCredentials extends StoredPreferencesTinyRSSReader {
+	public static final String SESSIONID = "sessionId";
 	public static final String HOST = "host";
 	public static final String USERNAME = "username";
 	public static final String PASS = "pass";
+	
+	public static String getSessionIdPref(Context context) {
+		return getStringFromSavedPrefs(context, SESSIONID);
+	}
+	
+	public static void putSessionIdPref(Context context, String sessionId) {
+		putStringInSavedPrefs(context, SESSIONID, sessionId);
+	}
 
 	public static String getUsernamePref(Context context) {
 		return getStringFromSavedPrefs(context, USERNAME);
