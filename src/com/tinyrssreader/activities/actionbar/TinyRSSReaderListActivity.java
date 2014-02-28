@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.tinyrssreader.R;
+import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.entities.CustomAdapter;
 import com.tinyrssreader.entities.Entity;
 import com.tinyrssreader.entities.Feed;
@@ -94,6 +97,16 @@ public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 		adapter.notifyDataSetChanged();
 	}
 
+	protected void setEnabledRefresh(boolean enabled) {
+		if (menu != null) {
+			MenuItem item = menu.findItem(R.id.list_action_refresh);
+			if (item != null) {
+				ThemeUpdater.updateRefreshIcon(this, item, enabled);
+				item.setEnabled(enabled);
+			}
+		}
+	}
+
 	public abstract long getMilisecsWithoutRefresh();
 
 	public abstract InternalStorageUtil getUtil();
@@ -124,6 +137,6 @@ public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 	public abstract Feed getParentFeed();
 
 	public abstract <T extends Entity> T getEmtpyObj();
-	
+
 	public abstract long getLastRefreshTime();
 }

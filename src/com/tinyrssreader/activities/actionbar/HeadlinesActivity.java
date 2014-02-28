@@ -170,7 +170,8 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 			@Override
 			public void onFinish() {
-				hideProgress();
+				setEnabledRefresh(true);
+				// hideProgress();
 			}
 
 			@Override
@@ -352,7 +353,8 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		showProgress("Loading headlines...", "");
+		// showProgress("Loading headlines...", "");
+		setEnabledRefresh(false);
 		StorageHeadlinesUtil.savePos(this, feedId, 0);
 		feedId = feed.id;
 		ResponseHandler handler = getHeadlinesResponseHandler();
@@ -363,8 +365,11 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 	}
 
 	private Feed initParent() {
-		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE
-				){//|| feedId == TinyTinySpecificConstants.STARRED_FEED_ID) {
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {// ||
+																							// feedId
+																							// ==
+																							// TinyTinySpecificConstants.STARRED_FEED_ID)
+																							// {
 			feeds = StorageCategoriesUtil.get(this, sessionId);
 		} else {
 			feeds = StorageFeedsUtil.get(this, sessionId,

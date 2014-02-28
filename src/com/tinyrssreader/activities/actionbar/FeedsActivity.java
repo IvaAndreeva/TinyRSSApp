@@ -107,7 +107,8 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 					StorageFeedsUtil.save(FeedsActivity.this, sessionId, feeds,
 							category.id);
 					show(feeds);
-					hideProgress();
+//					hideProgress();
+					setEnabledRefresh(true);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -243,7 +244,8 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		showProgress("Loading feeds...", "");
+		//showProgress("Loading feeds...", "");
+		setEnabledRefresh(false);
 		StorageFeedsUtil.savePos(this, sessionId, 0, category.id);
 		ResponseHandler handler = getFeedsResponseHandler();
 		RequestBuilder.makeRequest(this, host, RequestParamsBuilder

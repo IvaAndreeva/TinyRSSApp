@@ -103,7 +103,8 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 					StorageCategoriesUtil.save(CategoriesActivity.this,
 							sessionId, categories);
 					show(categories);
-					hideProgress();
+					setEnabledRefresh(true);
+					// hideProgress();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -220,7 +221,8 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		showProgress("Loading categories...", "");
+		// showProgress("Loading categories...", "");
+		setEnabledRefresh(false);
 		StorageCategoriesUtil.savePos(this, sessionId, 0);
 		ResponseHandler handler = getCategoriesResponseHandler();
 		RequestBuilder.makeRequest(this, host,
