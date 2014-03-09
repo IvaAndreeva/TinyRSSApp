@@ -94,11 +94,13 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 	}
 
 	private ResponseHandler getHeadlinesResponseHandler() {
+		final String msg = "Parsing headlines starting...";
 		return new ResponseHandler() {
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
+				progress.show(msg);
 
 				AsyncTask<JSONObject, Void, Void> task = new AsyncTask<JSONObject, Void, Void>() {
 					private List<Headline> headlines = new ArrayList<Headline>();
@@ -156,13 +158,17 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
+						progress.hide(msg);
 						return null;
 					}
 
 					@Override
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
+						String msg = "Showing headlines starting...";
+						progress.show("Showing headlines starting...");
 						show(headlines);
+						progress.hide(msg);
 					}
 				};
 				task.execute(new JSONObject[] { response });
@@ -171,7 +177,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 			@Override
 			public void onFinish() {
 				setEnabledRefresh(true);
-				// hideProgress();
+				progress.hide(msg);
 			}
 
 			@Override
@@ -184,7 +190,6 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	private void markFeedAsRead(final int feedId, final String host,
 			final String sessionId, Context context) {
-		// showProgress("Marking feed as read...", "");
 		feed.unread = 0;
 		updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
 		if (PrefsSettings.getCategoryMode(HeadlinesActivity.this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
@@ -193,7 +198,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 			startAllFeedsActivity();
 		}
 		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
-		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+		RequestBuilder.makeRequestWithProgress(this, host, RequestParamsBuilder
 				.paramsMarkFeedAsRead(sessionId, feedId, parentIsCat),
 				getMarkFeedAsReadHandler());
 	}
@@ -353,15 +358,17 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		// showProgress("Loading headlines...", "");
+		String msg = "Refresh starting...";
+		progress.show(msg);
 		setEnabledRefresh(false);
 		StorageHeadlinesUtil.savePos(this, feedId, 0);
 		feedId = feed.id;
 		ResponseHandler handler = getHeadlinesResponseHandler();
+		progress.hide(msg);
 		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
-		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+		RequestBuilder.makeRequestWithProgress(this, host, RequestParamsBuilder
 				.paramsGetHeadlines(sessionId, feedId, parentIsCat,
-						getViewMode()), handler);
+						getViewMode(), feed.unread), handler);
 	}
 
 	private Feed initParent() {

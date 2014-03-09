@@ -15,6 +15,7 @@ import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.entities.CustomAdapter;
 import com.tinyrssreader.entities.Entity;
 import com.tinyrssreader.entities.Feed;
+import com.tinyrssreader.prompts.ProgressView;
 import com.tinyrssreader.storage.internal.InternalStorageUtil;
 import com.tinyrssreader.storage.internal.StorageParams;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
@@ -22,8 +23,10 @@ import com.tinyrssreader.storage.prefs.PrefsSettings;
 public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 	protected ListView listView;
 	protected boolean categoryChanged = false;
+	public ProgressView progress;
 
 	protected void load() {
+		progress = new ProgressView(this);
 		Date now = new Date();
 		long lastFeedUpdate = getLastRefreshTime();
 		if (now.getTime() - lastFeedUpdate >= getMilisecsWithoutRefresh()
