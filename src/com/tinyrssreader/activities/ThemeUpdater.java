@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.MenuItem;
 
 import com.tinyrssreader.R;
 import com.tinyrssreader.activities.actionbar.TinyRSSReaderActivity;
@@ -46,5 +48,26 @@ public final class ThemeUpdater {
 			PrefsTheme.putSelectedTheme(context, DAY_THEME);
 		}
 		context.setTheme(PrefsTheme.getSelectedTheme(context));
+	}
+
+	public static void updateRefreshIcon(Context context, MenuItem item, boolean enabled) {
+		Drawable disabledIcon;
+		Drawable enabledIcon;
+		if (PrefsTheme.getSelectedTheme(context) == DAY_THEME){
+			disabledIcon = context.getResources().getDrawable(
+					R.drawable.dark_list_action_refresh);
+			enabledIcon = context.getResources().getDrawable(
+					R.drawable.light_list_action_refresh);
+		} else {
+			disabledIcon = context.getResources().getDrawable(
+					R.drawable.light_list_action_refresh);
+			enabledIcon = context.getResources().getDrawable(
+					R.drawable.dark_list_action_refresh);
+		}
+		if (enabled) {
+			item.setIcon(enabledIcon);
+		} else {
+			item.setIcon(disabledIcon);
+		}
 	}
 }

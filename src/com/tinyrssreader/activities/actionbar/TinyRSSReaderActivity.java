@@ -2,6 +2,10 @@ package com.tinyrssreader.activities.actionbar;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,6 +19,7 @@ import android.widget.Toast;
 
 import com.tinyrssreader.R;
 import com.tinyrssreader.activities.LoginActivity;
+import com.tinyrssreader.activities.StartingActivity;
 import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.constants.TinyTinySpecificConstants;
 import com.tinyrssreader.entities.Feed;
@@ -215,6 +220,32 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 			Class<? extends TinyRSSReaderActivity> _class) {
 		Intent intent = new Intent(this, _class);
 		intent.putExtras(b);
+		startActivity(intent);
+		finish();
+	}
+
+	public boolean checkResponseForError(JSONObject response)
+			throws JSONException {
+		System.out.println("Checking for error...");
+		if (response.has(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
+				&& response
+						.get(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP) instanceof JSONObject) {
+			JSONObject errorConentObj = response
+					.getJSONObject(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
+			if (errorConentObj.has(TinyTinySpecificConstants.RESPONSE_ERROR)
+					&& errorConentObj
+							.getString(TinyTinySpecificConstants.RESPONSE_ERROR)
+							.equals(TinyTinySpecificConstants.RESPONSE_NOT_LOGGED_IN_ERROR)) {
+				System.out.println("[ERROR] Has to login. Logging in...");
+				doLogin();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void doLogin() {
+		Intent intent = new Intent(this, StartingActivity.class);
 		startActivity(intent);
 		finish();
 	}

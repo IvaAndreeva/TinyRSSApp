@@ -143,6 +143,8 @@ public class LoginActivity extends Activity {
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+					ErrorAlertDialog.showError(LoginActivity.this,
+							"Something went wrong when logging in");
 				}
 			}
 

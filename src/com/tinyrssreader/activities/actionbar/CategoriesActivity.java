@@ -79,6 +79,11 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
 				try {
+					if (checkResponseForError(response)) {
+						return;
+					}
+					String msg = "Parsing categories starting...";
+					progress.show(msg);
 					List<Feed> categories = new ArrayList<Feed>();
 					PrefsUpdater.putLastCategoriesRefreshTime(
 							CategoriesActivity.this, new Date());
@@ -99,13 +104,21 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 						}
 						categories.add(cat);
 					}
-
+					progress.hide(msg);
+					msg = "Saving categories starting...";
+					progress.show(msg);
 					StorageCategoriesUtil.save(CategoriesActivity.this,
 							sessionId, categories);
+					progress.hide(msg);
+					msg = "Showing categories starting...";
+					progress.show(msg);
 					show(categories);
-					hideProgress();
+					setEnabledRefresh(true);
+					progress.hide(msg);
 				} catch (JSONException e) {
 					e.printStackTrace();
+					ErrorAlertDialog.showError(CategoriesActivity.this,
+							"Something went wrong when refreshing");
 				}
 			}
 		};
@@ -220,14 +233,20 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		showProgress("Loading categories...", "");
+		String msg = "Refresh starting...";
+		progress.show(msg);
+		setEnabledRefresh(false);
 		StorageCategoriesUtil.savePos(this, sessionId, 0);
 		ResponseHandler handler = getCategoriesResponseHandler();
-		RequestBuilder.makeRequest(this, host,
+		progress.hide(msg);
+		RequestBuilder.makeRequestWithProgress(this, host,
 				RequestParamsBuilder.paramsGetCategories(sessionId, showAll),
 				handler);
+		msg = "Invalidate starting...";
+		progress.show(msg);
 		PrefsUpdater.invalidateFeedsRefreshTime(this);
 		PrefsUpdater.invalidateHeadlinesRefreshTime(this);
+		progress.hide(msg);
 	}
 
 	@Override

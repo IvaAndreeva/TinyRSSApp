@@ -5,6 +5,8 @@ package com.tinyrssreader.constants;
  */
 public final class TinyTinySpecificConstants {
 	public static final String OP_PROP = "op";
+	public static final String RESPONSE_ERROR = "error";
+	public static final String RESPONSE_NOT_LOGGED_IN_ERROR = "NOT_LOGGED_IN";
 
 	public static final String REQUEST_LOGIN_OP_VALUE = "login";
 	public static final String REQUEST_LOGIN_USERNAME_PROP = "user";

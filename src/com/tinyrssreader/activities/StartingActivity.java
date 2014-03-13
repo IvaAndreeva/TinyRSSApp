@@ -7,10 +7,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.tinyrssreader.activities.actionbar.CategoriesActivity;
 import com.tinyrssreader.activities.actionbar.FeedsActivity;
 import com.tinyrssreader.constants.TinyTinySpecificConstants;
+import com.tinyrssreader.errorhandling.ErrorAlertDialog;
 import com.tinyrssreader.request.RequestBuilder;
 import com.tinyrssreader.request.RequestParamsBuilder;
 import com.tinyrssreader.response.ResponseHandler;
@@ -19,6 +19,7 @@ import com.tinyrssreader.storage.prefs.PrefsSettings;
 
 public class StartingActivity extends Activity {
 	public static final String HOST_PROP = "host";
+	public static final String INTERNAL_CALL = "internal";
 
 	/**
 	 * Called when the activity is first created.
@@ -45,8 +46,21 @@ public class StartingActivity extends Activity {
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
 				try {
+					JSONObject toInspect = response;
 					if (response
-							.getInt(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP) != TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_FAIL_VALUE) {
+							.has(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
+							&& response
+									.get(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP) instanceof JSONObject) {
+						toInspect = response
+								.getJSONObject(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
+					}
+					if (!(toInspect
+							.getString(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP)
+							.equals(String
+									.valueOf(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_FAIL_VALUE)))
+							&& !(toInspect
+									.getString(TinyTinySpecificConstants.RESPONSE_LOGIN_STATUS_PROP)
+									.equals("false"))) {
 						startNextActivity();
 					} else {
 						PrefsCredentials.putSessionIdPref(
@@ -55,6 +69,8 @@ public class StartingActivity extends Activity {
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+					ErrorAlertDialog.showError(StartingActivity.this,
+							"Something went wrong when getting session id");
 				}
 			}
 
