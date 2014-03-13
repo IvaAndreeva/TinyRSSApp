@@ -224,7 +224,6 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 
 	public boolean checkResponseForError(JSONObject response)
 			throws JSONException {
-		System.out.println("Checking for error...");
 		if (response.has(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
 				&& response
 						.get(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP) instanceof JSONObject) {

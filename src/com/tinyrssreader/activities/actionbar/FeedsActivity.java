@@ -87,7 +87,7 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 						refresh();
 						return;
 					}
-					String msg = "Parsing feeds starting...";
+					String msg = "Parsing feeds...";
 					progress.show(msg);
 					List<Feed> feeds = new ArrayList<Feed>();
 					PrefsUpdater.putLastFeedsRefreshTime(FeedsActivity.this,
@@ -258,7 +258,7 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		String msg = "Refresh starting...";
+		String msg = "Refreshing...";
 		progress.show(msg);
 		setEnabledRefresh(false);
 		StorageFeedsUtil.savePos(this, sessionId, 0, category.id);

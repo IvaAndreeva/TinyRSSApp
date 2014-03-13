@@ -82,7 +82,7 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 					if (checkResponseForError(response)) {
 						return;
 					}
-					String msg = "Parsing categories starting...";
+					String msg = "Parsing categories...";
 					progress.show(msg);
 					List<Feed> categories = new ArrayList<Feed>();
 					PrefsUpdater.putLastCategoriesRefreshTime(
@@ -233,7 +233,7 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		String msg = "Refresh starting...";
+		String msg = "Refreshing...";
 		progress.show(msg);
 		setEnabledRefresh(false);
 		StorageCategoriesUtil.savePos(this, sessionId, 0);

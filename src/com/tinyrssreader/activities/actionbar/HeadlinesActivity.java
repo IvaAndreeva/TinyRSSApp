@@ -94,7 +94,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 	}
 
 	private ResponseHandler getHeadlinesResponseHandler() {
-		final String msg = "Parsing headlines starting...";
+		final String msg = "Parsing headlines...";
 		return new ResponseHandler() {
 
 			@Override
@@ -170,8 +170,8 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 					@Override
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
-						String msg = "Showing headlines starting...";
-						progress.show("Showing headlines starting...");
+						String msg = "Showing headlines ...";
+						progress.show("Showing headlines...");
 						show(headlines);
 						progress.hide(msg);
 					}
@@ -363,7 +363,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		String msg = "Refresh starting...";
+		String msg = "Refreshing...";
 		progress.show(msg);
 		setEnabledRefresh(false);
 		StorageHeadlinesUtil.savePos(this, feedId, 0);
