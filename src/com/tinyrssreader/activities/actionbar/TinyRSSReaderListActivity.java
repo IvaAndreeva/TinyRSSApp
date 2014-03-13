@@ -15,6 +15,7 @@ import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.entities.CustomAdapter;
 import com.tinyrssreader.entities.Entity;
 import com.tinyrssreader.entities.Feed;
+import com.tinyrssreader.prompts.ProgressView;
 import com.tinyrssreader.storage.internal.InternalStorageUtil;
 import com.tinyrssreader.storage.internal.StorageParams;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
