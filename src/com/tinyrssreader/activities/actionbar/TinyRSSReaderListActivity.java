@@ -24,7 +24,7 @@ public abstract class TinyRSSReaderListActivity extends TinyRSSReaderActivity {
 	protected ListView listView;
 	protected boolean categoryChanged = false;
 	public ProgressView progress;
-
+	
 	protected void load() {
 		progress = new ProgressView(this);
 		Date now = new Date();
