@@ -24,7 +24,7 @@ public class ProgressView {
 	}
 
 	public void show(final String msg) {
-		System.out.println("SHOWING PROGRESS FOR " + msg);
+//		System.out.println("SHOWING PROGRESS FOR " + msg);
 		msgs.add(msg);
 		this.context.runOnUiThread(new Runnable() {
 			@Override
@@ -44,7 +44,7 @@ public class ProgressView {
 	}
 
 	public void hide(String msg) {
-		System.out.println("HIDING PROGRESS FOR " + msg);
+//		System.out.println("HIDING PROGRESS FOR " + msg);
 		msgs.remove(msg);
 		this.context.runOnUiThread(new Runnable() {
 

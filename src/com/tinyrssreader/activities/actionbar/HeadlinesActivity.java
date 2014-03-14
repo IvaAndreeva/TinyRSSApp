@@ -171,7 +171,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
 						String msg = "Showing headlines ...";
-						progress.show("Showing headlines...");
+						progress.show(msg);
 						show(headlines);
 						progress.hide(msg);
 					}
