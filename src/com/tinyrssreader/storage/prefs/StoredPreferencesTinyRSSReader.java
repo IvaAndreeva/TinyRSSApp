@@ -1,6 +1,10 @@
 package com.tinyrssreader.storage.prefs;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -46,6 +50,29 @@ public abstract class StoredPreferencesTinyRSSReader {
 			return savedPrefs.getInt(prefName, 0);
 		}
 		return 0;
+	}
+
+	protected static List<String> getListStrings(Context context,
+			String prefName) {
+		SharedPreferences savedPrefs = context.getSharedPreferences(PREFS,
+				Context.MODE_PRIVATE);
+		if (savedPrefs != null) {
+			return new ArrayList<String>(savedPrefs.getStringSet(prefName,
+					new HashSet<String>()));
+		}
+		return new ArrayList<String>();
+	}
+
+	protected static void putStringInListStringsInSavedPrefs(Context context,
+			String prefName, String string) {
+		SharedPreferences savedPrefs = context.getSharedPreferences(PREFS,
+				Context.MODE_PRIVATE);
+		Set<String> newSet = new HashSet<String>(getListStrings(context,
+				prefName));
+		newSet.add(string);
+		Editor editor = savedPrefs.edit();
+		editor.putStringSet(prefName, newSet);
+		editor.commit();
 	}
 
 	protected static void putDateInSavedPrefs(Context context, String prefName,

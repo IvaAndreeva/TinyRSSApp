@@ -119,7 +119,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 								return null;
 							}
 							PrefsUpdater.putLastHeadlinesRefreshTime(
-									HeadlinesActivity.this, new Date());
+									HeadlinesActivity.this, new Date(), feedId);
 							JSONObject response = (JSONObject) params[0];
 							JSONArray contentArray = response
 									.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
@@ -256,7 +256,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 					PrefsSettings.getCurrentCategoryId(this));
 		} else {
 			StorageCategoriesUtil.save(this, sessionId, feeds);
-			PrefsUpdater.invalidateFeedsRefreshTime(this);
+			PrefsUpdater.invalidateFeedsRefreshTime(this, feedId);
 		}
 		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
 	}
@@ -407,6 +407,6 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public long getLastRefreshTime() {
-		return PrefsUpdater.getLastHeadlinesRefreshTime(this);
+		return PrefsUpdater.getLastHeadlinesRefreshTime(this, feedId);
 	}
 }

@@ -244,8 +244,8 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 				handler);
 		msg = "Invalidate starting...";
 		progress.show(msg);
-		PrefsUpdater.invalidateFeedsRefreshTime(this);
-		PrefsUpdater.invalidateHeadlinesRefreshTime(this);
+		PrefsUpdater.invalidateAllFeedsRefreshTime(this);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
 		progress.hide(msg);
 	}
 

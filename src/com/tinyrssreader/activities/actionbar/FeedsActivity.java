@@ -91,7 +91,7 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 					progress.show(msg);
 					List<Feed> feeds = new ArrayList<Feed>();
 					PrefsUpdater.putLastFeedsRefreshTime(FeedsActivity.this,
-							new Date());
+							new Date(), category.id);
 					JSONArray contentArray = response
 							.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
 					for (int i = 0; i < contentArray.length(); i++) {
@@ -269,7 +269,7 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 						PrefsSettings.getCurrentCategoryId(this)), handler);
 		msg = "Invalidate starting...";
 		progress.show(msg);
-		PrefsUpdater.invalidateHeadlinesRefreshTime(this);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
 		progress.hide(msg);
 	}
 
@@ -294,6 +294,6 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public long getLastRefreshTime() {
-		return PrefsUpdater.getLastFeedsRefreshTime(this);
+		return PrefsUpdater.getLastFeedsRefreshTime(this, category.id);
 	}
 }
