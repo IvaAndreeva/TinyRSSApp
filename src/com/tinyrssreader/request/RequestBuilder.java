@@ -26,7 +26,7 @@ public class RequestBuilder {
 			HttpEntity params, final ResponseHandler responseHandler) {
 		AsyncHttpClient client;
 
-		boolean useSSL = !PrefsSettings.getNoSSLUrls(context).contains(host);
+		boolean useSSL = !PrefsSettings.hasSSLIgnoreUrl(context, host);
 		if (!useSSL) {
 			HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 			HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);

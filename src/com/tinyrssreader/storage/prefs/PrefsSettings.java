@@ -1,7 +1,5 @@
 package com.tinyrssreader.storage.prefs;
 
-import java.util.List;
-
 import android.content.Context;
 
 public class PrefsSettings extends StoredPreferencesTinyRSSReader {
@@ -12,7 +10,7 @@ public class PrefsSettings extends StoredPreferencesTinyRSSReader {
 	public static final String SHOW_ALL = "showAll";
 	public static final String CATEGORY_MODE_USED = "categoryMode";
 	public static final String CURRENT_CATEGORY_ID = "categoryId";
-	
+
 	public static final String NO_SSL_URSL = "NoSSLUrls";
 
 	public static int getCategoryMode(Context context) {
@@ -26,17 +24,17 @@ public class PrefsSettings extends StoredPreferencesTinyRSSReader {
 	public static int getCurrentCategoryId(Context context) {
 		return getIntFromSavedPrefs(context, CURRENT_CATEGORY_ID);
 	}
-	
-	public static List<String> getNoSSLUrls(Context context) {
-		return getListStrings(context, NO_SSL_URSL);
+
+	public static boolean hasSSLIgnoreUrl(Context context, String url) {
+		return hasPref(context, NO_SSL_URSL + url);
 	}
 
 	public static void putCurrentCategoryId(Context context, int categoryId) {
 		putIntInSavedPrefs(context, CURRENT_CATEGORY_ID, categoryId);
 	}
-	
+
 	public static void putUrlToNoSSLUrls(Context context, String url) {
-		putStringInListStringsInSavedPrefs(context, NO_SSL_URSL, url);
+		putStringInSavedPrefs(context, NO_SSL_URSL + url, "ignore this url");
 	}
 
 	public static boolean getShowAllPref(Context context) {
