@@ -373,7 +373,8 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
 		RequestBuilder.makeRequestWithProgress(this, host, RequestParamsBuilder
 				.paramsGetHeadlines(sessionId, feedId, parentIsCat,
-						getViewMode(), feed.unread), handler);
+						getViewMode(), feed.unread,
+						PrefsSettings.getOrderByMode(this)), handler);
 	}
 
 	private Feed initParent() {
@@ -393,6 +394,18 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 			}
 		}
 		return new Feed();
+	}
+
+	@Override
+	public void onOldestFirstChosen() {
+		super.onOldestFirstChosen();
+		refresh();
+	}
+
+	@Override
+	public void onDefaultOrderChosen() {
+		super.onDefaultOrderChosen();
+		refresh();
 	}
 
 	public Feed getParentFeed() {

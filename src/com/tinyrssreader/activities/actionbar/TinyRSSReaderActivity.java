@@ -123,6 +123,7 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 	protected void updateAllItemTitles() {
 		updateShowUnreadItemTitle();
 		updateShowHideCategoriesItemTitle();
+		updateOrderByItemTitle();
 	}
 
 	private void updateShowUnreadItemTitle() {
@@ -143,6 +144,15 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		}
 	}
 
+	private void updateOrderByItemTitle() {
+		MenuItem showUnreadItem = menu.findItem(R.id.toggle_oldest_first);
+		if (PrefsSettings.getOrderByMode(this) == PrefsSettings.ORDER_BY_OLDEST_FIRST) {
+			showUnreadItem.setTitle(R.string.default_order_msg);
+		} else {
+			showUnreadItem.setTitle(R.string.oldest_first_msg);
+		}
+	}
+
 	public void onShowCategories() {
 		PrefsSettings.putCategoryMode(this,
 				PrefsSettings.CATEGORY_NO_FEEDS_MODE);
@@ -158,6 +168,18 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		PrefsUpdater.invalidateRefreshTimes(this);
 		forceInflateMenu();
 		startAllFeedsActivity();
+	}
+
+	public void onOldestFirstChosen() {
+		PrefsSettings.putOrderByMode(this, PrefsSettings.ORDER_BY_OLDEST_FIRST);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
+		forceInflateMenu();
+	}
+
+	public void onDefaultOrderChosen() {
+		PrefsSettings.putOrderByMode(this, PrefsSettings.ORDER_BY_DEFAULT);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
+		forceInflateMenu();
 	}
 
 	public void startCategoriesActivity() {

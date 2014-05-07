@@ -7,6 +7,8 @@
     <string name="logout_action_msg">Logout</string>
     <string name="show_all_msg">Show all</string>
     <string name="show_unread_msg">Show unread only</string>
+    <string name="oldest_first_msg">Oldest first</string>
+    <string name="default_order_msg">Default order</string>
     <string name="show_categories_msg">Show categories</string>
     <string name="hide_categories_msg">Hide categories</string>
     <string name="switch_theme_msg">Switch theme</string>

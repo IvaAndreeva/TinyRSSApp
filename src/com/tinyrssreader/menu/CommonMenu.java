@@ -26,6 +26,14 @@ public class CommonMenu {
 			context.onHideCategories();
 			return true;
 		}
+		if (oldestFirstIfChosen(context, item)) {
+			context.onOldestFirstChosen();
+			return true;
+		}
+		if (defaultOrderIfChosen(context, item)) {
+			context.onDefaultOrderChosen();
+			return true;
+		}
 		if (switchThemeIfChosen(context, item)) {
 			return true;
 		}
@@ -36,8 +44,8 @@ public class CommonMenu {
 		return false;
 	}
 
-	private static boolean hideCategoriesIfChosen(TinyRSSReaderActivity context,
-			MenuItem item) {
+	private static boolean hideCategoriesIfChosen(
+			TinyRSSReaderActivity context, MenuItem item) {
 		if (item.getItemId() == R.id.toggle_show_categories
 				&& PrefsSettings.getCategoryMode(context) != PrefsSettings.CATEGORY_NO_MODE) {
 			Toast.makeText(context, "Hiding categories", Toast.LENGTH_LONG)
@@ -47,11 +55,33 @@ public class CommonMenu {
 		return false;
 	}
 
-	private static boolean showCategoriesIfChosen(TinyRSSReaderActivity context,
-			MenuItem item) {
+	private static boolean showCategoriesIfChosen(
+			TinyRSSReaderActivity context, MenuItem item) {
 		if (item.getItemId() == R.id.toggle_show_categories
 				&& PrefsSettings.getCategoryMode(context) == PrefsSettings.CATEGORY_NO_MODE) {
 			Toast.makeText(context, "Showing categories", Toast.LENGTH_LONG)
+					.show();
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean defaultOrderIfChosen(TinyRSSReaderActivity context,
+			MenuItem item) {
+		if (item.getItemId() == R.id.toggle_oldest_first
+				&& PrefsSettings.getOrderByMode(context) != PrefsSettings.ORDER_BY_DEFAULT) {
+			Toast.makeText(context, "Default order chosen", Toast.LENGTH_LONG)
+					.show();
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean oldestFirstIfChosen(TinyRSSReaderActivity context,
+			MenuItem item) {
+		if (item.getItemId() == R.id.toggle_oldest_first
+				&& PrefsSettings.getOrderByMode(context) != PrefsSettings.ORDER_BY_OLDEST_FIRST) {
+			Toast.makeText(context, "Oldest first chosen", Toast.LENGTH_LONG)
 					.show();
 			return true;
 		}
@@ -77,8 +107,8 @@ public class CommonMenu {
 		return false;
 	}
 
-	private static boolean toggleShowUnreadIfChosen(TinyRSSReaderActivity context,
-			MenuItem item) {
+	private static boolean toggleShowUnreadIfChosen(
+			TinyRSSReaderActivity context, MenuItem item) {
 		if (item.getItemId() == R.id.toggle_show_unread) {
 			context.toggleShowUnread();
 			return true;
