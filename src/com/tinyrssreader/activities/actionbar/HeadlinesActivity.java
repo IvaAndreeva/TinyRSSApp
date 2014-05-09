@@ -189,6 +189,9 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 			public void onFailure(Throwable e, JSONObject errorResponse) {
 				ErrorAlertDialog.showError(HeadlinesActivity.this,
 						R.string.error_refresh_headlines);
+				if (menuLoadingShouldWait) {
+					inflateMenu();
+				}
 			}
 		};
 	}
@@ -331,6 +334,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 				headlines.add((Headline) entity);
 			}
 		}
+		feed.unread = headlines.size();
 		if (feed.id == TinyTinySpecificConstants.STARRED_FEED_ID
 				&& PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			feed.unread = 0;

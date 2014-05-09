@@ -141,6 +141,9 @@ public class FeedsActivity extends TinyRSSReaderListActivity {
 			public void onFailure(Throwable e, JSONObject errorResponse) {
 				ErrorAlertDialog.showError(FeedsActivity.this,
 						R.string.error_refresh_feeds);
+				if (menuLoadingShouldWait) {
+					inflateMenu();
+				}
 			}
 		};
 	}

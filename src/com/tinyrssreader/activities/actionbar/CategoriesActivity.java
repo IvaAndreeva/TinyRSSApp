@@ -69,6 +69,9 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 			public void onFailure(Throwable e, JSONObject errorResponse) {
 				ErrorAlertDialog.showError(CategoriesActivity.this,
 						R.string.error_refresh_categories);
+				if (menuLoadingShouldWait) {
+					inflateMenu();
+				}
 			}
 
 			@Override
