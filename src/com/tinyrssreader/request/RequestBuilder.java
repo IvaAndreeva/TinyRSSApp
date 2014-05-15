@@ -1,13 +1,15 @@
 package com.tinyrssreader.request;
 
+import java.security.KeyStore;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,20 +26,30 @@ public class RequestBuilder {
 
 	public static void makeRequest(Context context, String host,
 			HttpEntity params, final ResponseHandler responseHandler) {
-		AsyncHttpClient client;
+		AsyncHttpClient client = null;
 
 		boolean useSSL = !PrefsSettings.hasSSLIgnoreUrl(context, host);
 		if (!useSSL) {
-			HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-			HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
-			SchemeRegistry registry = new SchemeRegistry();
-			SSLSocketFactory socketFactory = SSLSocketFactory
-					.getSocketFactory();
-			socketFactory
-					.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
-			registry.register(new Scheme("https", socketFactory, 443));
-			client = new AsyncHttpClient(registry);
-		} else {
+			try {
+				HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+				HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+				SchemeRegistry registry = new SchemeRegistry();
+				KeyStore trustStore = KeyStore.getInstance(KeyStore
+						.getDefaultType());
+				trustStore.load(null, null);
+				CustomSSLSocketFactory socketFactory = new CustomSSLSocketFactory(
+						trustStore);
+				socketFactory
+						.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+				registry.register(new Scheme("http", PlainSocketFactory
+						.getSocketFactory(), 80));
+				registry.register(new Scheme("https", socketFactory, 443));
+				client = new AsyncHttpClient(registry);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if (client == null) {
 			client = new AsyncHttpClient();
 		}
 		client.post(context, host, params, "application/json",
