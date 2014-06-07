@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Toast;
@@ -335,6 +337,8 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 	private void loadWebView() {
 		showProgress("Loading article", "");
 		WebView webView = (WebView) findViewById(R.id.articleWebView);
+		webView.setWebChromeClient(new WebChromeClient());
+		webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl(BLANK_PAGE);
 		injectHtml();
