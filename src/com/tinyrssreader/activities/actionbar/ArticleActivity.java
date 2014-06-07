@@ -349,6 +349,7 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 	}
 
 	private void injectHtml() {
+		getSupportActionBar().setTitle(getCurrentArticle().title);
 		content = content.replaceAll("^<html><body>", "");
 		content = content.replaceAll("</body>\\s*</html>$", "");
 		String headlineLink = TextUtils.replace(
@@ -357,7 +358,9 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 				new String[] { getCurrentArticle().link,
 						TextUtils.htmlEncode(getCurrentArticle().title) })
 				.toString();
-		content = "<html><head>" + getString(R.string.tpl_article_style)
+		content = "<html><head>"
+				+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no, minimal-ui\">"
+				+ getString(R.string.tpl_article_style)
 				+ "</head><body><div id='ttrss-article-container'>"
 				+ headlineLink + content + "</div>"
 				+ getString(R.string.tpl_article_script) + "</body></html>";
