@@ -54,6 +54,8 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 	private int unmarkStarredIcon = 0;
 
 	public void initialize() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(true);
 		Bundle b = getIntent().getExtras();
 		initSessionAndHost(b);
 		if (b != null) {
