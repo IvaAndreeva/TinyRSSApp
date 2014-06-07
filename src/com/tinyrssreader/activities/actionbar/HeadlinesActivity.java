@@ -94,12 +94,13 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 	}
 
 	private ResponseHandler getHeadlinesResponseHandler() {
+		final String msg = "Parsing headlines...";
 		return new ResponseHandler() {
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
-
+				progress.show(msg);
 				AsyncTask<JSONObject, Void, Void> task = new AsyncTask<JSONObject, Void, Void>() {
 					private List<Headline> headlines = new ArrayList<Headline>();
 
@@ -113,8 +114,12 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 										R.string.error_something_went_wrong);
 								return null;
 							}
+							if (checkResponseForError((JSONObject) params[0])) {
+								refresh();
+								return null;
+							}
 							PrefsUpdater.putLastHeadlinesRefreshTime(
-									HeadlinesActivity.this, new Date());
+									HeadlinesActivity.this, new Date(), feedId);
 							JSONObject response = (JSONObject) params[0];
 							JSONArray contentArray = response
 									.getJSONArray(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
@@ -155,14 +160,20 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
+							ErrorAlertDialog.showError(HeadlinesActivity.this,
+									"Something went wrong when refreshing");
 						}
+						progress.hide(msg);
 						return null;
 					}
 
 					@Override
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
+						String msg = "Showing headlines ...";
+						progress.show(msg);
 						show(headlines);
+						progress.hide(msg);
 					}
 				};
 				task.execute(new JSONObject[] { response });
@@ -170,20 +181,23 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 			@Override
 			public void onFinish() {
-				hideProgress();
+				setEnabledRefresh(true);
+				progress.hide(msg);
 			}
 
 			@Override
 			public void onFailure(Throwable e, JSONObject errorResponse) {
 				ErrorAlertDialog.showError(HeadlinesActivity.this,
 						R.string.error_refresh_headlines);
+				if (menuLoadingShouldWait) {
+					inflateMenu();
+				}
 			}
 		};
 	}
 
 	private void markFeedAsRead(final int feedId, final String host,
 			final String sessionId, Context context) {
-		// showProgress("Marking feed as read...", "");
 		feed.unread = 0;
 		updateHeadlinesAndFeedsFiles(markAllHeadlinesAsRead());
 		if (PrefsSettings.getCategoryMode(HeadlinesActivity.this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
@@ -192,7 +206,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 			startAllFeedsActivity();
 		}
 		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
-		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+		RequestBuilder.makeRequestWithProgress(this, host, RequestParamsBuilder
 				.paramsMarkFeedAsRead(sessionId, feedId, parentIsCat),
 				getMarkFeedAsReadHandler());
 	}
@@ -245,7 +259,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 					PrefsSettings.getCurrentCategoryId(this));
 		} else {
 			StorageCategoriesUtil.save(this, sessionId, feeds);
-			PrefsUpdater.invalidateFeedsRefreshTime(this);
+			PrefsUpdater.invalidateFeedsRefreshTime(this, feedId);
 		}
 		StorageHeadlinesUtil.save(HeadlinesActivity.this, headlines, feedId);
 	}
@@ -320,6 +334,7 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 				headlines.add((Headline) entity);
 			}
 		}
+		feed.unread = headlines.size();
 		if (feed.id == TinyTinySpecificConstants.STARRED_FEED_ID
 				&& PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			feed.unread = 0;
@@ -352,19 +367,26 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		showProgress("Loading headlines...", "");
+		String msg = "Refreshing...";
+		progress.show(msg);
+		setEnabledRefresh(false);
 		StorageHeadlinesUtil.savePos(this, feedId, 0);
 		feedId = feed.id;
 		ResponseHandler handler = getHeadlinesResponseHandler();
+		progress.hide(msg);
 		boolean parentIsCat = PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE;
-		RequestBuilder.makeRequest(this, host, RequestParamsBuilder
+		RequestBuilder.makeRequestWithProgress(this, host, RequestParamsBuilder
 				.paramsGetHeadlines(sessionId, feedId, parentIsCat,
-						getViewMode()), handler);
+						getViewMode(), feed.unread,
+						PrefsSettings.getOrderByMode(this)), handler);
 	}
 
 	private Feed initParent() {
-		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE
-				){//|| feedId == TinyTinySpecificConstants.STARRED_FEED_ID) {
+		if (PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {// ||
+																							// feedId
+																							// ==
+			// TinyTinySpecificConstants.STARRED_FEED_ID)
+			// {
 			feeds = StorageCategoriesUtil.get(this, sessionId);
 		} else {
 			feeds = StorageFeedsUtil.get(this, sessionId,
@@ -376,6 +398,18 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 			}
 		}
 		return new Feed();
+	}
+
+	@Override
+	public void onOldestFirstChosen() {
+		super.onOldestFirstChosen();
+		refresh();
+	}
+
+	@Override
+	public void onDefaultOrderChosen() {
+		super.onDefaultOrderChosen();
+		refresh();
 	}
 
 	public Feed getParentFeed() {
@@ -390,6 +424,6 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public long getLastRefreshTime() {
-		return PrefsUpdater.getLastHeadlinesRefreshTime(this);
+		return PrefsUpdater.getLastHeadlinesRefreshTime(this, feedId);
 	}
 }

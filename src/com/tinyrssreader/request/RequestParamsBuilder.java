@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.tinyrssreader.constants.TinyTinySpecificConstants;
+import com.tinyrssreader.storage.prefs.PrefsSettings;
 
 public class RequestParamsBuilder {
 
@@ -107,15 +108,29 @@ public class RequestParamsBuilder {
 	}
 
 	public static StringEntity paramsGetHeadlines(String sessionId, int feedId,
-			boolean isCat, String viewMode) {
+			boolean isCat, String viewMode, int unreadCount, int orderByMode) {
 		try {
 			JSONObject jsonParams = new JSONObject();
 			jsonParams.put(
 					TinyTinySpecificConstants.REQUEST_HEADLINES_FEED_ID_PROP,
 					feedId);
-			jsonParams
-					.put(TinyTinySpecificConstants.REQUEST_HEADLINES_LIMIT_PROP,
-							TinyTinySpecificConstants.REQUEST_HEADLINES_LIMIT_UNDEFINED_VALUE);
+			String limit = TinyTinySpecificConstants.REQUEST_HEADLINES_LIMIT_UNDEFINED_VALUE;
+			if (unreadCount > 0) {
+				limit = String.valueOf(unreadCount);
+			}
+			jsonParams.put(
+					TinyTinySpecificConstants.REQUEST_HEADLINES_LIMIT_PROP,
+					limit);
+			String orderByValue = "";
+			if (orderByMode == PrefsSettings.ORDER_BY_DEFAULT) {
+				orderByValue = TinyTinySpecificConstants.REQUEST_HEADLINES_ORDER_DEFAULT_VALUE;
+			}
+			if (orderByMode == PrefsSettings.ORDER_BY_OLDEST_FIRST) {
+				orderByValue = TinyTinySpecificConstants.REQUEST_HEADLINES_OLDEST_FIRST_VALUE;
+			}
+			jsonParams.put(
+					TinyTinySpecificConstants.REQUEST_HEADLINES_ORDER_BY_PROP,
+					orderByValue);
 			jsonParams
 					.put(TinyTinySpecificConstants.OP_PROP,
 							TinyTinySpecificConstants.REQUEST_HEADLINES_GET_HEADLINES_OP_VALUE);

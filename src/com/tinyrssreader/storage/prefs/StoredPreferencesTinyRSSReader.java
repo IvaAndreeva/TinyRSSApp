@@ -48,6 +48,15 @@ public abstract class StoredPreferencesTinyRSSReader {
 		return 0;
 	}
 
+	protected static boolean hasPref(Context context, String prefName) {
+		SharedPreferences savedPrefs = context.getSharedPreferences(PREFS,
+				Context.MODE_PRIVATE);
+		if (savedPrefs != null) {
+			return savedPrefs.contains(prefName);
+		}
+		return false;
+	}
+
 	protected static void putDateInSavedPrefs(Context context, String prefName,
 			Date date) {
 		SharedPreferences savedPrefs = context.getSharedPreferences(PREFS,

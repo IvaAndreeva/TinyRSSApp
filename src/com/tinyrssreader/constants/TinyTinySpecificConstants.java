@@ -5,6 +5,8 @@ package com.tinyrssreader.constants;
  */
 public final class TinyTinySpecificConstants {
 	public static final String OP_PROP = "op";
+	public static final String RESPONSE_ERROR = "error";
+	public static final String RESPONSE_NOT_LOGGED_IN_ERROR = "NOT_LOGGED_IN";
 
 	public static final String REQUEST_LOGIN_OP_VALUE = "login";
 	public static final String REQUEST_LOGIN_USERNAME_PROP = "user";
@@ -35,6 +37,10 @@ public final class TinyTinySpecificConstants {
 	public static final String REQUEST_HEADLINES_VIEW_MODE_PROP = "view_mode";
 	public static final String REQUEST_HEADLINES_VIEW_MODE_UNREAD_VALUE = "unread";
 	public static final String REQUEST_HEADLINES_VIEW_MODE_ALL_ARTICLES_VALUE = "all_articles";
+	public static final String REQUEST_HEADLINES_ORDER_BY_PROP = "order_by";
+	
+	public static final String REQUEST_HEADLINES_OLDEST_FIRST_VALUE = "date_reverse";
+	public static final String REQUEST_HEADLINES_ORDER_DEFAULT_VALUE = "";
 
 	public static final String RESPONSE_HEADLINE_ID_PROP = "id";
 	public static final String RESPONSE_HEADLINE_MARKED_PROP = "marked";

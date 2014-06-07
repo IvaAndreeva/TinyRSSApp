@@ -21,11 +21,6 @@
         android:title="@string/article_share_msg"
         tinyrssreader:showAsAction="always"/>
     <item
-        android:id="@+id/logout_action"
-        android:showAsAction="never"
-        android:title="@string/logout_action_msg"
-        tinyrssreader:showAsAction="never"/>
-    <item
         android:id="@+id/toggle_show_unread"
         android:showAsAction="never"
         android:title="@string/show_all_msg"
@@ -34,6 +29,16 @@
         android:id="@+id/toggle_show_categories"
         android:showAsAction="never"
         android:title="@string/show_categories_msg"
+        tinyrssreader:showAsAction="never"/>
+    <item
+        android:id="@+id/toggle_oldest_first"
+        android:showAsAction="never"
+        android:title="@string/oldest_first_msg"
+        tinyrssreader:showAsAction="never"/>
+    <item
+        android:id="@+id/logout_action"
+        android:showAsAction="never"
+        android:title="@string/logout_action_msg"
         tinyrssreader:showAsAction="never"/>
 
 </menu>

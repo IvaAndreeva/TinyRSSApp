@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -327,6 +328,7 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 		};
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	private void loadWebView() {
 		showProgress("Loading article", "");
 		WebView webView = (WebView) findViewById(R.id.articleWebView);

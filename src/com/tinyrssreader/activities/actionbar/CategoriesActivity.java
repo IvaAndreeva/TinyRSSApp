@@ -69,6 +69,9 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 			public void onFailure(Throwable e, JSONObject errorResponse) {
 				ErrorAlertDialog.showError(CategoriesActivity.this,
 						R.string.error_refresh_categories);
+				if (menuLoadingShouldWait) {
+					inflateMenu();
+				}
 			}
 
 			@Override
@@ -79,6 +82,11 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
 				try {
+					if (checkResponseForError(response)) {
+						return;
+					}
+					String msg = "Parsing categories...";
+					progress.show(msg);
 					List<Feed> categories = new ArrayList<Feed>();
 					PrefsUpdater.putLastCategoriesRefreshTime(
 							CategoriesActivity.this, new Date());
@@ -99,13 +107,21 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 						}
 						categories.add(cat);
 					}
-
+					progress.hide(msg);
+					msg = "Saving categories starting...";
+					progress.show(msg);
 					StorageCategoriesUtil.save(CategoriesActivity.this,
 							sessionId, categories);
+					progress.hide(msg);
+					msg = "Showing categories starting...";
+					progress.show(msg);
 					show(categories);
-					hideProgress();
+					setEnabledRefresh(true);
+					progress.hide(msg);
 				} catch (JSONException e) {
 					e.printStackTrace();
+					ErrorAlertDialog.showError(CategoriesActivity.this,
+							"Something went wrong when refreshing");
 				}
 			}
 		};
@@ -220,14 +236,20 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 
 	@Override
 	public void refresh() {
-		showProgress("Loading categories...", "");
+		String msg = "Refreshing...";
+		progress.show(msg);
+		setEnabledRefresh(false);
 		StorageCategoriesUtil.savePos(this, sessionId, 0);
 		ResponseHandler handler = getCategoriesResponseHandler();
-		RequestBuilder.makeRequest(this, host,
+		progress.hide(msg);
+		RequestBuilder.makeRequestWithProgress(this, host,
 				RequestParamsBuilder.paramsGetCategories(sessionId, showAll),
 				handler);
-		PrefsUpdater.invalidateFeedsRefreshTime(this);
-		PrefsUpdater.invalidateHeadlinesRefreshTime(this);
+		msg = "Invalidate starting...";
+		progress.show(msg);
+		PrefsUpdater.invalidateAllFeedsRefreshTime(this);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
+		progress.hide(msg);
 	}
 
 	@Override

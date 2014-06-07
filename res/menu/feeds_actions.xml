@@ -9,11 +9,6 @@
         android:title="@string/action_bar_refresh"
         tinyrssreader:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/logout_action"
-        android:showAsAction="never"
-        android:title="@string/logout_action_msg"
-        tinyrssreader:showAsAction="never"/>
-    <item
         android:id="@+id/toggle_show_unread"
         android:showAsAction="never"
         android:title="@string/show_all_msg"
@@ -40,5 +35,15 @@
                 android:title="@string/switch_to_auto_theme_msg"/>
         </menu>
     </item>
+    <item
+        android:id="@+id/toggle_oldest_first"
+        android:showAsAction="never"
+        android:title="@string/oldest_first_msg"
+        tinyrssreader:showAsAction="never"/>
+    <item
+        android:id="@+id/logout_action"
+        android:showAsAction="never"
+        android:title="@string/logout_action_msg"
+        tinyrssreader:showAsAction="never"/>
 
 </menu>

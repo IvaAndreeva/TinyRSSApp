@@ -7,9 +7,11 @@
     <string name="error_mark_feed_as_read">Marking feed as read failed :(</string>
     <string name="error_login">Login failed, try again :(</string>
     <string name="error_connection">Connection to server failed, try again :(</string>
+    <string name="error_ssl_certificate">SSL certificate not trusted</string>
     <string name="error_something_went_wrong">Something went wrong</string>
     
     <string name="error_title">Ooops</string>
     <string name="error_button">okay…</string>
+    <string name="error_button_login_anyway">login anyway</string>
 
 </resources>

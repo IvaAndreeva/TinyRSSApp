@@ -2,6 +2,8 @@ package com.tinyrssreader.activities;
 
 import java.util.Date;
 
+import javax.net.ssl.SSLException;
+
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,7 @@ import com.tinyrssreader.activities.actionbar.CategoriesActivity;
 import com.tinyrssreader.activities.actionbar.FeedsActivity;
 import com.tinyrssreader.constants.TinyTinySpecificConstants;
 import com.tinyrssreader.errorhandling.ErrorAlertDialog;
+import com.tinyrssreader.handlers.AbstractHandler;
 import com.tinyrssreader.request.RequestBuilder;
 import com.tinyrssreader.request.RequestParamsBuilder;
 import com.tinyrssreader.response.ResponseHandler;
@@ -95,6 +98,12 @@ public class LoginActivity extends Activity {
 
 	}
 
+	private void loginWithoutSSLCheck() {
+		PrefsSettings.putUrlToNoSSLUrls(this, RequestParamsBuilder
+				.formatHostAddress(address.getText().toString()));
+		onConnectButtonClick();
+	}
+
 	private void loadSavedPrefs() {
 		address.setText(PrefsCredentials.getHostPref(LoginActivity.this));
 		username.setText(PrefsCredentials.getUsernamePref(LoginActivity.this));
@@ -143,6 +152,8 @@ public class LoginActivity extends Activity {
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+					ErrorAlertDialog.showError(LoginActivity.this,
+							"Something went wrong when logging in");
 				}
 			}
 
@@ -150,8 +161,20 @@ public class LoginActivity extends Activity {
 			public void onFailure(Throwable e, JSONObject errorResponse) {
 				if (!LoginActivity.this.isFinishing()) {
 					progressDialog.dismiss();
-					ErrorAlertDialog.showError(LoginActivity.this,
-							R.string.error_connection);
+					if (e instanceof SSLException) {
+						ErrorAlertDialog.showErrorTwoButtonsF(
+								LoginActivity.this, R.string.error_ssl_certificate,
+								R.string.error_button_login_anyway,
+								R.string.error_button, new AbstractHandler() {
+									@Override
+									public void handle(Object obj) {
+										loginWithoutSSLCheck();
+									}
+								});
+					} else {
+						ErrorAlertDialog.showError(LoginActivity.this,
+								R.string.error_connection);
+					}
 				}
 			}
 

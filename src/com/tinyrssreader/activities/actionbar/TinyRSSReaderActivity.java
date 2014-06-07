@@ -1,6 +1,8 @@
 package com.tinyrssreader.activities.actionbar;
 
 import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.tinyrssreader.R;
 import com.tinyrssreader.activities.LoginActivity;
+import com.tinyrssreader.activities.StartingActivity;
 import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.constants.TinyTinySpecificConstants;
 import com.tinyrssreader.entities.Feed;
@@ -120,6 +123,7 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 	protected void updateAllItemTitles() {
 		updateShowUnreadItemTitle();
 		updateShowHideCategoriesItemTitle();
+		updateOrderByItemTitle();
 	}
 
 	private void updateShowUnreadItemTitle() {
@@ -140,6 +144,15 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		}
 	}
 
+	private void updateOrderByItemTitle() {
+		MenuItem showUnreadItem = menu.findItem(R.id.toggle_oldest_first);
+		if (PrefsSettings.getOrderByMode(this) == PrefsSettings.ORDER_BY_OLDEST_FIRST) {
+			showUnreadItem.setTitle(R.string.default_order_msg);
+		} else {
+			showUnreadItem.setTitle(R.string.oldest_first_msg);
+		}
+	}
+
 	public void onShowCategories() {
 		PrefsSettings.putCategoryMode(this,
 				PrefsSettings.CATEGORY_NO_FEEDS_MODE);
@@ -155,6 +168,18 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		PrefsUpdater.invalidateRefreshTimes(this);
 		forceInflateMenu();
 		startAllFeedsActivity();
+	}
+
+	public void onOldestFirstChosen() {
+		PrefsSettings.putOrderByMode(this, PrefsSettings.ORDER_BY_OLDEST_FIRST);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
+		forceInflateMenu();
+	}
+
+	public void onDefaultOrderChosen() {
+		PrefsSettings.putOrderByMode(this, PrefsSettings.ORDER_BY_DEFAULT);
+		PrefsUpdater.invalidateAllHeadlinesRefreshTime(this);
+		forceInflateMenu();
 	}
 
 	public void startCategoriesActivity() {
@@ -215,6 +240,31 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 			Class<? extends TinyRSSReaderActivity> _class) {
 		Intent intent = new Intent(this, _class);
 		intent.putExtras(b);
+		startActivity(intent);
+		finish();
+	}
+
+	public boolean checkResponseForError(JSONObject response)
+			throws JSONException {
+		if (response.has(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP)
+				&& response
+						.get(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP) instanceof JSONObject) {
+			JSONObject errorConentObj = response
+					.getJSONObject(TinyTinySpecificConstants.RESPONSE_CONTENT_PROP);
+			if (errorConentObj.has(TinyTinySpecificConstants.RESPONSE_ERROR)
+					&& errorConentObj
+							.getString(TinyTinySpecificConstants.RESPONSE_ERROR)
+							.equals(TinyTinySpecificConstants.RESPONSE_NOT_LOGGED_IN_ERROR)) {
+				System.out.println("[ERROR] Has to login. Logging in...");
+				doLogin();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void doLogin() {
+		Intent intent = new Intent(this, StartingActivity.class);
 		startActivity(intent);
 		finish();
 	}
