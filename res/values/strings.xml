@@ -24,10 +24,7 @@
 <![CDATA[
         <style>
         	.article-title {
-        		border: 1px solid;
         		padding: 4px;
-        		border-radius: 4px;
-        		-webkit-border-radius: 4px;
         		font-size: 16pt;
         	}
         	.article-title a {
