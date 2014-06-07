@@ -2,6 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="CustomLightTheme" parent="Theme.Base.AppCompat.Light">
+        <item name="android:windowAnimationStyle">@null</item>
         <item name="actionMenuTextColor">@color/menu_background</item>
         <item name="android:textColor">@color/light_unread_feeds</item>
         <item name="refresh_icon">@drawable/light_list_action_refresh</item>
@@ -16,6 +17,7 @@
     </style>
 
     <style name="CustomDarkTheme" parent="Theme.Base.AppCompat">
+        <item name="android:windowAnimationStyle">@null</item>
         <item name="android:textColor">@color/dark_unread_feeds</item>
         <item name="android:button">@style/CustomButton</item>
         <item name="android:checkboxStyle">@style/CustomCheckbox</item>
