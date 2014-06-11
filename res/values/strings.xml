@@ -23,6 +23,10 @@
     <string name="tpl_article_style">
 <![CDATA[
         <style>
+        	body.dark {
+        		background-color: #000;
+        		color: #eee;
+        	}
         	.article-title {
         		padding: 4px;
         		font-size: 16pt;
@@ -30,6 +34,12 @@
         	.article-title a {
         		text-decoration: none;
         		color: #000;
+        	}
+        	.dark .article-title a {
+        		color: #fff;
+            }
+         	.dark a {
+        		color: #fff;
         	}
         </style>
     ]]>

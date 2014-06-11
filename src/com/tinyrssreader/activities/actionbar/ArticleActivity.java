@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tinyrssreader.R;
+import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.constants.TinyTinySpecificConstants;
 import com.tinyrssreader.entities.Feed;
 import com.tinyrssreader.entities.Headline;
@@ -35,6 +36,7 @@ import com.tinyrssreader.request.RequestParamsBuilder;
 import com.tinyrssreader.response.ResponseHandler;
 import com.tinyrssreader.storage.internal.StorageHeadlinesUtil;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
+import com.tinyrssreader.storage.prefs.PrefsTheme;
 
 /**
  * Created by iva on 2/8/14.
@@ -349,6 +351,7 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 	}
 
 	private void injectHtml() {
+		boolean hasDarkTheme = PrefsTheme.getSelectedTheme(this) == ThemeUpdater.NIGHT_THEME;
 		getSupportActionBar().setTitle(getCurrentArticle().title);
 		content = content.replaceAll("^<html><body>", "");
 		content = content.replaceAll("</body>\\s*</html>$", "");
@@ -360,10 +363,11 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 				.toString();
 		content = "<html><head>"
 				+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no, minimal-ui\">"
-				+ getString(R.string.tpl_article_style)
-				+ "</head><body><div id='ttrss-article-container'>"
-				+ headlineLink + content + "</div>"
-				+ getString(R.string.tpl_article_script) + "</body></html>";
+				+ getString(R.string.tpl_article_style) + "</head><body "
+				+ (hasDarkTheme ? "class='dark'" : "")
+				+ "><div id='ttrss-article-container'>" + headlineLink
+				+ content + "</div>" + getString(R.string.tpl_article_script)
+				+ "</body></html>";
 	}
 
 	@Override
