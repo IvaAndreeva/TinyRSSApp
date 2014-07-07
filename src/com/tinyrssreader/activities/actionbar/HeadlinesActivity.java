@@ -334,12 +334,22 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 				headlines.add((Headline) entity);
 			}
 		}
-		feed.unread = headlines.size();
+		feed.unread = getUnreadCount(headlines);
 		if (feed.id == TinyTinySpecificConstants.STARRED_FEED_ID
 				&& PrefsSettings.getCategoryMode(this) == PrefsSettings.CATEGORY_NO_FEEDS_MODE) {
 			feed.unread = 0;
 		}
 		updateHeadlinesAndFeedsFiles(headlines);
+	}
+
+	private int getUnreadCount(List<Headline> headlines) {
+		int unread = 0;
+		for (Headline headline : headlines) {
+			if (headline.unread) {
+				unread++;
+			}
+		}
+		return unread;
 	}
 
 	@Override

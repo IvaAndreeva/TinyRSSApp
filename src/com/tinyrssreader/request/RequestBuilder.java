@@ -52,60 +52,69 @@ public class RequestBuilder {
 		if (client == null) {
 			client = new AsyncHttpClient();
 		}
-		client.post(context, host, params, "application/json",
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(int statusCode, Header[] headers,
-							JSONObject response) {
-						responseHandler
-								.onSuccess(statusCode, headers, response);
-						super.onSuccess(statusCode, headers, response);
-					}
+		try {
+			client.post(context, host, params, "application/json",
+					new JsonHttpResponseHandler() {
+						@Override
+						public void onSuccess(int statusCode, Header[] headers,
+								JSONObject response) {
+							responseHandler.onSuccess(statusCode, headers,
+									response);
+							super.onSuccess(statusCode, headers, response);
+						}
 
-					public void onFailure(Throwable e, JSONObject errorResponse) {
-						responseHandler.onFailure(e, errorResponse);
-						super.onFailure(e, errorResponse);
-					};
+						public void onFailure(Throwable e,
+								JSONObject errorResponse) {
+							responseHandler.onFailure(e, errorResponse);
+							super.onFailure(e, errorResponse);
+						};
 
-					@Override
-					public void onFailure(Throwable e, JSONArray errorResponse) {
-						responseHandler.onFailure(null, null);
-						super.onFailure(e, errorResponse);
-					}
+						@Override
+						public void onFailure(Throwable e,
+								JSONArray errorResponse) {
+							responseHandler.onFailure(null, null);
+							super.onFailure(e, errorResponse);
+						}
 
-					@Override
-					public void onFailure(String responseBody, Throwable error) {
-						responseHandler.onFailure(null, null);
-						super.onFailure(responseBody, error);
-					}
+						@Override
+						public void onFailure(String responseBody,
+								Throwable error) {
+							responseHandler.onFailure(null, null);
+							super.onFailure(responseBody, error);
+						}
 
-					@Override
-					public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-							Throwable arg3) {
-						responseHandler.onFailure(null, null);
-						super.onFailure(arg0, arg1, arg2, arg3);
-					}
+						@Override
+						public void onFailure(int arg0, Header[] arg1,
+								byte[] arg2, Throwable arg3) {
+							responseHandler.onFailure(null, null);
+							super.onFailure(arg0, arg1, arg2, arg3);
+						}
 
-					@Override
-					public void onFailure(int statusCode, Header[] headers,
-							Throwable e, JSONArray errorResponse) {
-						responseHandler.onFailure(null, null);
-						super.onFailure(statusCode, headers, e, errorResponse);
-					}
+						@Override
+						public void onFailure(int statusCode, Header[] headers,
+								Throwable e, JSONArray errorResponse) {
+							responseHandler.onFailure(null, null);
+							super.onFailure(statusCode, headers, e,
+									errorResponse);
+						}
 
-					@Override
-					public void onFailure(int statusCode, Throwable e,
-							JSONArray errorResponse) {
-						responseHandler.onFailure(null, null);
-						super.onFailure(statusCode, e, errorResponse);
-					}
+						@Override
+						public void onFailure(int statusCode, Throwable e,
+								JSONArray errorResponse) {
+							responseHandler.onFailure(null, null);
+							super.onFailure(statusCode, e, errorResponse);
+						}
 
-					@Override
-					public void onFinish() {
-						responseHandler.onFinish();
-						super.onFinish();
-					}
-				});
+						@Override
+						public void onFinish() {
+							responseHandler.onFinish();
+							super.onFinish();
+						}
+					});
+		} catch (Exception e) {
+
+			responseHandler.onFailure(e, null);
+		}
 	}
 
 	public static void makeRequestWithProgress(

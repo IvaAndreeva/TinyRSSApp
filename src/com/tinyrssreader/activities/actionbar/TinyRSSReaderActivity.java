@@ -69,6 +69,13 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 
 	public void inflateMenu() {
 		if (!isMenuInflated) {
+			while (menu == null) {
+				try {
+					System.out.println("[MENU] Sleeping ...");
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+				}
+			}
 			menu.clear();
 			isMenuInflated = true;
 			MenuInflater inflater = getMenuInflater();
