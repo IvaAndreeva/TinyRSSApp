@@ -10,22 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/articleButtonsLayout"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/background_dark" />
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
         android:id="@+id/articleButtonsLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="@android:color/transparent" >
+        android:layout_alignParentLeft="true" >
 
         <Button
             android:id="@+id/previousButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:minHeight="48dp"
+            android:minWidth="12dip"
             android:text="@string/article_previous_button_msg" />
 
         <Button
@@ -40,8 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:minHeight="48dip"
+            android:minWidth="12dip"
             android:text="@string/article_next_button_msg" />
-
     </LinearLayout>
 
 </RelativeLayout>
