@@ -2,23 +2,18 @@ package com.tinyrssreader.storage.prefs;
 
 import android.content.Context;
 
-public class PrefsTheme extends StoredPreferencesTinyRSSReader {
-	public static final int AUTO_THEME = 0;
-	public static final int MANUAL_THEME = 1;
+import com.tinyrssreader.R;
 
-	public static final String THEME_MODE = "sthemeMode";
+public class PrefsTheme extends StoredPreferencesTinyRSSReader {
+	public static final int DAY_THEME = R.style.CustomLightTheme;
+	public static final int NIGHT_THEME = R.style.CustomDarkTheme;
+
+
 	public static final String SELECTED_THEME = "selectedTheme";
 
-	public static int getThemeMode(Context context) {
-		return getIntFromSavedPrefs(context, THEME_MODE);
-	}
-
-	public static void putThemeMode(Context context, int mode) {
-		putIntInSavedPrefs(context, THEME_MODE, mode);
-	}
-
 	public static int getSelectedTheme(Context context) {
-		return getIntFromSavedPrefs(context, SELECTED_THEME);
+		int theme = getIntFromSavedPrefs(context, SELECTED_THEME);
+		return theme == 0? DAY_THEME : theme;
 	}
 
 	public static void putSelectedTheme(Context context, int theme) {

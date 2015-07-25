@@ -359,7 +359,7 @@ public class ArticleActivity extends TinyRSSReaderActivity {
 	}
 
 	private void injectHtml() {
-		boolean hasDarkTheme = PrefsTheme.getSelectedTheme(this) == ThemeUpdater.NIGHT_THEME;
+		boolean hasDarkTheme = PrefsTheme.getSelectedTheme(this) == PrefsTheme.NIGHT_THEME;
 		getSupportActionBar().setTitle(getCurrentArticle().title);
 		content = content.replaceAll("^<html><body>", "");
 		content = content.replaceAll("</body>\\s*</html>$", "");

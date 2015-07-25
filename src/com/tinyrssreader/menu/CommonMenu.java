@@ -7,6 +7,7 @@ import com.tinyrssreader.R;
 import com.tinyrssreader.activities.ThemeUpdater;
 import com.tinyrssreader.activities.actionbar.TinyRSSReaderActivity;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
+import com.tinyrssreader.storage.prefs.PrefsTheme;
 
 public class CommonMenu {
 	public static boolean checkIsCommonMenuItemSelected(
@@ -119,15 +120,11 @@ public class CommonMenu {
 	private static boolean switchThemeIfChosen(TinyRSSReaderActivity context,
 			MenuItem item) {
 		if (item.getItemId() == R.id.switch_to_dark_theme) {
-			ThemeUpdater.setThemeManually(context, ThemeUpdater.NIGHT_THEME);
+			ThemeUpdater.setThemeManually(context, PrefsTheme.NIGHT_THEME);
 			return true;
 		}
 		if (item.getItemId() == R.id.switch_to_light_theme) {
-			ThemeUpdater.setThemeManually(context, ThemeUpdater.DAY_THEME);
-			return true;
-		}
-		if (item.getItemId() == R.id.switch_to_auto_theme) {
-			ThemeUpdater.setThemeAuto(context);
+			ThemeUpdater.setThemeManually(context, PrefsTheme.DAY_THEME);
 			return true;
 		}
 		return false;

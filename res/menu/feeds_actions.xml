@@ -30,9 +30,6 @@
             <item
                 android:id="@+id/switch_to_light_theme"
                 android:title="@string/switch_to_light_theme_msg"/>
-            <item
-                android:id="@+id/switch_to_auto_theme"
-                android:title="@string/switch_to_auto_theme_msg"/>
         </menu>
     </item>
     <item
