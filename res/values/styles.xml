@@ -14,6 +14,8 @@
         <item name="share_icon">@drawable/share</item>
         <item name="no_unread_feeds_color">@color/light_no_unread_feeds</item>
         <item name="unread_feeds_color">@color/light_unread_feeds</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="CustomDarkTheme" parent="Base.Theme.AppCompat">
@@ -31,6 +33,8 @@
         <item name="share_icon">@drawable/share</item>
         <item name="no_unread_feeds_color">@color/dark_no_unread_feeds</item>
         <item name="unread_feeds_color">@color/dark_unread_feeds</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="CustomButton" parent="@android:style/Widget.Button">

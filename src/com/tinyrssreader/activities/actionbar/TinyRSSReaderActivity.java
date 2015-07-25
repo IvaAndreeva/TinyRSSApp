@@ -1,15 +1,12 @@
 package com.tinyrssreader.activities.actionbar;
 
-import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +24,12 @@ import com.tinyrssreader.storage.prefs.PrefsCredentials;
 import com.tinyrssreader.storage.prefs.PrefsSettings;
 import com.tinyrssreader.storage.prefs.PrefsUpdater;
 
-public abstract class TinyRSSReaderActivity extends ActionBarActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
+public abstract class TinyRSSReaderActivity extends AppCompatActivity {
 	public static final String ARTICLE_ID = "articleId";
 	public static final String CONTENT = "content";
 	public static final String HEADLINES_TO_LOAD = "headlines";
@@ -50,6 +52,10 @@ public abstract class TinyRSSReaderActivity extends ActionBarActivity {
 		ThemeUpdater.updateTheme(this);
 		super.onCreate(savedInstanceState);
 		setContentView(getLayout());
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 //			getActionBar().setHomeButtonEnabled(true);
