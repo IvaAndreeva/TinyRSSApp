@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CustomLightTheme" parent="Theme.Base.AppCompat.Light">
+    <style name="CustomLightTheme" parent="Base.Theme.AppCompat.Light">
         <item name="android:windowAnimationStyle">@null</item>
         <item name="actionMenuTextColor">@color/menu_background</item>
         <item name="android:textColor">@color/light_unread_feeds</item>
@@ -16,7 +16,7 @@
         <item name="unread_feeds_color">@color/light_unread_feeds</item>
     </style>
 
-    <style name="CustomDarkTheme" parent="Theme.Base.AppCompat">
+    <style name="CustomDarkTheme" parent="Base.Theme.AppCompat">
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:textColor">@color/dark_unread_feeds</item>
         <item name="android:button">@style/CustomButton</item>
