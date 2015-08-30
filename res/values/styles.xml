@@ -5,6 +5,7 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="actionMenuTextColor">@color/menu_background</item>
         <item name="android:textColor">@color/light_unread_feeds</item>
+        <item name="android:panelFullBackground">@color/menu_background</item>
         <item name="refresh_icon">@drawable/light_list_action_refresh</item>
         <item name="mark_as_read_icon">@drawable/light_mark_as_read</item>
         <item name="article_mark_starred_icon">@drawable/light_article_toggle_starred</item>
