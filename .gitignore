@@ -7,3 +7,4 @@ gradle/
 gradlew.*
 gradlew
 local.properties
+*.iml
