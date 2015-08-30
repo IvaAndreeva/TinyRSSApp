@@ -17,6 +17,7 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
+
     compile fileTree(include: '*.jar', dir: 'libs')
 }
 
@@ -27,6 +28,12 @@ android {
 
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
+
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+    }
 
     sourceSets {
         main {
