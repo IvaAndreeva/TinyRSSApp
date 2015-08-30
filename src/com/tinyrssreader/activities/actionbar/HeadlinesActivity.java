@@ -13,6 +13,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.tinyrssreader.R;
@@ -64,6 +66,15 @@ public class HeadlinesActivity extends TinyRSSReaderListActivity {
 		}
 		setTitle(feed.title);
 		listView = (ListView) findViewById(R.id.listView);
+
+		ImageButton fab = ((ImageButton) findViewById(R.id.fab));
+		fab.setImageResource(R.drawable.light_mark_as_read);
+		fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				markFeedAsRead(feedId, host, sessionId, getApplicationContext());
+			}
+		});
 	}
 
 	@Override

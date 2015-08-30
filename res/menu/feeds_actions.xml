@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tinyrssreader="http://schemas.android.com/apk/res-auto" >
+    xmlns:tinyrssreader="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/list_action_refresh"
         android:icon="?attr/refresh_icon"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_bar_refresh"
-        tinyrssreader:showAsAction="ifRoom"/>
+        tinyrssreader:showAsAction="never"/>
     <item
         android:id="@+id/toggle_show_unread"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/show_all_msg"
         tinyrssreader:showAsAction="never"/>
     <item
         android:id="@+id/toggle_show_categories"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/show_categories_msg"
         tinyrssreader:showAsAction="never"/>
     <item
         android:id="@+id/switch_theme"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/switch_theme_msg"
         tinyrssreader:showAsAction="never">
         <menu>
@@ -34,12 +35,12 @@
     </item>
     <item
         android:id="@+id/toggle_oldest_first"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/oldest_first_msg"
         tinyrssreader:showAsAction="never"/>
     <item
         android:id="@+id/logout_action"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/logout_action_msg"
         tinyrssreader:showAsAction="never"/>
 

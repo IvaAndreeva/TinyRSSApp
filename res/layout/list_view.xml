@@ -19,6 +19,16 @@
         android:layout_alignParentRight="false"
         android:layout_below="@+id/toolbar" />
 
+    <ImageButton
+        android:id='@+id/fab'
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_shape_circle"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+
     <RelativeLayout
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"

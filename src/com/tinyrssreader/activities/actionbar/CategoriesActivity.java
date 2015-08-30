@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.tinyrssreader.R;
@@ -37,6 +39,15 @@ public class CategoriesActivity extends TinyRSSReaderListActivity {
 	public void initialize() {
 		initSessionAndHost(getIntent().getExtras());
 		listView = (ListView) findViewById(R.id.listView);
+
+		ImageButton fab = ((ImageButton) findViewById(R.id.fab));
+		fab.setImageResource(R.drawable.light_list_action_refresh);
+		fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				refresh();
+			}
+		});
 	}
 
 	@Override
