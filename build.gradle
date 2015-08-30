@@ -23,6 +23,8 @@ dependencies {
 
 android {
     defaultConfig {
+        versionCode 7
+        versionName "1.6"
         minSdkVersion 8
     }
 
