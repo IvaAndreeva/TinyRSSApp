@@ -8,3 +8,5 @@ gradlew.*
 gradlew
 local.properties
 *.iml
+*.apk
+manifest-merger-release-report.txt
