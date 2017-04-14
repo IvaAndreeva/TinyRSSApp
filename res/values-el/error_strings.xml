@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="error_mark_article">Αποτυχία σήμανσης άρθρου :(</string>
+    <string name="error_refresh_categories">Αποτυχία ανανέωσης των κατηγοριών :(</string>
+    <string name="error_refresh_feeds">Αποτυχία ανανέωσης των ροών :(</string>
+    <string name="error_refresh_headlines">Αποτυχία ανανέωσης των τίτλων :(</string>
+    <string name="error_mark_feed_as_read">Αποτυχία σήμανσης της ροής ως αναγνωσμένης :(</string>
+    <string name="error_login">Αποτυχία φόρτωσης, ξαναπροσπαθήστε :(</string>
+    <string name="error_connection">Αποτυχία σύνδεσης με τον εξυπηρετητή, ξαναπροσπαθήστε :(</string>
+    <string name="error_ssl_certificate">Το πιστοποιητικό SSL δεν είναι έμπιστο</string>
+    <string name="error_something_went_wrong">Κάτι πήγε στραβά</string>
+    
+    <string name="error_title">Ωχ</string>
+    <string name="error_button">εντάξει…</string>
+    <string name="error_button_login_anyway">σύνδεση ούτως ή άλλως</string>
+
+</resources>

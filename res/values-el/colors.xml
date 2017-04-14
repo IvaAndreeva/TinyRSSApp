@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="dark_theme_text_color">#3399cc</color>
+    <color name="light_no_unread_feeds">#a9d0f5</color>
+    <color name="dark_no_unread_feeds">#6e6e6e</color>
+    <color name="light_unread_feeds">#3399cc</color>
+    <color name="dark_unread_feeds">#3399cc</color>
+    <color name="menu_background">#b6b6b4</color>
+
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="article_back_to_headlines">Επιστροφή στους τίτλους</string>
+    <string name="article_mark_unread_msg">Σήμανση ως μη αναγνωσμένο</string>
+    <string name="article_mark_read_msg">Σήμανση ως μη αναγνωσμένο</string>
+    <string name="article_mark_star_msg">Σήμανση με αστέρι</string>
+    <string name="article_mark_unstar_msg">Απαλοιφή σήμανσης με αστέρι</string>
+    <string name="article_share_msg">Κοινοποίηση</string>
+    <string name="article_previous_button_msg">\u25C0</string>
+    <string name="article_go_to_article_msg">Μετάβαση στο άρθρο</string>
+    <string name="article_next_button_msg">\u25B6</string>
+</resources>
