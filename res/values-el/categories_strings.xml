@@ -1,0 +1,4 @@
+<resources>
+    <string name="show_feeds_in_cats_msg">Εμφάνιση των ροών σε κατηγορίες</string>
+    <string name="hide_feeds_in_cats_msg">Εμφάνιση μόνο των τίτλων σε κατηγορίες</string>
+</resources>

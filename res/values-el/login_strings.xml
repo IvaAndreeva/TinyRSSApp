@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="login_welcome_msg">Καλωσορίσατε στο Tiny RSS Reader, παρακαλώ εισαγάγετε τα δεδομένα ώστε να σας δείξουμε τις ροές σας</string>
+    <string name="login_address_msg">Διεύθυνση:</string>
+    <string name="login_address_hint_msg">π.χ. example.com/tt-rss</string>
+    <string name="login_username_msg">Όνομα χρήστη:</string>
+    <string name="login_username_hint_msg">Όνομα χρήστη για το API</string>
+    <string name="login_password_msg">Κωδικός:</string>
+    <string name="login_password_hint_msg">Κωδικός για το API</string>
+    <string name="login_connecting_msg">Συνδέεται…</string>
+    <string name="login_connect_button_text">Σύνδεση</string>
+    <string name="login_error_msg">Αποτυχία εισόδου</string>
+    <string name="login_error_conn_failed_msg">Αποτυχία σύνδεσης</string>
+    <string name="login_success_msg">Φόρτωση ροών…</string>
+    <string name="login_save_credentials_msg">Αποθήκευση διαπιστευτηρίων</string>
+
+</resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tiny RSS Reader</string>
+    <string name="categories_title">Κατηγορίες</string>
+    <string name="feeds_title">Ροές</string>
+    <string name="logout_action_msg">Αποσύνδεση</string>
+    <string name="show_all_msg">Εμφάνιση όλων</string>
+    <string name="show_unread_msg">Εμφάνιση μόνο μη αναγνωσμένων</string>
+    <string name="oldest_first_msg">Παλαιότερα πρώτα</string>
+    <string name="default_order_msg">Προκαθορισμένη σειρά</string>
+    <string name="show_categories_msg">Εμφάνιση κατηγοριών</string>
+    <string name="hide_categories_msg">Απόκρυψη κατηγοριών</string>
+    <string name="switch_theme_msg">Εναλλαγή θέματος</string>
+    <string name="switch_to_dark_theme_msg">Μετάβαση σε σκοτεινό</string>
+    <string name="switch_to_light_theme_msg">Μετάβαση σε φωτεινό</string>
+    <string name="switch_to_auto_theme_msg">Αυτόματο θέμα</string>
+    <string name="tpl_article_title">
+<![CDATA[
+        <h1 class="article-title"><a href="{{link}}">{{title}}</a></h1>
+    ]]>
+    </string>
+    <string name="tpl_article_style">
+<![CDATA[
+        <style>
+        	body.dark {
+        		background-color: #000;
+        		color: #eee;
+        	}
+        	.article-title {
+        		padding: 4px;
+        		font-size: 16pt;
+        	}
+        	.article-title a {
+        		text-decoration: none;
+        		color: #000;
+        	}
+        	.dark .article-title a {
+        		color: #fff;
+            }
+         	.dark a {
+        		color: #fff;
+        	}
+        </style>
+    ]]>
+    </string>
+    <string name="tpl_article_script">
+<![CDATA[
+        <script>
+        </script>
+    ]]>
+    </string>
+
+</resources>

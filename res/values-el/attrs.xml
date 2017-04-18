@@ -1,0 +1,13 @@
+<resources>
+    <declare-styleable name="menu_item">
+        <attr name="refresh_icon" format="reference" />
+        <attr name="mark_as_read_icon" format="reference" />
+        <attr name="article_mark_starred_icon" format="reference" />
+        <attr name="article_unmark_starred_icon" format="reference" />
+        <attr name="article_mark_unread_icon" format="reference" />
+        <attr name="article_mark_read_icon" format="reference" />
+        <attr name="share_icon" format="reference" />
+        <attr name="no_unread_feeds_color" format="reference" />
+        <attr name="unread_feeds_color" format="reference" />
+    </declare-styleable>
+</resources>
